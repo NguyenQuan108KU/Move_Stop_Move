@@ -12,6 +12,7 @@ TagManager:
   - Wall
   - EnemyController
   - Builder
+  - Qua
   layers:
   - Default
   - TransparentFX

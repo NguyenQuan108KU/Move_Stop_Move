@@ -59,11 +59,13 @@ public class PlayerCity_Controller : MonoBehaviour
     public GameObject winner;
     public int coinOfPlayer;
 
+    public bool isOffPlayer = false;
+
     //[SerializeField] private Bullet bullet1;
     void Start()
     {
         coinOfPlayer = 0;
-        EnemyAlive = 1;
+        EnemyAlive = 10;
         point = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         anim = GetComponent<Animator>();
@@ -251,6 +253,7 @@ public class PlayerCity_Controller : MonoBehaviour
             UIManager.instance.StartDead();
             isDead = true;
             anim.SetBool("Death", true);
+            isOffPlayer = true;
         }
     }
     public void DestroyPlayer()
@@ -272,6 +275,12 @@ public class PlayerCity_Controller : MonoBehaviour
         {
             EnemyAlive = 0;
             winner.SetActive(true);
+            StartCoroutine(StopGameAfterDelay(2f));
         }
+    }
+    private IEnumerator StopGameAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Time.timeScale = 0f;
     }
 }

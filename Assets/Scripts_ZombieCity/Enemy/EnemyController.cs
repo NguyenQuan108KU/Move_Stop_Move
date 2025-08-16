@@ -33,7 +33,12 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         float distance = Vector3.Distance(transform.position, target.position);
-
+        if (GameManager.instance.playerCityController.isOffPlayer || isDead)
+        {
+            agent.ResetPath();                  // Xóa đường đi của NavMeshAgent
+            anim.SetBool("Move", false);        // Tắt animation Move
+            return;                             // Thoát khỏi Update
+        }
         if (distance <= lookRadius && !isDead)
         {
             anim.SetBool("Move", true);
@@ -83,8 +88,10 @@ public class EnemyController : MonoBehaviour
         {
             GameManager.instance.playerCityController.EnemyAlive -= 1;
             GameManager.instance.playerCityController.coinOfPlayer += 5;
-            Destroy(gameObject, 0.25f);
-            praticleSystem.SetActive(true);
+            Destroy(gameObject, 0.25f);            var ps = praticleSystem.GetComponent<ParticleSystem>();
+            ps.Stop();
+            ps.Play();
+
         }
         if (collision.gameObject.CompareTag("Player"))
         {

@@ -43,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 348641515877151161}
-  m_Mesh: {fileID: 1913988541965732932, guid: 1cf44c1437d95c641ae732ea8eca44c3, type: 3}
+  m_Mesh: {fileID: -1065404696862110030, guid: 1b74d2770d5b5894984bd1a4f676134b, type: 3}
 --- !u!23 &3539473813388833265
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
   shootDirection: {x: 0, y: 0, z: 0}
   destroyTimer: 1.5
   owner: {fileID: 0}
-  SetRoration: 1
+  SetRoration: 0
 --- !u!54 &1194726180561282274
 Rigidbody:
   m_ObjectHideFlags: 0
