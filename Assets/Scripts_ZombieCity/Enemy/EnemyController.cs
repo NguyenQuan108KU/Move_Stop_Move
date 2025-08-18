@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
     [Header("Praticle System")]
     [SerializeField] private GameObject praticleSystem;
     [Header("Material Enemy")]
-    [SerializeField] private GameObject colorEnemy;    public GameObject targetEnemy;    public bool isDead = false;
+    [SerializeField] private GameObject colorEnemy;    public GameObject targetEnemy;    public bool isDead = false;    public bool isGetGift = false;
     void Start()
     {
         target = GameManager.instance.playerCityController.transform;
@@ -86,12 +86,18 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet1"))
         {
+            AudioManager.instance.PlayerSFX(2);
             GameManager.instance.playerCityController.EnemyAlive -= 1;
             GameManager.instance.playerCityController.coinOfPlayer += 5;
-            Destroy(gameObject, 0.25f);            var ps = praticleSystem.GetComponent<ParticleSystem>();
-            ps.Stop();
-            ps.Play();
 
+            // Spawn particle riêng biệt tại vị trí enemy
+            GameObject ps = Instantiate(praticleSystem, transform.position, Quaternion.identity);
+            var particle = ps.GetComponent<ParticleSystem>();
+            particle.Play();
+
+            Destroy(ps, particle.main.duration + particle.main.startLifetime.constantMax); // tự hủy sau khi chạy xong
+
+            Destroy(gameObject, 0.25f); // xóa enemy
         }
         if (collision.gameObject.CompareTag("Player"))
         {

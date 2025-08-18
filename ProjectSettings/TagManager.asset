@@ -13,6 +13,7 @@ TagManager:
   - EnemyController
   - Builder
   - Qua
+  - Gift
   layers:
   - Default
   - TransparentFX

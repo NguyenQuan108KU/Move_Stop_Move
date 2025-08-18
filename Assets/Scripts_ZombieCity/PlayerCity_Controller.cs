@@ -28,7 +28,7 @@ public class PlayerCity_Controller : MonoBehaviour
     public int point;
     private EnemyController enemyCurrent;
     private bool isDetech = false;
-    private bool isDead = false;
+    public bool isDead = false;
 
     public GameObject dead1;
     public int coinMoney;
@@ -225,7 +225,7 @@ public class PlayerCity_Controller : MonoBehaviour
         if (Time.time >= nextFireTime) // chỉ bắn khi đã hết cooldown
         {
             nextFireTime = Time.time + fireRate; // đặt lại thời gian bắn tiếp theo
-
+            AudioManager.instance.PlayerSFX(0);
             playerMove = Vector3.zero;
             GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
             Bullet bulletScript = bulletObj.GetComponent<Bullet>();
@@ -249,6 +249,7 @@ public class PlayerCity_Controller : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("EnemyController"))
         {
+            //AudioManager.instance.PlayerSFX(3);
             dead1.SetActive(true);
             UIManager.instance.StartDead();
             isDead = true;

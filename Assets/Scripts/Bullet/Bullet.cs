@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour
             Vector3 direction = target.position - transform.position;
             direction.y = 0;
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = lookRotation * Quaternion.Euler(90, 0, 0);
+            transform.rotation = lookRotation * Quaternion.Euler(-90, 0, 0);
         }
         else
         {
@@ -62,7 +62,7 @@ public class Bullet : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("EnemyController"))
         {
-            Destroy(gameObject, 0.35f);
+            Destroy(gameObject);
         }
     }
 }

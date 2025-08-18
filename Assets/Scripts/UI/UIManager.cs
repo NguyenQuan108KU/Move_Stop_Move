@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Load")]
     [SerializeField] public GameObject loadCircle;
+    [SerializeField] public GameObject loadGift;
     [SerializeField] public float speedRotation;
     [SerializeField] TextMeshProUGUI number;
     private int countNumber;
@@ -44,10 +45,12 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI enemyCity;
     public TextMeshProUGUI coinOfPlayer;
 
+    public GameObject GiftOpen;
+
 
     private void Start()
     {
-        enemyAliveTotal = 1;
+        enemyAliveTotal = 100;
         countNumber = 5;
 
         countdownDuration = 5;
@@ -55,7 +58,8 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        if(enemyCity != null)
+        coin.text = GameManager.instance.playerController.coinMoney.ToString();
+        if (enemyCity != null)
             enemyCity.text = GameManager.instance.playerCityController.EnemyAlive.ToString();
         if (coinOfPlayer != null)
             coinOfPlayer.text = GameManager.instance.playerCityController.coinOfPlayer.ToString();
@@ -75,6 +79,8 @@ public class UIManager : MonoBehaviour
             Load();
         }
         //Load();
+        if(!loadGift)
+            loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
     }
     private void LateUpdate()
     {
@@ -116,4 +122,6 @@ public class UIManager : MonoBehaviour
     }
     public void StopGame() => Time.timeScale = 0;
     public void ContinueGame() => Time.timeScale = 1;
+    public void SaveGift() => PlayerPrefs.SetInt("Gift", 1);
+    public void SetGift() => GiftOpen.SetActive(true);
 }

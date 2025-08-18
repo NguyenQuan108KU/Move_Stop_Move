@@ -1871,7 +1871,7 @@ MonoBehaviour:
   bulletPrefabs: {fileID: 348641515877151161, guid: a48ea611c30b97e4698d99d2affd1452, type: 3}
   firingTransform: {fileID: 6378755179001133314}
   target: {fileID: 0}
-  detectionRange: 5
+  detectionRange: 8
   attackRange: 0
   targetTags:
   - Player

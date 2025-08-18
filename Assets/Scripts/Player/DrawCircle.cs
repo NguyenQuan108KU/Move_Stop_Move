@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class DrawCircle : MonoBehaviour
 {
-    public float radius = 3f;
+    public float radius = 10f;
     public int segments = 100;
 
     private LineRenderer lineRenderer;
@@ -18,7 +18,7 @@ public class DrawCircle : MonoBehaviour
         DrawCircleUnderFeet();
     }
 
-    void DrawCircleUnderFeet()
+    public void DrawCircleUnderFeet()
     {
         Vector3[] points = new Vector3[segments];
         float angle = 0f;

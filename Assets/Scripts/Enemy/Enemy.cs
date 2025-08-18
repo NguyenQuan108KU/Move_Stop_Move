@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     public Transform target;
 
     [Header("Detection & Attack Range")]
-    [SerializeField] private float detectionRange = 10f;
+    [SerializeField] private float detectionRange = 8f;
     [SerializeField] private float attackRange = 3f;
 
     [Header("Target Tags")]
@@ -38,7 +38,10 @@ public class Enemy : MonoBehaviour
 
     public int point;
     public TextMeshProUGUI pointOfEnemy;
-    
+
+    public bool isGetGift = false;
+
+
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -75,7 +78,7 @@ public class Enemy : MonoBehaviour
         if (isDead || target != null || GameManager.instance.playerController.isPlayerDie) return; // Không di chuyển nếu đã chết hoặc đang tấn công
 
         timer += Time.deltaTime;
-        if (timer >= changeDirectionTime)
+        if (timer >= changeDirectionTime || CheckWall())
         {
             anim.SetBool("Move", true);
             randomDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
@@ -133,10 +136,10 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet1"))
         {
-            //AudioManager.instance.PlayerSFX(2);
+            GameManager.instance.playerController.SetDeufalt();
+            AudioManager.instance.PlayerSFX(2);
             GameManager.instance.playerController.point += 5;
             GameManager.instance.playerController.coinMoney += 5;
-            //UIManager.instance.coin.text = GameManager.instance.playerController.coinMoney.ToString();
             GameManager.instance.playerController.countAttack += 1;
         }
         if (collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2"))
@@ -166,6 +169,14 @@ public class Enemy : MonoBehaviour
             anim.SetBool("Death", true);
             gameObject.tag = "Untagged";
         }
+
+        if (collision.gameObject.CompareTag("Gift"))
+        {
+            isGetGift = true;
+            Destroy(collision.gameObject);
+            detectionRange = 12f;
+            bulletPrefabs.transform.localScale = new Vector3(100, 100, 100);
+        }
     }
 
 
@@ -184,5 +195,25 @@ public class Enemy : MonoBehaviour
         textEnemy.rectTransform.position = enemyScreenPosition;
     }
     public void DestroyEnemy() => Destroy(gameObject);
+    public bool CheckWall()
+    {
+        if(Physics.Raycast(transform.position + Vector3.up * 1.0f, transform.forward, out RaycastHit hit, 2f))
+        {
+            return hit.collider.CompareTag("Wall");
+        }
+        else
+        {
+            return false;
+        }
+    }
 
+    public void SetDeufalt()
+    {
+        if (isGetGift)
+        {
+            isGetGift = false;
+            detectionRange = 8f;
+            bulletPrefabs.transform.localScale = new Vector3(39, 39, 39);
+        }
+    }
 }

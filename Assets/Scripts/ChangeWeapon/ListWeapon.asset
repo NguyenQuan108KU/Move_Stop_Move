@@ -28,3 +28,6 @@ MonoBehaviour:
   - index: 4
     weaponMesh: {fileID: -3780750940207061274, guid: c18c1ba41a4f9424099b1b4380b9b303, type: 3}
     isRotate: 0
+  - index: 5
+    weaponMesh: {fileID: -3669228104775074923, guid: 541429fa9b02a6148a85b3e12ef9b27d, type: 3}
+    isRotate: 1

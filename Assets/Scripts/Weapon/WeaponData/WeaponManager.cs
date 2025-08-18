@@ -27,14 +27,32 @@ public class WeaponManager : MonoBehaviour
 
     public GameObject button;
     public bool isTouch = false;
+    public Sprite gift;
+    public Sprite gift_lock;
+
+    public int indexGift;
+
+    public TextMeshProUGUI coinOfPlayerText;
+    public int coinOfPlayer;
 
     private void Start()
     {
+        coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
         UpdateWeapon(selectedOption);
         SetButtonWeapon();
     }
     private void Update()
     {
+        coinOfPlayerText.text = coinOfPlayer.ToString();
+        indexGift = PlayerPrefs.GetInt("Gift");
+        if(selectedOption == 5 && indexGift != 1)
+        {
+            button.GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            button.GetComponent<Button>().interactable = true;
+        }
     }
     public void NextOption()
     {
@@ -58,6 +76,23 @@ public class WeaponManager : MonoBehaviour
     }
     public void UpdateWeapon(int selectedOption)
     {
+        if (indexGift == 1)
+        {
+            Weapon weapon1 = weaponDB.GetWeapon(5);
+            weapon1.weaponImage = gift;
+            weapon1.weaponName = "Weapon";
+            weapon1.isLock = "Unlock";
+            weapon1.damageWeapon = "+10 damage";
+        }
+        else
+        {
+            Weapon weapon1 = weaponDB.GetWeapon(5);
+            weapon1.weaponImage = gift_lock;
+            weapon1.weaponName = "Gift";
+            weapon1.isLock = "Lock";
+            weapon1.damageWeapon = "?";
+        }
+
         Weapon weapon = weaponDB.GetWeapon(selectedOption);
         image.sprite = weapon.weaponImage;
         nameText.text = weapon.weaponName;
@@ -107,5 +142,13 @@ public class WeaponManager : MonoBehaviour
     {
         int x = PlayerPrefs.GetInt("IndexWeapon");
         return x;
+    }
+    public void BuyWeapons()
+    {
+        Weapon weapon = weaponDB.GetWeapon(selectedOption);
+        if(int.Parse(weapon.coin) <= coinOfPlayer)
+        {
+
+        }
     }
 }

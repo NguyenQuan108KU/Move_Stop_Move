@@ -43,3 +43,9 @@ MonoBehaviour:
     isLock: Unlock
     damageWeapon: +100 damage
     meshWeapon: {fileID: -3780750940207061274, guid: c18c1ba41a4f9424099b1b4380b9b303, type: 3}
+  - weaponName: Gift
+    weaponImage: {fileID: 21300000, guid: 79b2087be051fea43b9c8f51637d0764, type: 3}
+    coin: '?'
+    isLock: Lock
+    damageWeapon: '?'
+    meshWeapon: {fileID: -3669228104775074923, guid: 541429fa9b02a6148a85b3e12ef9b27d, type: 3}

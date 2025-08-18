@@ -53,6 +53,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int indexHats;
     [SerializeField] private HATS hatOfPlayer;
 
+    public bool isGetGift = false;
+
     //[SerializeField] private Bullet bullet1;
     void Start()
     {
@@ -210,8 +212,12 @@ public class PlayerController : MonoBehaviour
     public void SetOffAttack() => anim.SetBool("Attack", false);
     public void Shooting()
     {
+        if (isDead)
+        {
+            AudioManager.instance.StopSFX(0);
+        }
         playerMove = Vector3.zero;
-        //AudioManager.instance.PlayerSFX(0);
+        AudioManager.instance.PlayerSFX(0);
         GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
         bulletScript.SetOwner(gameObject);
@@ -221,8 +227,8 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet2"))
         {
-            //AudioManager.instance.isPlayerBGM = false;
-            //AudioManager.instance.PlayerSFX(0);
+            AudioManager.instance.isPlayerBGM = false;
+            AudioManager.instance.PlayerSFX(0);
             dead1.SetActive(true);
             UIManager.instance.StartDead();
             anim.SetBool("Death", true);
@@ -231,6 +237,20 @@ public class PlayerController : MonoBehaviour
             PlayerPrefs.SetInt("coinMoney", coinMoney);
             isPlayerDie = true;
         }
+
+        if (collision.gameObject.CompareTag("Gift"))
+        {
+            isGetGift = true;
+            Destroy(collision.gameObject);
+            radius = 6.5f;
+            DrawCircle circle = GetComponentInChildren<DrawCircle>();
+            if(circle != null)
+            {
+                circle.radius = 6.5f;
+                circle.DrawCircleUnderFeet();
+            }
+            bullet1.transform.localScale = new Vector3(100, 100, 100);
+        }
     }
     public void DestroyPlayer()
     {
@@ -238,11 +258,26 @@ public class PlayerController : MonoBehaviour
     }
     public void UpLevel()
     {
-        if(countAttack >= 1)
+        if(countAttack >= 3)
         {
             effectLevelUp.SetActive(true);
             transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
             UIManager.instance.up = 4.5f;
+        }
+    }
+    public void SetDeufalt()
+    {
+        if (isGetGift)
+        {
+            isGetGift = false;
+            radius = 5f;
+            DrawCircle circle = GetComponentInChildren<DrawCircle>();
+            if (circle != null)
+            {
+                circle.radius = 5f;
+                circle.DrawCircleUnderFeet();
+            }
+            bullet1.transform.localScale = new Vector3(39, 39, 39);
         }
     }
 }
