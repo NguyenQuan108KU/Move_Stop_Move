@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -39,7 +39,7 @@ public class WeaponManager : MonoBehaviour
     {
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
         UpdateWeapon(selectedOption);
-        SetButtonWeapon();
+        //SetButtonWeapon();
     }
     private void Update()
     {
@@ -62,7 +62,7 @@ public class WeaponManager : MonoBehaviour
             selectedOption = 0;
         }
         UpdateWeapon(selectedOption);
-        SetButtonWeapon();
+        //SetButtonWeapon();
     }
     public void BackOption()
     {
@@ -72,31 +72,16 @@ public class WeaponManager : MonoBehaviour
             selectedOption = weaponDB.WeaponCount() - 1;
         }
         UpdateWeapon(selectedOption);
-        SetButtonWeapon();
+        //SetButtonWeapon();
     }
     public void UpdateWeapon(int selectedOption)
     {
-        if (indexGift == 1)
-        {
-            Weapon weapon1 = weaponDB.GetWeapon(5);
-            weapon1.weaponImage = gift;
-            weapon1.weaponName = "Weapon";
-            weapon1.isLock = "Unlock";
-            weapon1.damageWeapon = "+10 damage";
-        }
-        else
-        {
-            Weapon weapon1 = weaponDB.GetWeapon(5);
-            weapon1.weaponImage = gift_lock;
-            weapon1.weaponName = "Gift";
-            weapon1.isLock = "Lock";
-            weapon1.damageWeapon = "?";
-        }
-
+        UpdateGift();
         Weapon weapon = weaponDB.GetWeapon(selectedOption);
         image.sprite = weapon.weaponImage;
         nameText.text = weapon.weaponName;
         isLock.text = weapon.isLock;
+        coin.text = weapon.coin;
         damage.text = weapon.damageWeapon;
         SetButtonWeapon();
     }
@@ -106,31 +91,64 @@ public class WeaponManager : MonoBehaviour
     }
     public void BuyWeapon()
     {
-        //Weapon weapon = weaponDB.GetWeapon(selectedOption);
-        button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
-        coin.text = "UnEquip";
-
-        for (int i = 0; i < weaponDB.WeaponCount(); i++)
+        Weapon weapon = weaponDB.GetWeapon(selectedOption);
+        if (weapon.isBought || weapon.isGift)
         {
-            if (i == selectedOption)
+            button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
+            weapon.isBought = true;
+            coin.text = "Equipped";
+
+            for (int i = 0; i < weaponDB.WeaponCount(); i++)
             {
-                Weapon.GetComponent<MeshFilter>().mesh = weaponDB.weapon[i].meshWeapon;
+                if (i == selectedOption)
+                {
+                    Weapon.GetComponent<MeshFilter>().mesh = weaponDB.weapon[i].meshWeapon;
+                }
+            }
+        }
+        else
+        {
+            if(selectedOption != 5)
+            {
+                if (int.Parse(weapon.coin) <= coinOfPlayer)
+                {
+                    coinOfPlayer -= int.Parse(weapon.coin);
+                    PlayerPrefs.SetInt("coinMoney", coinOfPlayer);
+                    button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
+                    weapon.isBought = true;
+                    coin.text = "Equipped";
+
+                    for (int i = 0; i < weaponDB.WeaponCount(); i++)
+                    {
+                        if (i == selectedOption)
+                        {
+                            Weapon.GetComponent<MeshFilter>().mesh = weaponDB.weapon[i].meshWeapon;
+                        }
+                    }
+                }
             }
         }
     }
     public void SetButtonWeapon()
     {
         int indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
-        if(indexWeapon == selectedOption)
+        Weapon weapon = weaponDB.GetWeapon(selectedOption);
+        if (indexWeapon == selectedOption)
         {
-            button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
-            coin.text = "UnEquip";
+                button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
+                coin.text = "Equipped";
         }
         else
         {
-            Weapon weapon = weaponDB.GetWeapon(selectedOption);
-            button.GetComponent<Image>().color = new Color(254f / 255f, 204f / 255f, 45f / 255f);
-            coin.text = "Equip";
+            if (weapon.isBought || weapon.isGift)
+            {
+                button.GetComponent<Image>().color = new Color(254f / 255f, 204f / 255f, 45f / 255f);
+                coin.text = "Select";
+            }
+            else
+            {
+                button.GetComponent<Image>().color = new Color(68f / 255f, 224f / 255f, 22f / 255f);
+            }
         }
     }
     public void SetWeapon(int x)
@@ -143,12 +161,26 @@ public class WeaponManager : MonoBehaviour
         int x = PlayerPrefs.GetInt("IndexWeapon");
         return x;
     }
-    public void BuyWeapons()
+    private void UpdateGift()
     {
-        Weapon weapon = weaponDB.GetWeapon(selectedOption);
-        if(int.Parse(weapon.coin) <= coinOfPlayer)
+        if (indexGift == 1)
         {
-
+            Weapon weapon1 = weaponDB.GetWeapon(5);
+            weapon1.weaponImage = gift;
+            weapon1.weaponName = "Weapon";
+            weapon1.isLock = "Unlock";
+            weapon1.damageWeapon = "+10 damage";
+            weapon1.coin = "Select";
+            weapon1.isGift = true;
+        }
+        else
+        {
+            Weapon weapon1 = weaponDB.GetWeapon(5);
+            weapon1.weaponImage = gift_lock;
+            weapon1.weaponName = "Gift";
+            weapon1.isLock = "Lock";
+            weapon1.damageWeapon = "?";
+            weapon1.coin = "Lock";
         }
     }
 }

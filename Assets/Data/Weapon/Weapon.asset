@@ -19,33 +19,39 @@ MonoBehaviour:
     isLock: Unlock
     damageWeapon: +5 speed
     meshWeapon: {fileID: 3174812724623785705, guid: a938027f2a9b4214e89f12cd4b47ba72, type: 3}
+    isBought: 1
   - weaponName: Candy
     weaponImage: {fileID: 21300000, guid: ea1caec6a91f5e14b8c2f6e8a274a099, type: 3}
-    coin: 300
+    coin: 200
     isLock: Unlock
     damageWeapon: +10 damage
     meshWeapon: {fileID: 2459579263309379254, guid: b9d25e22206860449b9d0249b1d4df71, type: 3}
+    isBought: 0
   - weaponName: Arrow
     weaponImage: {fileID: 21300000, guid: 249cdf7f762c6fb458d30887cbd4c535, type: 3}
     coin: 400
     isLock: Unlock
     damageWeapon: +20 damage
     meshWeapon: {fileID: 1913988541965732932, guid: ceffb78c74021304889ac584f173d156, type: 3}
+    isBought: 1
   - weaponName: Axe
     weaponImage: {fileID: 21300000, guid: fa6cc6f9f8905c24d8c45a091e8ce615, type: 3}
     coin: 500
     isLock: Unlock
     damageWeapon: +50 damage
     meshWeapon: {fileID: -1065404696862110030, guid: 1b74d2770d5b5894984bd1a4f676134b, type: 3}
+    isBought: 0
   - weaponName: Knife
     weaponImage: {fileID: 21300000, guid: e9498015d2b7c6e46bded4dec65eb92a, type: 3}
     coin: 700
     isLock: Unlock
     damageWeapon: +100 damage
     meshWeapon: {fileID: -3780750940207061274, guid: c18c1ba41a4f9424099b1b4380b9b303, type: 3}
-  - weaponName: Gift
-    weaponImage: {fileID: 21300000, guid: 79b2087be051fea43b9c8f51637d0764, type: 3}
-    coin: '?'
-    isLock: Lock
-    damageWeapon: '?'
+    isBought: 0
+  - weaponName: Weapon
+    weaponImage: {fileID: 21300000, guid: 4689386d44d0c7f4cae601e6db0203ca, type: 3}
+    coin: 0
+    isLock: Unlock
+    damageWeapon: +10 damage
     meshWeapon: {fileID: -3669228104775074923, guid: 541429fa9b02a6148a85b3e12ef9b27d, type: 3}
+    isBought: 0

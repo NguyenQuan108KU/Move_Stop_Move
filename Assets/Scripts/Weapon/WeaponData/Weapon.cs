@@ -11,4 +11,6 @@ public class Weapon
     public string isLock;
     public string damageWeapon;
     public Mesh meshWeapon;
+    public bool isBought;
+    public bool isGift;
 }

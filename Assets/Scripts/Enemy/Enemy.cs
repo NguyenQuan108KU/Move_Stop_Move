@@ -160,7 +160,7 @@ public class Enemy : MonoBehaviour
             else
             {
                 GameManager.instance.playerController.point += 5;
-                GameManager.instance.playerController.coinMoney += 5;
+                GameManager.instance.playerController.coinMoney += 50;
             }
             UIManager.instance.UpdateAlive();
             isDead = true;
