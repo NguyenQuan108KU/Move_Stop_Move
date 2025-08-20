@@ -10,6 +10,8 @@ public class UIMenu : MonoBehaviour
     public PantsManager pants;
     public HairManager hair;
     public WeaponManager weapon;
+    public ClothesManager clothes;
+    public ProtectManager protect;
 
     public TextMeshProUGUI coinOfPlayerText;
     void Start()
@@ -20,6 +22,8 @@ public class UIMenu : MonoBehaviour
         pants.SetPaintsPlayer();
         hair.SetHairPlayer();
         weapon.SetWeapon(weapon.LoadWeapon());
+        clothes.SetClothesPlayer();
+        protect.SetProtectPlayer();
     }
 
     // Update is called once per frame
