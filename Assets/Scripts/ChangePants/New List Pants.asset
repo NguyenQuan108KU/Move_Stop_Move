@@ -25,3 +25,5 @@ MonoBehaviour:
     materialPants: {fileID: 2100000, guid: 35bc13d5ca114ea4c8c8dce607f18835, type: 2}
   - index: 5
     materialPants: {fileID: 2100000, guid: 1d257c36ca65ec545a4a287b84dbdebd, type: 2}
+  - index: 6
+    materialPants: {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}

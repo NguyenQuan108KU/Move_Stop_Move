@@ -10,18 +10,22 @@ public class UIMenu : MonoBehaviour
     public PantsManager pants;
     public HairManager hair;
     public WeaponManager weapon;
+
+    public TextMeshProUGUI coinOfPlayerText;
     void Start()
     {
         Time.timeScale = 1.0f;
         score = PlayerPrefs.GetInt("coinMoney");
-        pants.SetPants(pants.LoadPants());
-        hair.SetHairs(hair.LoadHats());
+        //pants.SetPants(pants.LoadPants());
+        pants.SetPaintsPlayer();
+        hair.SetHairPlayer();
         weapon.SetWeapon(weapon.LoadWeapon());
     }
 
     // Update is called once per frame
     void Update()
     {
+        coinOfPlayerText.text = score.ToString();
         scoreMenu.text = score.ToString();
     }
     public void SaveWeapon()

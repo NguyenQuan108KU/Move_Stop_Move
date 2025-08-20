@@ -96,11 +96,15 @@ public class PlayerController : MonoBehaviour
     }
     void changePants()
     {
-        
-        indexPants = PlayerPrefs.GetInt("IndexPants");
+        indexHats = PlayerPrefs.GetInt("SlectPaint", -1);
+        //indexPants = PlayerPrefs.GetInt("IndexPants");
+        if(indexHats == -1)
+        {
+            pantsOdPlayer.GetComponent<SkinnedMeshRenderer>().material = listPants.pantsObjects[6].materialPants;
+        }
         for (int i = 0; i < listPants.pantsObjects.Count(); i++)
         {
-            if (listPants.pantsObjects[i].index == indexPants)
+            if (listPants.pantsObjects[i].index == indexHats)
             {
                 pantsOdPlayer.GetComponent<SkinnedMeshRenderer>().material = listPants.pantsObjects[i].materialPants;
             }
@@ -108,8 +112,13 @@ public class PlayerController : MonoBehaviour
     }
     void changeHats()
     {
-        indexHats = PlayerPrefs.GetInt("IndexHat");
-        for(int i = 0; i < hatOfPlayer.games.Count(); i++)
+        //indexHats = PlayerPrefs.GetInt("IndexHat");
+        indexHats = PlayerPrefs.GetInt("SlectHat", -1); 
+        if(indexHats == -1)
+        {
+            hatOfPlayer.games[6].SetActive(true);
+        }
+        for (int i = 0; i < hatOfPlayer.games.Count(); i++)
         {
             if(indexHats == i)
             {

@@ -15,13 +15,22 @@ MonoBehaviour:
   pants:
   - index: 0
     material: {fileID: 2100000, guid: afc9956d9d122e44994320f2ca57123f, type: 2}
+    coin: 0
   - index: 1
     material: {fileID: 2100000, guid: d4288cd0690c5dc41bfbdca269357e1d, type: 2}
+    coin: 0
   - index: 2
     material: {fileID: 2100000, guid: 938ecf4066c39044cb3ce08bb93d7ee9, type: 2}
+    coin: 0
   - index: 3
     material: {fileID: 2100000, guid: ad933ea13f5f18b429a78a11dd2376de, type: 2}
+    coin: 0
   - index: 4
     material: {fileID: 2100000, guid: 35bc13d5ca114ea4c8c8dce607f18835, type: 2}
+    coin: 0
   - index: 5
     material: {fileID: 2100000, guid: 1d257c36ca65ec545a4a287b84dbdebd, type: 2}
+    coin: 0
+  - index: 6
+    material: {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
+    coin: 0

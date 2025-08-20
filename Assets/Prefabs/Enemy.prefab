@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 60821383778884606}
   serializedVersion: 2
   m_LocalRotation: {x: 0.12608457, y: 0.102055684, z: 0.092986435, w: 0.9823649}
-  m_LocalPosition: {x: 0.00000009775162, y: 0.33568466, z: 0.000000019073486}
+  m_LocalPosition: {x: 0.00000005415116, y: 0.33568457, z: -0.000000028062146}
   m_LocalScale: {x: 0.99999917, y: 0.99999934, z: 0.9999996}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1594,7 +1594,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 3.01}
-  m_SizeDelta: {x: 0.8, y: 0.6}
+  m_SizeDelta: {x: 1.5, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5969913215504811903
 CanvasRenderer:
@@ -1898,6 +1898,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 14d7f88cea181bc43b96093256c85468, type: 2}
   point: 0
   pointOfEnemy: {fileID: 584047824249063001}
+  isGetGift: 0
 --- !u!1 &4944856439070377637
 GameObject:
   m_ObjectHideFlags: 0
@@ -2487,7 +2488,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6282457656021724554}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3638d3e213b6d3c43bf5416974008044, type: 3}
   m_Name: 

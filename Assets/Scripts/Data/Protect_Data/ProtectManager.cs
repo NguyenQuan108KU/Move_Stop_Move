@@ -1,55 +1,55 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
-using Image = UnityEngine.UI.Image;
 
-public class PantsManager : MonoBehaviour
+public class ProtectManager : MonoBehaviour
 {
-    public PantsDatabases pantsDatabases;
+    public GameObject[] protectList;
+    public int[] protectPrices;
     public GameObject[] buttons;
-    public int[] paintsPrices;
-    public GameObject pantsOfPlayer;
+
     public int layerButton;
 
     public GameObject ButtonBuy;
     private TextMeshProUGUI txt;
     private int indexButton;
 
-    [Header("Buy Paints")]
+    [Header("Buy protect")]
     public int coinOfPlayer;
-    public TextMeshProUGUI coinOfPaints;
+    public TextMeshProUGUI coinOfProtect;
 
     public GameObject BuyByCoin;
     public GameObject BuyByAds;
-    public GameObject SelectPaint;
+    public GameObject SelectProtect;
+
+
     private void Start()
     {
-        SetPaintsPlayer();
+        SetProtectPlayer();
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
         txt = ButtonBuy.GetComponentInChildren<TextMeshProUGUI>();
         for (int i = 0; i < buttons.Length; i++)
         {
-            int index = i; 
+            int index = i;
             buttons[index].GetComponent<Button>().onClick.AddListener(() =>
             {
                 layerButton = buttons[index].layer;
-                SetPaintsDefault(layerButton);
-                SavePants();
-                SetPants(layerButton);
-                if (coinOfPaints != null)
+                SetProtectDefault(layerButton);
+                SaveProtect();
+                SetProtect(layerButton);
+                if (coinOfProtect != null)
                 {
-                    coinOfPaints.text = paintsPrices[layerButton].ToString();
+                    coinOfProtect.text = protectPrices[layerButton].ToString();
                 }
             });
         }
     }
     private void Update()
     {
-        indexButton = PlayerPrefs.GetInt("SlectPaint", -1);
+        indexButton = PlayerPrefs.GetInt("SlectProtect", -1);
         if (layerButton == indexButton)
         {
             txt.text = "Unequip";
@@ -61,81 +61,99 @@ public class PantsManager : MonoBehaviour
             ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
         }
     }
-    public void SetPants(int x)
-    {
-        if(pantsOfPlayer != null)
-            pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[x].material;
-    }
-    public void SavePants()
-    {
-        PlayerPrefs.SetInt("IndexPants",layerButton);
 
-    }
-    public int LoadPants()
+    public void SetProtect(int x)
     {
-        int x = PlayerPrefs.GetInt("IndexPants");
+        for (int i = 0; i < protectList.Count(); i++)
+        {
+            if (x == i)
+            {
+                protectList[i].SetActive(true);
+            }
+            else
+            {
+                protectList[i].SetActive(false);
+            }
+        }
+    }
+    public void SaveProtect()
+    {
+        PlayerPrefs.SetInt("IndexProtect", layerButton);
+    }
+    public int LoadProtect()
+    {
+        int x = PlayerPrefs.GetInt("IndexProtect");
         return x;
     }
     public void ButtonClick()
     {
         if (txt.text == "SELECT")
         {
-            PlayerPrefs.SetInt("SlectPaint", layerButton);
+            PlayerPrefs.SetInt("SlectProtect", layerButton);
             txt.text = "Unequip";
             ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 255f / 255f, 255f / 255f);
-            SavePants();
-            SetPants(layerButton);
+            SaveProtect();
+            SetProtect(layerButton);
         }
         else if (txt.text == "Unequip")
         {
-            PlayerPrefs.DeleteKey("SlectPaint");
+            PlayerPrefs.DeleteKey("SlectProtect");
             txt.text = "SELECT";
             ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 221f / 255f, 0f / 255f);
-            SetPants(6);
+            SetProtect(protectList.Count());
         }
     }
-    public void BuyPaints()
+    public void BuyProtect()
     {
-        int indexBuy = PlayerPrefs.GetInt("IndexPants");
-        int price = paintsPrices[indexBuy];
+        int indexBuy = PlayerPrefs.GetInt("IndexProtect");
+        int price = protectPrices[indexBuy];
         if (coinOfPlayer >= price)
         {
             coinOfPlayer -= price;
             PlayerPrefs.SetInt("coinMoney", coinOfPlayer);
 
             // Lưu trạng thái mua
-            PlayerPrefs.SetInt("PantsBought_" + indexBuy, 1);
+            PlayerPrefs.SetInt("ProtectBought_" + indexBuy, 1);
 
             BuyByAds.SetActive(false);
             BuyByCoin.SetActive(false);
-            SelectPaint.SetActive(true);
+            SelectProtect.SetActive(true);
         }
     }
-    public void SetPaintsDefault(int i)
+    public void SetProtectDefault(int i)
     {
-        if (PlayerPrefs.GetInt("PantsBought_" + i) == 1)
+        if (PlayerPrefs.GetInt("ProtectBought_" + i) == 1)
         {
+            // Hair đã mua, hiển thị nút SELECT/UNEQUIP
             BuyByAds.SetActive(false);
             BuyByCoin.SetActive(false);
-            SelectPaint.SetActive(true);
+            SelectProtect.SetActive(true);
         }
         else
         {
             BuyByAds.SetActive(true);
             BuyByCoin.SetActive(true);
-            SelectPaint.SetActive(false);
+            SelectProtect.SetActive(false);
         }
+
     }
-    public void SetPaintsPlayer()
+    public void SetProtectPlayer()
     {
-        int index = PlayerPrefs.GetInt("SlectPaint", -1);
+        int index = PlayerPrefs.GetInt("SlectProtect", -1);
         if (index == -1)
         {
-            pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[6].material;
+            protectList[2].SetActive(true);
         }
-        else
+        for (int i = 0; i < protectList.Count(); i++)
         {
-            pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[index].material;
+            if (index == i)
+            {
+                protectList[i].SetActive(true);
+            }
+            else
+            {
+                protectList[i].SetActive(false);
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ public class Pants
 {
     public int index;
     public Material material;
-
+    public int coin;
     public int GetIndex()
     {
         return index;
