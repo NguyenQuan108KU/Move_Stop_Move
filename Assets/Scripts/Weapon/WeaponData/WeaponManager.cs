@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,11 +39,22 @@ public class WeaponManager : MonoBehaviour
     public GameObject MenuSelect;
 
     public GameObject[] buttons;
+    public int indexWeapon;
 
     private void Start()
     {
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
         UpdateWeapon(selectedOption);
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            int index = i;
+            buttons[index].GetComponent<Button>().onClick.AddListener(() =>
+            {
+                indexWeapon = buttons[index].layer;
+                Weapon weapon = weaponDB.GetWeapon(selectedOption);
+                image.sprite = weapon.weaponImage[indexWeapon];
+            });
+        }
         //SetButtonWeapon();
     }
     private void Update()
@@ -91,7 +103,11 @@ public class WeaponManager : MonoBehaviour
         if (weapon.isBought)
         {
             MenuSelect.SetActive(true);
-            
+            for(int i = 0; i < buttons.Length; i++)
+            {
+                Image img = buttons[i].transform.GetChild(0).GetComponent<Image>();
+                img.sprite = weapon.weaponImage[i];
+            }
         }
         else
         {
