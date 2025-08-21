@@ -156,4 +156,18 @@ public class ProtectManager : MonoBehaviour
             }
         }
     }
+    public void ResetProtect()
+    {
+        // Xoá trạng thái hair đã chọn
+        PlayerPrefs.DeleteKey("SlectProtect");
+
+        // Tắt toàn bộ hair
+        for (int i = 0; i < protectList.Length; i++)
+        {
+            protectList[i].SetActive(false);
+        }
+        // Đưa UI về trạng thái ban đầu
+        txt.text = "SELECT";
+        ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
+    }
 }

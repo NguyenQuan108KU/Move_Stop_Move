@@ -18,12 +18,10 @@ public class Indicator : MonoBehaviour
     {
         if (!mesh.isVisible) // enemy không trong camera
         {
-            Debug.Log("aaa");
             IndicatorS.SetActive(true);
         }
         else
         {
-            Debug.Log("bbbb");
             IndicatorS.SetActive(false);
         }
     }

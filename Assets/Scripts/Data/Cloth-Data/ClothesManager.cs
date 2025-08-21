@@ -31,6 +31,7 @@ public class ClothesManager : MonoBehaviour
 
     public Material materialDefaultOfPlayer;
     public HairManager hairManager;
+    public ProtectManager protectManager;
 
     private void Start()
     {
@@ -70,7 +71,6 @@ public class ClothesManager : MonoBehaviour
 
     public void SetClothes(int x)
     {
-        Debug.Log(clothesSet.Count());
         for (int i = 0; i < clothesSet.Count(); i++)
         {
             if (x == i)
@@ -78,6 +78,10 @@ public class ClothesManager : MonoBehaviour
                 if (hairManager != null)
                 {
                     hairManager.ResetHair();
+                }
+                if (protectManager != null)
+                {
+                    protectManager.ResetProtect();
                 }
                 clothesSet[i].hatOfSet.SetActive(true);
                 clothesSet[i].wingOfSet.SetActive(true);

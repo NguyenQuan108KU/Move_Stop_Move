@@ -53,6 +53,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int indexHats;
     [SerializeField] private HATS hatOfPlayer;
 
+    [Header("Change Protect")]
+    [SerializeField] private int indexProtect;
+    [SerializeField] private Protect protectOfPlayer;
+
+    [Header("Change Clothes Player")]
+    [SerializeField] private int indexClothes;
+    [SerializeField] private ClothesSet[] listClothes;
+    [SerializeField] private GameObject initialShadingOfPlayer;
+    [SerializeField] private GameObject PantsOfPlayer;
+
     public bool isGetGift = false;
 
     //[SerializeField] private Bullet bullet1;
@@ -71,6 +81,8 @@ public class PlayerController : MonoBehaviour
         changeWepon();
         changePants();
         changeHats();
+        changeProtect();
+        changeClothesPlayer();
         //Len level
         UpLevel();
     }
@@ -126,6 +138,62 @@ public class PlayerController : MonoBehaviour
             }
             else{
                 hatOfPlayer.games[i].SetActive(false);
+            }
+        }
+    }
+    void changeProtect()
+    {
+        indexProtect = PlayerPrefs.GetInt("SlectProtect", -1);
+        if (indexProtect == -1)
+        {
+            protectOfPlayer.protect[2].SetActive(true);
+        }
+        for (int i = 0; i < protectOfPlayer.protect.Count(); i++)
+        {
+            if (indexProtect == i)
+            {
+                protectOfPlayer.protect[i].SetActive(true);
+            }
+            else
+            {
+                protectOfPlayer.protect[i].SetActive(false);
+            }
+        }
+    }
+    void changeClothesPlayer()
+    {
+        //Debug.Log(indexClothes);
+        indexClothes = PlayerPrefs.GetInt("SlectClothes", -1);
+        //Debug.Log(listClothes.Count());
+        if (indexProtect == -1)
+        {
+            listClothes[2].hatOfSet.SetActive(true);
+            listClothes[2].wingOfSet.SetActive(true);
+            listClothes[2].protectOfSet.SetActive(true);
+            listClothes[2].tailOfSet.SetActive(true);
+            initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
+            PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
+            //return;
+        }
+        for (int i = 0; i < listClothes.Count(); i++)
+        {
+            if (indexClothes == i)
+            {
+                listClothes[i].hatOfSet.SetActive(true);
+                listClothes[i].wingOfSet.SetActive(true);
+                listClothes[i].protectOfSet.SetActive(true);
+                listClothes[i].tailOfSet.SetActive(true);
+                initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[i].material;
+                PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[i].material;
+            }
+            else
+            {
+                listClothes[2].hatOfSet.SetActive(false);
+                listClothes[2].wingOfSet.SetActive(false);
+                listClothes[2].protectOfSet.SetActive(false);
+                listClothes[2].tailOfSet.SetActive(false);
+                //initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
+                //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
             }
         }
     }
@@ -193,7 +261,6 @@ public class PlayerController : MonoBehaviour
 
             enemyCurrent = firstEnemyDetected;
             enemyCurrent.targetEnemy.SetActive(true); // Bật enemy mới
-            Debug.Log("abc");
             if (playerMove.sqrMagnitude == 0.0f)
             {
                 target = enemyCurrent.transform;

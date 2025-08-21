@@ -180,7 +180,6 @@ public class PlayerCity_Controller : MonoBehaviour
         {
             if (hit.CompareTag("EnemyController"))
             {
-                Debug.Log("a");
                 firstEnemyDetected = hit.GetComponent<EnemyController>();
                 break; // chỉ lấy enemy đầu tiên
             }

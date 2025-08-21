@@ -140,7 +140,6 @@ public class HairManager : MonoBehaviour
     }
     public void SetHairPlayer()
     {
-        Debug.Log(PlayerPrefs.GetInt("SlectHat", -1));
         int index = PlayerPrefs.GetInt("SlectHat", -1);
         if(index == -1)
         {
