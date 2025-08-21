@@ -26,7 +26,7 @@ public class HairManager : MonoBehaviour
     public GameObject BuyByAds;
     public GameObject SelectHair;
 
-
+    public ClothesManager clothesManager;
     private void Start()
     {
         SetHairPlayer();
@@ -65,6 +65,10 @@ public class HairManager : MonoBehaviour
 
     public void SetHairs(int x)
     {
+        if(clothesManager != null)
+        {
+            clothesManager.ResetClothes();
+        }
         for(int i = 0; i < hairList.Count(); i++)
         {
             if(x == i)
@@ -90,6 +94,8 @@ public class HairManager : MonoBehaviour
     {
         if (txt.text == "SELECT")
         {
+            clothesManager.ResetClothesWhenSelect();
+            clothesManager.isSetFull = false;
             PlayerPrefs.SetInt("SlectHat", layerButton);
             txt.text = "Unequip";
             ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 255f / 255f, 255f / 255f);
@@ -160,17 +166,20 @@ public class HairManager : MonoBehaviour
 
     public void ResetHair()
     {
-        // Xoá trạng thái hair đã chọn
-        PlayerPrefs.DeleteKey("SlectHat");
-
         // Tắt toàn bộ hair
         for (int i = 0; i < hairList.Length; i++)
         {
             hairList[i].SetActive(false);
         }
-        // Đưa UI về trạng thái ban đầu
+    }
+    public void ResetHairWhenSelect()
+    {
+        PlayerPrefs.DeleteKey("SlectHat");
+        for (int i = 0; i < hairList.Length; i++)
+        {
+            hairList[i].SetActive(false);
+        }
         txt.text = "SELECT";
         ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
     }
-
 }

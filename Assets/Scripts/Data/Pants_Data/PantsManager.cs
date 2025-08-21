@@ -26,6 +26,8 @@ public class PantsManager : MonoBehaviour
     public GameObject BuyByCoin;
     public GameObject BuyByAds;
     public GameObject SelectPaint;
+
+    public ClothesManager clothesManager;
     private void Start()
     {
         SetPaintsPlayer();
@@ -63,7 +65,11 @@ public class PantsManager : MonoBehaviour
     }
     public void SetPants(int x)
     {
-        if(pantsOfPlayer != null)
+        if (clothesManager != null)
+        {
+            clothesManager.ResetClothes();
+        }
+        if (pantsOfPlayer != null)
             pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[x].material;
     }
     public void SavePants()
@@ -80,6 +86,8 @@ public class PantsManager : MonoBehaviour
     {
         if (txt.text == "SELECT")
         {
+            clothesManager.ResetClothesWhenSelect();
+            clothesManager.isSetFull = false;
             PlayerPrefs.SetInt("SlectPaint", layerButton);
             txt.text = "Unequip";
             ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 255f / 255f, 255f / 255f);
@@ -131,11 +139,33 @@ public class PantsManager : MonoBehaviour
         int index = PlayerPrefs.GetInt("SlectPaint", -1);
         if (index == -1)
         {
-            pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[6].material;
+            if (clothesManager.isSetFull)
+            {
+                pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[7].material;
+            }
+            else
+            {
+                pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[6].material;
+            }
         }
         else
         {
             pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[index].material;
         }
+    }
+    public void ResetPaints()
+    {
+        // Tắt toàn bộ pants
+        pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[7].material;
+    }
+    public void ResetPaintsWhenSelect()
+    {
+        PlayerPrefs.DeleteKey("SlectPaint");
+        pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[6].material;
+        if(txt != null)
+        {
+            txt.text = "SELECT";
+        }
+        ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
     }
 }

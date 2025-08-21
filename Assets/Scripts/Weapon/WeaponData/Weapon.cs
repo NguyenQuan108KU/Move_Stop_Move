@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Weapon
 {
     public string weaponName;
-    public Sprite weaponImage;
+    public List<Sprite> weaponImage;
     public string coin;
     public string isLock;
     public string damageWeapon;

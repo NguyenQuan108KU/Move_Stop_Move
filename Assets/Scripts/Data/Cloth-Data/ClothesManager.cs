@@ -32,6 +32,8 @@ public class ClothesManager : MonoBehaviour
     public Material materialDefaultOfPlayer;
     public HairManager hairManager;
     public ProtectManager protectManager;
+    public PantsManager pantsManager;
+    public bool isSetFull;
 
     private void Start()
     {
@@ -83,6 +85,10 @@ public class ClothesManager : MonoBehaviour
                 {
                     protectManager.ResetProtect();
                 }
+                if(pantsManager != null)
+                {
+                    pantsManager.ResetPaints();
+                }
                 clothesSet[i].hatOfSet.SetActive(true);
                 clothesSet[i].wingOfSet.SetActive(true);
                 clothesSet[i].protectOfSet.SetActive(true);
@@ -114,6 +120,10 @@ public class ClothesManager : MonoBehaviour
     {
         if (txt.text == "SELECT")
         {
+            isSetFull = true;
+            hairManager.ResetHairWhenSelect();
+            protectManager.ResetProtectWhenSelect();
+            pantsManager.ResetPaintsWhenSelect();
             PlayerPrefs.SetInt("SlectClothes", layerButton);
             txt.text = "Unequip";
             ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 255f / 255f, 255f / 255f);
@@ -122,6 +132,7 @@ public class ClothesManager : MonoBehaviour
         }
         else if (txt.text == "Unequip")
         {
+            isSetFull = false;
             PlayerPrefs.DeleteKey("SlectClothes");
             txt.text = "SELECT";
             ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 221f / 255f, 0f / 255f);
@@ -172,7 +183,8 @@ public class ClothesManager : MonoBehaviour
                 clothesSet[2].protectOfSet.SetActive(false);
                 clothesSet[2].tailOfSet.SetActive(false);
                 initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
-                PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
+            //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
+            pantsManager.SetPaintsPlayer();
         }
         for (int i = 0; i < clothesSet.Count(); i++)
         {
@@ -194,6 +206,46 @@ public class ClothesManager : MonoBehaviour
                 //initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
                 //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
             }
+        }
+    }
+    public void ResetClothes()
+    {
+        //PlayerPrefs.DeleteKey("SlectClothes");
+        // Tắt toàn bộ hair
+        for (int i = 0; i < clothesSet.Length; i++)
+        {
+            clothesSet[i].hatOfSet.SetActive(false);
+            clothesSet[i].wingOfSet.SetActive(false);
+            clothesSet[i].protectOfSet.SetActive(false);
+            clothesSet[i].tailOfSet.SetActive(false);
+            initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
+            PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
+        }
+        // Đưa UI về trạng thái ban đầu
+        //if (txt != null)
+        //{
+            //txt.text = "SELECT";
+            //ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
+        //}
+    }
+    public void ResetClothesWhenSelect()
+    {
+        PlayerPrefs.DeleteKey("SlectClothes");
+        // Tắt toàn bộ hair
+        for (int i = 0; i < clothesSet.Length; i++)
+        {
+            clothesSet[i].hatOfSet.SetActive(false);
+            clothesSet[i].wingOfSet.SetActive(false);
+            clothesSet[i].protectOfSet.SetActive(false);
+            clothesSet[i].tailOfSet.SetActive(false);
+            initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
+            PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = materialDefaultOfPlayer;
+        }
+        // Đưa UI về trạng thái ban đầu
+        if (txt != null)
+        {
+        txt.text = "SELECT";
+        ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
         }
     }
 }

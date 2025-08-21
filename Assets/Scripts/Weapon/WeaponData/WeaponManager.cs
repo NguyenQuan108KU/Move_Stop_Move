@@ -35,6 +35,10 @@ public class WeaponManager : MonoBehaviour
     public TextMeshProUGUI coinOfPlayerText;
     public int coinOfPlayer;
 
+    public GameObject MenuSelect;
+
+    public GameObject[] buttons;
+
     private void Start()
     {
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
@@ -78,12 +82,21 @@ public class WeaponManager : MonoBehaviour
     {
         UpdateGift();
         Weapon weapon = weaponDB.GetWeapon(selectedOption);
-        image.sprite = weapon.weaponImage;
+        image.sprite = weapon.weaponImage[0];
         nameText.text = weapon.weaponName;
         isLock.text = weapon.isLock;
         coin.text = weapon.coin;
         damage.text = weapon.damageWeapon;
         SetButtonWeapon();
+        if (weapon.isBought)
+        {
+            MenuSelect.SetActive(true);
+            
+        }
+        else
+        {
+            MenuSelect.SetActive(false);
+        }
     }
     public int GetSelectedOption()
     {
@@ -166,7 +179,7 @@ public class WeaponManager : MonoBehaviour
         if (indexGift == 1)
         {
             Weapon weapon1 = weaponDB.GetWeapon(5);
-            weapon1.weaponImage = gift;
+            //weapon1.weaponImage = gift;
             weapon1.weaponName = "Weapon";
             weapon1.isLock = "Unlock";
             weapon1.damageWeapon = "+10 damage";
@@ -176,7 +189,7 @@ public class WeaponManager : MonoBehaviour
         else
         {
             Weapon weapon1 = weaponDB.GetWeapon(5);
-            weapon1.weaponImage = gift_lock;
+            //weapon1.weaponImage = gift_lock;
             weapon1.weaponName = "Gift";
             weapon1.isLock = "Lock";
             weapon1.damageWeapon = "?";

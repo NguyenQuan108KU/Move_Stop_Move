@@ -101,7 +101,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  weaponData: {fileID: 11400000, guid: 6784bf05d97cf3e4fbbf3f6224c88d39, type: 2}
   bulletSpeed: 12
   speedRotation: 1000
   shootDirection: {x: 0, y: 0, z: 0}

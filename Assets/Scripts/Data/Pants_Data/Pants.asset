@@ -34,3 +34,6 @@ MonoBehaviour:
   - index: 6
     material: {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
     coin: 0
+  - index: 7
+    material: {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
+    coin: 0

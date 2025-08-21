@@ -25,7 +25,7 @@ public class ProtectManager : MonoBehaviour
     public GameObject BuyByAds;
     public GameObject SelectProtect;
 
-
+    public ClothesManager clothesManager;
     private void Start()
     {
         SetProtectPlayer();
@@ -64,6 +64,10 @@ public class ProtectManager : MonoBehaviour
 
     public void SetProtect(int x)
     {
+        if (clothesManager != null)
+        {
+            clothesManager.ResetClothes();
+        }
         for (int i = 0; i < protectList.Count(); i++)
         {
             if (x == i)
@@ -89,6 +93,8 @@ public class ProtectManager : MonoBehaviour
     {
         if (txt.text == "SELECT")
         {
+            clothesManager.ResetClothesWhenSelect();
+            clothesManager.isSetFull = false;
             PlayerPrefs.SetInt("SlectProtect", layerButton);
             txt.text = "Unequip";
             ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 255f / 255f, 255f / 255f);
@@ -158,16 +164,27 @@ public class ProtectManager : MonoBehaviour
     }
     public void ResetProtect()
     {
+        // Tắt toàn bộ hair
+        for (int i = 0; i < protectList.Length; i++)
+        {
+            protectList[i].SetActive(false);
+        }
+    }
+
+    public void ResetProtectWhenSelect()
+    {
         // Xoá trạng thái hair đã chọn
         PlayerPrefs.DeleteKey("SlectProtect");
-
         // Tắt toàn bộ hair
         for (int i = 0; i < protectList.Length; i++)
         {
             protectList[i].SetActive(false);
         }
         // Đưa UI về trạng thái ban đầu
-        txt.text = "SELECT";
-        ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
+        if (txt != null)
+        {
+            txt.text = "SELECT";
+            ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
+        }
     }
 }

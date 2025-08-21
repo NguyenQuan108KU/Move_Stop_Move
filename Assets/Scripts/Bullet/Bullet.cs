@@ -5,7 +5,7 @@ public class Bullet : MonoBehaviour
 {
     private Rigidbody rb;
     public Transform target;
-    public WeaponData weaponData;
+    //public WeaponData weaponData;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float speedRotation;
     [SerializeField] private Vector3 shootDirection;
