@@ -5,6 +5,7 @@ using UnityEngine;
 public class WeaponDatabase : ScriptableObject
 {
     public Weapon[] weapon;
+    public MaterialOfHammer[] listOfMaterials;
 
     public int WeaponCount()
     {

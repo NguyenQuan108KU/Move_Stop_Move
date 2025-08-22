@@ -34,11 +34,13 @@ public class PlayerCity_Controller : MonoBehaviour
     public int coinMoney;
 
     [Header("Change Weapon")]
+    public WeaponDatabase weaponDB;
     public Test test;
     public GameObject weaponChoose;
     public Bullet bullet1;
     private int indexWeapon;
     public bool isPlayerDie = false;
+    [SerializeField] private int indexMaterial;
 
     public int countAttack;
     public GameObject effectLevelUp;
@@ -86,12 +88,25 @@ public class PlayerCity_Controller : MonoBehaviour
     void changeWepon()
     {
         indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
+        indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);
+        MeshRenderer meshRenderer = weaponChoose.GetComponent<MeshRenderer>();
+        MeshRenderer meshRendererOfButton = bullet1.GetComponent<MeshRenderer>();
+        // Lấy toàn bộ materials ra
+        Material[] mats = meshRenderer.materials;
+        Material[] matsOfButton = meshRendererOfButton.sharedMaterials;
         for (int i = 0; i < test.list.Count(); i++)
         {
             if (test.list[i].index == indexWeapon)
             {
                 weaponChoose.GetComponent<MeshFilter>().mesh = test.list[i].weaponMesh;
                 bullet1.GetComponent<MeshFilter>().mesh = test.list[i].weaponMesh;
+                for (int j = 0; j < weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++)
+                {
+                    mats[j] = weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                    matsOfButton[j] = weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                }
+                meshRenderer.materials = mats;
+                meshRendererOfButton.materials = matsOfButton;
                 if (test.list[i].isRotate)
                 {
                     bullet1.SetRoration = true;
@@ -221,15 +236,27 @@ public class PlayerCity_Controller : MonoBehaviour
     public void SetOffAttack() => anim.SetBool("Attack", false);
     public void Shooting()
     {
-        if (Time.time >= nextFireTime) // chỉ bắn khi đã hết cooldown
+        if (Time.time >= nextFireTime)
         {
-            nextFireTime = Time.time + fireRate; // đặt lại thời gian bắn tiếp theo
-            AudioManager.instance.PlayerSFX(0);
-            playerMove = Vector3.zero;
-            GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
-            Bullet bulletScript = bulletObj.GetComponent<Bullet>();
-            bulletScript.SetTarget(target);
+            nextFireTime = Time.time + fireRate;
+            StartCoroutine(ShootBurst());
         }
+    }
+
+    private IEnumerator ShootBurst()
+    {
+        AudioManager.instance.PlayerSFX(0);
+        playerMove = Vector3.zero;
+
+        // Viên thứ 1
+        GameObject bulletObj1 = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
+        bulletObj1.GetComponent<Bullet>().SetTarget(target);
+
+        yield return new WaitForSeconds(0.1f); // delay 0.1s (có thể chỉnh)
+
+        // Viên thứ 2
+        GameObject bulletObj2 = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
+        bulletObj2.GetComponent<Bullet>().SetTarget(target);
     }
 
     private void OnCollisionEnter(Collision collision)

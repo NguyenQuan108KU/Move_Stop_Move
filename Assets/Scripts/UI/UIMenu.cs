@@ -34,6 +34,6 @@ public class UIMenu : MonoBehaviour
     }
     public void SaveWeapon()
     {
-        PlayerPrefs.SetInt("IndexWeapon", WeaponManager.instance.GetSelectedOption());
+        //PlayerPrefs.SetInt("IndexWeapon", WeaponManager.instance.GetSelectedOption());
     }
 }

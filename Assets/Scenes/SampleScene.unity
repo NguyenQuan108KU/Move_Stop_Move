@@ -5954,6 +5954,7 @@ MonoBehaviour:
   point: 0
   dead1: {fileID: 1150709141}
   coinMoney: 0
+  weaponDB: {fileID: 11400000, guid: 845548f4dabb27241b1710421213ffb4, type: 2}
   test: {fileID: 11400000, guid: e7f6953fe215ebb4da92281e8f8b1767, type: 2}
   weaponChoose: {fileID: 910033303506345432}
   bullet1: {fileID: 694607201790650757, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
@@ -5961,6 +5962,7 @@ MonoBehaviour:
   countAttack: 0
   effectLevelUp: {fileID: 4900915}
   indexPants: 0
+  indexMaterial: 0
   listPants: {fileID: 11400000, guid: be58fc94eb84c6141a112b9f1ef44035, type: 2}
   pantsOdPlayer: {fileID: 6617154173455119153}
   indexHats: 0

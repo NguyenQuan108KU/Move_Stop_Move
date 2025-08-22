@@ -10,88 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e9f0a42a974ec742a484df297214731, type: 3}
-  m_Name: Weapon
+  m_Name: Materials
   m_EditorClassIdentifier: 
-  weapon:
-  - weaponName: Hammer
-    weaponImage:
-    - {fileID: 21300000, guid: 2825c646d6585cb4f9f1fba6eb9391d2, type: 3}
-    - {fileID: 21300000, guid: b6939b90cab60f94c8cf81cfaf155fd8, type: 3}
-    - {fileID: 21300000, guid: a67f21e0c07ea3e47aa9ed3967728ef3, type: 3}
-    - {fileID: 21300000, guid: 22e4b3a89f1834c41b871f8629ae110c, type: 3}
-    - {fileID: 21300000, guid: de24cebe1bf2c0447b3e5bd6b0a194bc, type: 3}
-    coin: 200
-    isLock: Unlock
-    damageWeapon: +5 speed
-    meshWeapon: {fileID: 3174812724623785705, guid: a938027f2a9b4214e89f12cd4b47ba72, type: 3}
-    isBought: 1
-    isGift: 0
-  - weaponName: Candy
-    weaponImage:
-    - {fileID: 21300000, guid: ea1caec6a91f5e14b8c2f6e8a274a099, type: 3}
-    coin: 200
-    isLock: Unlock
-    damageWeapon: +10 damage
-    meshWeapon: {fileID: 2459579263309379254, guid: b9d25e22206860449b9d0249b1d4df71, type: 3}
-    isBought: 0
-    isGift: 0
-  - weaponName: Arrow
-    weaponImage:
-    - {fileID: 21300000, guid: 249cdf7f762c6fb458d30887cbd4c535, type: 3}
-    - {fileID: 21300000, guid: fe6135ed8249a8e4bb89591057833581, type: 3}
-    - {fileID: 21300000, guid: a208f89d75496aa46b48b17c17e20eae, type: 3}
-    - {fileID: 21300000, guid: 5bf4a4a49b1bed645964459d17706a76, type: 3}
-    - {fileID: 21300000, guid: 66bdda08f1b8fd648a600794114401e3, type: 3}
-    coin: 400
-    isLock: Unlock
-    damageWeapon: +20 damage
-    meshWeapon: {fileID: 1913988541965732932, guid: ceffb78c74021304889ac584f173d156, type: 3}
-    isBought: 1
-    isGift: 0
-  - weaponName: Axe
-    weaponImage:
-    - {fileID: 21300000, guid: fa6cc6f9f8905c24d8c45a091e8ce615, type: 3}
-    coin: 500
-    isLock: Unlock
-    damageWeapon: +50 damage
-    meshWeapon: {fileID: -1065404696862110030, guid: 1b74d2770d5b5894984bd1a4f676134b, type: 3}
-    isBought: 0
-    isGift: 0
-  - weaponName: Knife
-    weaponImage:
-    - {fileID: 21300000, guid: e9498015d2b7c6e46bded4dec65eb92a, type: 3}
-    coin: 700
-    isLock: Unlock
-    damageWeapon: +100 damage
-    meshWeapon: {fileID: -3780750940207061274, guid: c18c1ba41a4f9424099b1b4380b9b303, type: 3}
-    isBought: 0
-    isGift: 0
-  - weaponName: Gift
-    weaponImage:
-    - {fileID: 21300000, guid: 4689386d44d0c7f4cae601e6db0203ca, type: 3}
-    - {fileID: 21300000, guid: f2f110ae6388a0d49b93ec0f27f4ebb8, type: 3}
-    - {fileID: 21300000, guid: 0c4a1843f9cf81b45b5daa0a9ab24c2e, type: 3}
-    - {fileID: 21300000, guid: 1d18b805ed9dbcd40b9a28a6f87bd322, type: 3}
-    - {fileID: 21300000, guid: d85256b8524c158428e6006b987ed294, type: 3}
-    coin: Lock
-    isLock: Lock
-    damageWeapon: '?'
-    meshWeapon: {fileID: -3669228104775074923, guid: 541429fa9b02a6148a85b3e12ef9b27d, type: 3}
-    isBought: 0
-    isGift: 0
+  weapon: []
   listOfMaterials:
   - materialOfHammer:
     - materials:
-      - {fileID: -6478536213147159724, guid: 0cdafb12b394e1b4e88f00cef4a9a1e0, type: 3}
+      - {fileID: -6478536213147159724, guid: 1cf44c1437d95c641ae732ea8eca44c3, type: 3}
       - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
       - {fileID: 0}
     - materials:
       - {fileID: 2100000, guid: 2e18707ce91d4cc4784a1983977a9b48, type: 2}
-      - {fileID: -6478536213147159724, guid: 0cdafb12b394e1b4e88f00cef4a9a1e0, type: 3}
+      - {fileID: -6478536213147159724, guid: 1cf44c1437d95c641ae732ea8eca44c3, type: 3}
       - {fileID: 0}
     - materials:
       - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
-      - {fileID: 4874126678125670354, guid: 38d01da549946dd4eae84d257ff1a295, type: 3}
+      - {fileID: 4874126678125670354, guid: 1cf44c1437d95c641ae732ea8eca44c3, type: 3}
       - {fileID: 0}
     - materials:
       - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
@@ -101,6 +35,10 @@ MonoBehaviour:
       - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
       - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
       - {fileID: 0}
+  - materialOfHammer:
+    - materials:
+      - {fileID: -6478536213147159724, guid: 1cf44c1437d95c641ae732ea8eca44c3, type: 3}
+      - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
   - materialOfHammer:
     - materials:
       - {fileID: 2100000, guid: afaf67fa37c18734faf8d3da551bfb7b, type: 2}
@@ -116,11 +54,11 @@ MonoBehaviour:
       - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
     - materials:
       - {fileID: 2100000, guid: f3e1c855a5a42af439a029b1eb231c01, type: 2}
-      - {fileID: 2100000, guid: 9417a8e677d38824bb6db375d63ccd0c, type: 2}
+      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
       - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
     - materials:
       - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
-      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
+      - {fileID: 2100000, guid: 9417a8e677d38824bb6db375d63ccd0c, type: 2}
       - {fileID: 2100000, guid: 9d18032826bc8874da5d19767ac1e99e, type: 2}
   - materialOfHammer:
     - materials:
@@ -137,11 +75,11 @@ MonoBehaviour:
       - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
     - materials:
       - {fileID: 2100000, guid: f3e1c855a5a42af439a029b1eb231c01, type: 2}
-      - {fileID: 2100000, guid: 9417a8e677d38824bb6db375d63ccd0c, type: 2}
+      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
       - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
     - materials:
       - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
-      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
+      - {fileID: 2100000, guid: 9417a8e677d38824bb6db375d63ccd0c, type: 2}
       - {fileID: 2100000, guid: 9d18032826bc8874da5d19767ac1e99e, type: 2}
   - materialOfHammer:
     - materials:
@@ -158,32 +96,11 @@ MonoBehaviour:
       - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
     - materials:
       - {fileID: 2100000, guid: f3e1c855a5a42af439a029b1eb231c01, type: 2}
-      - {fileID: 2100000, guid: 9417a8e677d38824bb6db375d63ccd0c, type: 2}
+      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
       - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
     - materials:
       - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
-      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
-      - {fileID: 2100000, guid: 9d18032826bc8874da5d19767ac1e99e, type: 2}
-  - materialOfHammer:
-    - materials:
-      - {fileID: 2100000, guid: afaf67fa37c18734faf8d3da551bfb7b, type: 2}
-      - {fileID: 2100000, guid: 2e18707ce91d4cc4784a1983977a9b48, type: 2}
-      - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
-    - materials:
-      - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
-      - {fileID: 2100000, guid: 3254760ccc79f914cbf0279d3fbe8492, type: 2}
-      - {fileID: 2100000, guid: 0f1c3bf5cd309144a83ce906f981bb29, type: 2}
-    - materials:
-      - {fileID: 2100000, guid: f4b0a7cfb4e02114d8bec3309e409df6, type: 2}
-      - {fileID: 2100000, guid: afaf67fa37c18734faf8d3da551bfb7b, type: 2}
-      - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
-    - materials:
-      - {fileID: 2100000, guid: f3e1c855a5a42af439a029b1eb231c01, type: 2}
       - {fileID: 2100000, guid: 9417a8e677d38824bb6db375d63ccd0c, type: 2}
-      - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
-    - materials:
-      - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
-      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
       - {fileID: 2100000, guid: 9d18032826bc8874da5d19767ac1e99e, type: 2}
   - materialOfHammer:
     - materials:
@@ -205,10 +122,4 @@ MonoBehaviour:
     - materials:
       - {fileID: 2100000, guid: e66a2353a668cb74e80ceb3f0f57a4fb, type: 2}
       - {fileID: 2100000, guid: cec999be64f3fb842b6963971c0411f7, type: 2}
-      - {fileID: 0}
-    - materials:
-      - {fileID: 2100000, guid: e66a2353a668cb74e80ceb3f0f57a4fb, type: 2}
-      - {fileID: 2100000, guid: cec999be64f3fb842b6963971c0411f7, type: 2}
-      - {fileID: 0}
-      - {fileID: 0}
       - {fileID: 0}

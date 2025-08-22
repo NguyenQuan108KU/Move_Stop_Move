@@ -36,11 +36,13 @@ public class PlayerController : MonoBehaviour
     public int coinMoney;
 
     [Header("Change Weapon")]
+    public WeaponDatabase weaponDB;
     public Test test;
     public GameObject weaponChoose;
     public Bullet bullet1;
     private int indexWeapon;
     public bool isPlayerDie = false;
+    [SerializeField] private int indexMaterial;
 
     public int countAttack;
     public GameObject effectLevelUp;
@@ -89,12 +91,26 @@ public class PlayerController : MonoBehaviour
     void changeWepon()
     {
         indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
+        indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);
+        MeshRenderer meshRenderer = weaponChoose.GetComponent<MeshRenderer>();
+        MeshRenderer meshRendererOfButton = bullet1.GetComponent<MeshRenderer>();
+        // Lấy toàn bộ materials ra
+        Material[] mats = meshRenderer.materials;
+        Material[] matsOfButton = meshRendererOfButton.sharedMaterials;
         for (int i = 0; i < test.list.Count(); i++)
         {
             if (test.list[i].index == indexWeapon)
             {
                 weaponChoose.GetComponent<MeshFilter>().mesh = test.list[i].weaponMesh;
                 bullet1.GetComponent<MeshFilter>().mesh = test.list[i].weaponMesh;
+                for (int j = 0; j < weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++)
+                {
+                    mats[j] = weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                    matsOfButton[j] = weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                }
+                meshRenderer.materials = mats;
+                meshRendererOfButton.materials = matsOfButton;
+
                 if (test.list[i].isRotate)
                 {
                     bullet1.SetRoration = true;
@@ -163,9 +179,7 @@ public class PlayerController : MonoBehaviour
     }
     void changeClothesPlayer()
     {
-        //Debug.Log(indexClothes);
         indexClothes = PlayerPrefs.GetInt("SlectClothes", -1);
-        //Debug.Log(listClothes.Count());
         if (indexProtect == -1)
         {
             listClothes[2].hatOfSet.SetActive(true);

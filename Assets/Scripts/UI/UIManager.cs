@@ -58,7 +58,8 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        coin.text = GameManager.instance.playerController.coinMoney.ToString();
+        if (coin != null && GameManager.instance.playerController != null)
+            coin.text = GameManager.instance.playerController.coinMoney.ToString();
         if (enemyCity != null)
             enemyCity.text = GameManager.instance.playerCityController.EnemyAlive.ToString();
         if (coinOfPlayer != null)
@@ -79,7 +80,7 @@ public class UIManager : MonoBehaviour
             Load();
         }
         //Load();
-        if(!loadGift)
+        if(!loadGift && loadGift != null)
             loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
     }
     private void LateUpdate()
