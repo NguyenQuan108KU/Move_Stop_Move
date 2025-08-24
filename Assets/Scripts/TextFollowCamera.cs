@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TextFollowCamera : MonoBehaviour
 {
@@ -13,7 +11,7 @@ public class TextFollowCamera : MonoBehaviour
         initialScale = transform.localScale; // lưu kích thước ban đầu
     }
 
-    void LateUpdate()
+    void Update()
     {
         // luôn nhìn thẳng vào camera
         transform.LookAt(
@@ -21,9 +19,7 @@ public class TextFollowCamera : MonoBehaviour
             mainCam.transform.rotation * Vector3.up
         );
 
-        // giữ nguyên kích thước
+        // giữ nguyên kích thước (không bị phóng to/thu nhỏ khi camera di chuyển)
         transform.localScale = initialScale;
     }
-
-
 }

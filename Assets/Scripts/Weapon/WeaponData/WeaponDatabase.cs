@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class WeaponDatabase : ScriptableObject
 {
+    
     public Weapon[] weapon;
     public MaterialOfHammer[] listOfMaterials;
 
@@ -15,5 +16,7 @@ public class WeaponDatabase : ScriptableObject
     {
         return weapon[index];
     }
-  
+    
+
+
 }

@@ -88,6 +88,7 @@ public class PlayerController : MonoBehaviour
         //Len level
         UpLevel();
     }
+    //Thay đổi vũ khí
     void changeWepon()
     {
         indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
@@ -122,6 +123,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    //Thay đổi giày 
     void changePants()
     {
         
@@ -139,6 +141,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    //Thay đổi mũ
     void changeHats()
     {
         //indexHats = PlayerPrefs.GetInt("IndexHat");
@@ -158,6 +161,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    //Thay đổi khiên
     void changeProtect()
     {
         indexProtect = PlayerPrefs.GetInt("SlectProtect", -1);
@@ -177,6 +181,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    //Thay đổi full set 
     void changeClothesPlayer()
     {
         indexClothes = PlayerPrefs.GetInt("SlectClothes", -1);
@@ -212,6 +217,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    //Di chuyển nhân vật
     private void PlayerMove()
     {
         if (isAttack)
@@ -248,11 +254,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, radius);
-    }
     public void AttackTrigle()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
@@ -370,5 +371,10 @@ public class PlayerController : MonoBehaviour
             }
             bullet1.transform.localScale = new Vector3(39, 39, 39);
         }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, radius);
     }
 }

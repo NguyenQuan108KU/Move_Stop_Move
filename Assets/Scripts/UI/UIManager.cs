@@ -50,7 +50,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        enemyAliveTotal = 100;
+        enemyAliveTotal = 3;
         countNumber = 5;
 
         countdownDuration = 5;
@@ -65,7 +65,7 @@ public class UIManager : MonoBehaviour
         if (coinOfPlayer != null)
             coinOfPlayer.text = GameManager.instance.playerCityController.coinOfPlayer.ToString();
         alive.text = enemyAliveTotal.ToString();
-        setVitriScorePlayer();
+        //setVitriScorePlayer();
         if(GameManager.instance.playerController != null)
         {
             pointOfPlayer.text = GameManager.instance.playerController.point.ToString();
@@ -80,26 +80,32 @@ public class UIManager : MonoBehaviour
             Load();
         }
         //Load();
-        if(!loadGift && loadGift != null)
+        if(loadGift != null)
             loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
     }
     private void LateUpdate()
     {
-        setVitriScorePlayer();
+        //setVitriScorePlayer();
     }
     public void UpdateAlive()
     {
         enemyAliveTotal -= 1;
-        if(enemyAliveTotal <= 0 && !Canvas_Dead_1.activeSelf && !Canvas_Dead_2.activeSelf)
+        if (enemyAliveTotal <= 0 && !Canvas_Dead_1.activeSelf && !Canvas_Dead_2.activeSelf)
         {
-            //Time.timeScale = 0;
             enemyAliveTotal = 0;
             Winner.SetActive(true);
+            StartCoroutine(StopGameAfterDelay(1f)); // gọi coroutine sau 1s
         }
+    }
+
+    private IEnumerator StopGameAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay); // chờ 1 giây
+        Time.timeScale = 0;
     }
     void setVitriScorePlayer()
     {
-        Vector3 enemyScreenPosition = Camera.main.WorldToScreenPoint(GameManager.instance.transform.position + new Vector3(0, up, 0));
+        Vector3 enemyScreenPosition = Camera.main.WorldToScreenPoint(GameManager.instance.playerController.transform.position + new Vector3(0, up, 0));
         namePlayer.transform.position = enemyScreenPosition;
     }
     //Load khi player chết

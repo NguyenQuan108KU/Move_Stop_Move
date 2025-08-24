@@ -53,6 +53,16 @@ public class PlayerCity_Controller : MonoBehaviour
     [SerializeField] private int indexHats;
     [SerializeField] private HATS hatOfPlayer;
 
+    [Header("Change Protect")]
+    [SerializeField] private int indexProtect;
+    [SerializeField] private Protect protectOfPlayer;
+
+    [Header("Change Clothes Player")]
+    [SerializeField] private int indexClothes;
+    [SerializeField] private ClothesSet[] listClothes;
+    [SerializeField] private GameObject initialShadingOfPlayer;
+    [SerializeField] private GameObject PantsOfPlayer;
+
     [Header("Attack Settings")]
     [SerializeField] private float fireRate = 0.5f; // thời gian chờ giữa các lần bắn
     private float nextFireTime = 0f;
@@ -62,7 +72,7 @@ public class PlayerCity_Controller : MonoBehaviour
     public int coinOfPlayer;
 
     public bool isOffPlayer = false;
-
+    private int functionBullet;
     //[SerializeField] private Bullet bullet1;
     void Start()
     {
@@ -81,6 +91,8 @@ public class PlayerCity_Controller : MonoBehaviour
         changeWepon();
         changePants();
         changeHats();
+        changeProtect();
+        changeClothesPlayer();
         //Len level
         UpLevel();
         SetWinner();
@@ -121,10 +133,15 @@ public class PlayerCity_Controller : MonoBehaviour
     void changePants()
     {
 
-        indexPants = PlayerPrefs.GetInt("IndexPants");
+        indexHats = PlayerPrefs.GetInt("SlectPaint", -1);
+        //indexPants = PlayerPrefs.GetInt("IndexPants");
+        if (indexHats == -1)
+        {
+            pantsOdPlayer.GetComponent<SkinnedMeshRenderer>().material = listPants.pantsObjects[6].materialPants;
+        }
         for (int i = 0; i < listPants.pantsObjects.Count(); i++)
         {
-            if (listPants.pantsObjects[i].index == indexPants)
+            if (listPants.pantsObjects[i].index == indexHats)
             {
                 pantsOdPlayer.GetComponent<SkinnedMeshRenderer>().material = listPants.pantsObjects[i].materialPants;
             }
@@ -132,7 +149,12 @@ public class PlayerCity_Controller : MonoBehaviour
     }
     void changeHats()
     {
-        indexHats = PlayerPrefs.GetInt("IndexHat");
+        //indexHats = PlayerPrefs.GetInt("IndexHat");
+        indexHats = PlayerPrefs.GetInt("SlectHat", -1);
+        if (indexHats == -1)
+        {
+            hatOfPlayer.games[6].SetActive(true);
+        }
         for (int i = 0; i < hatOfPlayer.games.Count(); i++)
         {
             if (indexHats == i)
@@ -142,6 +164,61 @@ public class PlayerCity_Controller : MonoBehaviour
             else
             {
                 hatOfPlayer.games[i].SetActive(false);
+            }
+        }
+    }
+    void changeProtect()
+    {
+        indexProtect = PlayerPrefs.GetInt("SlectProtect", -1);
+        if (indexProtect == -1)
+        {
+            protectOfPlayer.protect[2].SetActive(true);
+        }
+        for (int i = 0; i < protectOfPlayer.protect.Count(); i++)
+        {
+            if (indexProtect == i)
+            {
+                protectOfPlayer.protect[i].SetActive(true);
+            }
+            else
+            {
+                protectOfPlayer.protect[i].SetActive(false);
+            }
+        }
+    }
+
+    void changeClothesPlayer()
+    {
+        indexClothes = PlayerPrefs.GetInt("SlectClothes", -1);
+        if (indexProtect == -1)
+        {
+            listClothes[2].hatOfSet.SetActive(true);
+            listClothes[2].wingOfSet.SetActive(true);
+            listClothes[2].protectOfSet.SetActive(true);
+            listClothes[2].tailOfSet.SetActive(true);
+            //initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
+            //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
+            //return;
+        }
+        for (int i = 0; i < listClothes.Count(); i++)
+        {
+            if (indexClothes == i)
+            {
+                listClothes[i].hatOfSet.SetActive(true);
+                listClothes[i].wingOfSet.SetActive(true);
+                listClothes[i].protectOfSet.SetActive(true);
+                listClothes[i].tailOfSet.SetActive(true);
+                initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[i].material;
+                PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[i].material;
+            }
+            else
+            {
+                listClothes[2].hatOfSet.SetActive(false);
+                listClothes[2].wingOfSet.SetActive(false);
+                listClothes[2].protectOfSet.SetActive(false);
+                listClothes[2].tailOfSet.SetActive(false);
+                //initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
+                //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
             }
         }
     }
@@ -236,28 +313,124 @@ public class PlayerCity_Controller : MonoBehaviour
     public void SetOffAttack() => anim.SetBool("Attack", false);
     public void Shooting()
     {
-        if (Time.time >= nextFireTime)
+        functionBullet = PlayerPrefs.GetInt("Function");
+        if (functionBullet == -1)
         {
+            ShootingDefault();
+        }
+        else if(functionBullet == 0)
+        {
+            ShootingDouble(25);
+        }
+        else if(functionBullet == 1)
+        {
+            if (Time.time >= nextFireTime)
+            {
             nextFireTime = Time.time + fireRate;
-            StartCoroutine(ShootBurst());
+            StartCoroutine(ShootLevel1());
+            }
+        }
+        else if (functionBullet == 2)
+        {
+            ShootingTriple(20);
         }
     }
-
-    private IEnumerator ShootBurst()
+    public void ShootingDefault()
     {
-        AudioManager.instance.PlayerSFX(0);
         playerMove = Vector3.zero;
+        AudioManager.instance.PlayerSFX(0);
+        GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
+        Bullet bulletScript = bulletObj.GetComponent<Bullet>();
+        bulletScript.SetOwner(gameObject);
+        bulletScript.SetTarget(target);
+    }
+    private IEnumerator ShootLevel1()
+    {
+        Vector3 saveTranform = firingTransform.position;
+        // Phát âm thanh bắn
+        AudioManager.instance.PlayerSFX(0);
+
+        // Dừng di chuyển của player khi bắn
+        playerMove = Vector3.zero;
+
+        if (target == null)
+            yield break;
+
+        // Lấy hướng bắn 1 lần duy nhất để 2 viên thẳng hàng
+        Vector3 dir = (target.position - firingTransform.position).normalized;
 
         // Viên thứ 1
         GameObject bulletObj1 = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
-        bulletObj1.GetComponent<Bullet>().SetTarget(target);
+        Bullet b1 = bulletObj1.GetComponent<Bullet>();
+        b1.SetOwner(gameObject);
+        b1.SetDirection(dir);
 
-        yield return new WaitForSeconds(0.1f); // delay 0.1s (có thể chỉnh)
+        // Delay nếu muốn bắn liên tiếp (0.05s)
+        yield return new WaitForSeconds(0.15f);
 
         // Viên thứ 2
-        GameObject bulletObj2 = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
-        bulletObj2.GetComponent<Bullet>().SetTarget(target);
+        GameObject bulletObj2 = Instantiate(bulletPrefabs, saveTranform, Quaternion.identity);
+        Bullet b2 = bulletObj2.GetComponent<Bullet>();
+        b2.SetOwner(gameObject);
+        b2.SetDirection(dir);
     }
+
+
+    public void ShootingDouble(float angle)
+    {
+        if (target == null) return;
+
+        playerMove = Vector3.zero;
+        AudioManager.instance.PlayerSFX(0);
+
+        Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
+
+        // Góc lệch sang trái
+        Vector3 leftDir = Quaternion.Euler(0, -angle, 0) * dirToTarget;
+        GameObject bulletLeft = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(leftDir));
+        Bullet bulletLeftScript = bulletLeft.GetComponent<Bullet>();
+        bulletLeftScript.SetOwner(gameObject);
+        bulletLeftScript.SetDirection(leftDir);
+
+        // Góc lệch sang phải
+        Vector3 rightDir = Quaternion.Euler(0, angle, 0) * dirToTarget;
+        GameObject bulletRight = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(rightDir));
+        Bullet bulletRightScript = bulletRight.GetComponent<Bullet>();
+        bulletRightScript.SetOwner(gameObject);
+        bulletRightScript.SetDirection(rightDir);
+    }
+
+    public void ShootingTriple(float angle)
+    {
+        if (target == null) return;
+
+        playerMove = Vector3.zero;
+        AudioManager.instance.PlayerSFX(0);
+
+        Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
+
+        // Góc lệch sang trái
+        Vector3 leftDir = Quaternion.Euler(0, -angle, 0) * dirToTarget;
+        GameObject bulletLeft = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(leftDir));
+        Bullet bulletLeftScript = bulletLeft.GetComponent<Bullet>();
+        bulletLeftScript.SetOwner(gameObject);
+        bulletLeftScript.SetDirection(leftDir);
+
+        // Góc lệch sang phải
+        Vector3 rightDir = Quaternion.Euler(0, angle, 0) * dirToTarget;
+        GameObject bulletRight = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(rightDir));
+        Bullet bulletRightScript = bulletRight.GetComponent<Bullet>();
+        bulletRightScript.SetOwner(gameObject);
+        bulletRightScript.SetDirection(rightDir);
+
+        //Lệch giữa
+        Vector3 betweenDir = Quaternion.Euler(0, 0, 0) * dirToTarget;
+        GameObject bulletbetween = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(betweenDir));
+        Bullet bulletBetweenScript = bulletbetween.GetComponent<Bullet>();
+        bulletBetweenScript.SetOwner(gameObject);
+        bulletBetweenScript.SetDirection(betweenDir);
+    }
+
 
     private void OnCollisionEnter(Collision collision)
     {

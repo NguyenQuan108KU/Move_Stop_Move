@@ -41,16 +41,20 @@ public class Enemy : MonoBehaviour
 
     public bool isGetGift = false;
 
+    private void Awake()
+    {
+        foreach (var item in render)
+        {
+            item.material.color = Random.ColorHSV();
+        }
+    }
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         nameEnemy.text = listName[Random.Range(0, listName.Count)].name.ToString();
         
-        foreach (var item in render)
-        {
-            item.material.color = Random.ColorHSV();
-        }
+        
     }
 
     private void Update()
@@ -141,6 +145,7 @@ public class Enemy : MonoBehaviour
             GameManager.instance.playerController.point += 5;
             GameManager.instance.playerController.coinMoney += 5;
             GameManager.instance.playerController.countAttack += 1;
+            UIManager.instance.UpdateAlive();
         }
         if (collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2"))
         {
@@ -162,7 +167,7 @@ public class Enemy : MonoBehaviour
                 GameManager.instance.playerController.point += 5;
                 GameManager.instance.playerController.coinMoney += 50;
             }
-            UIManager.instance.UpdateAlive();
+            
             isDead = true;
             //Praticle System
             BloodParticle.SetActive(true);

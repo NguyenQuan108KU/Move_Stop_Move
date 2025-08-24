@@ -14,44 +14,61 @@ public class Bullet : MonoBehaviour
     public GameObject owner;
     public bool SetRoration;
 
-    private void Start()
+    private bool velocitySet = false;
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+    private void Start()
+    {
+        
         Destroy(gameObject, 1f);
     }
 
     public void SetTarget(Transform _target)
     {
-        target = _target;
-        shootDirection = (target.position - transform.position).normalized;
+        if (_target != null)
+        {
+            // Chỉ lấy hướng 1 lần rồi lưu lại
+            shootDirection = (_target.position - transform.position).normalized;
+        }
+        else
+        {
+            // Nếu target null, cho đạn bay thẳng về phía trước
+            shootDirection = transform.forward;
+        }
     }
+
     public void SetOwner(GameObject ownerObj)
     {
         owner = ownerObj;
     }
+    public void SetDirection(Vector3 dir)
+    {
+        shootDirection = dir.normalized;
+        rb.velocity = shootDirection * bulletSpeed;
+    }
 
     private void FixedUpdate()
     {
-        if (!target) return;
+        //if (!target) return;
         rb.velocity = shootDirection * bulletSpeed;
     }
     private void Update()
     {
-        //transform.rotation = Quaternion.Euler(90, 0, Time.time * speedRotation);
-        if(SetRoration)
+        if (SetRoration)
         {
-            if (!target) return;
-            Vector3 direction = target.position - transform.position;
-            direction.y = 0;
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = lookRotation * Quaternion.Euler(-90, 0, 0);
+            // Xoay theo hướng bay đã tính
+            if (shootDirection != Vector3.zero)
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(shootDirection);
+                transform.rotation = lookRotation * Quaternion.Euler(-90, 0, 0);
+            }
         }
         else
         {
             transform.rotation = Quaternion.Euler(90, 0, Time.time * speedRotation);
         }
-     
-
     }
     private void OnCollisionEnter(Collision collision)
     {

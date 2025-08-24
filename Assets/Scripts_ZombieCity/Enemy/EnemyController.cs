@@ -97,7 +97,7 @@ public class EnemyController : MonoBehaviour
 
             Destroy(ps, particle.main.duration + particle.main.startLifetime.constantMax); // tự hủy sau khi chạy xong
 
-            Destroy(gameObject, 0.25f); // xóa enemy
+            Destroy(gameObject); // xóa enemy
         }
         if (collision.gameObject.CompareTag("Player"))
         {

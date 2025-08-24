@@ -1754,6 +1754,7 @@ GameObject:
   - component: {fileID: 1998503663343204715}
   - component: {fileID: 449139140182421204}
   - component: {fileID: 7091091813915466600}
+  - component: {fileID: 1330244777685495638}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Enemy
@@ -1867,7 +1868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 449139140182421204}
-  EnemySpeed: 5
+  EnemySpeed: 4
   bulletPrefabs: {fileID: 348641515877151161, guid: a48ea611c30b97e4698d99d2affd1452, type: 3}
   firingTransform: {fileID: 6378755179001133314}
   target: {fileID: 0}
@@ -1899,6 +1900,23 @@ MonoBehaviour:
   point: 0
   pointOfEnemy: {fileID: 584047824249063001}
   isGetGift: 0
+--- !u!114 &1330244777685495638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4941116919885452685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5c25e341cba6d044851c3687bc1aa59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  canvasTransform: {fileID: 0}
+  arrowPrefab: {fileID: 6635158708798567490, guid: 6ed844ded8f490949ba869b59f9ff0c0, type: 3}
+  enemy: {fileID: 0}
+  text: {fileID: 0}
 --- !u!1 &4944856439070377637
 GameObject:
   m_ObjectHideFlags: 0

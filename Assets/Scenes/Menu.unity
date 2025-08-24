@@ -19282,7 +19282,7 @@ MonoBehaviour:
   bgm:
   - {fileID: 2001515460}
   - {fileID: 1173677480}
-  isPlayerBGM: 0
+  isPlayerBGM: 1
   isWinner: 0
   BGMIndex: 1
 --- !u!114 &1423189653
