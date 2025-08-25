@@ -166,10 +166,6 @@ public class WeaponManager : MonoBehaviour
                     }
                 }
             }
-            else
-            {
-
-            }
         }
     }
     public void SetButtonWeapon()
@@ -250,11 +246,11 @@ public class WeaponManager : MonoBehaviour
             meshRenderer.materials = mats;
         }
     }
-    public void SetButtonMaterial(int layer)
+    public void SetButtonMaterial(int layer)   
     {
         int indexMaterial = PlayerPrefs.GetInt("ButtonOfMeterial" + selectedOption);
 
-            if (indexMaterial == layer)
+        if (indexMaterial == layer)
             {
                 button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
                 coin.text = "Equipped";

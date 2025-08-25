@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject Harmmer;
     [SerializeField] private Transform target;
-    private bool isAttack = false;
+    public  bool isAttack = false;
     float timer;
     [SerializeField] private float attackDuration = 1f; // thời gian duy trì trạng thái attack
     private float attackTimer = 0f;
@@ -220,24 +220,6 @@ public class PlayerController : MonoBehaviour
     //Di chuyển nhân vật
     private void PlayerMove()
     {
-        if (isAttack)
-        {
-            attackTimer += Time.deltaTime;
-            if (attackTimer >= attackDuration)
-            {
-                isAttack = false;
-                anim.SetBool("Attack", false);
-                Harmmer.SetActive(true);
-                target = null;
-                attackTimer = 0f;
-            }
-            else
-            {
-                anim.SetFloat("Speed", 0);
-            }
-        }
-        else
-        {
             playerMove.x = joystick.Horizontal;
             playerMove.z = joystick.Vertical;
             playerMove.y = 0;
@@ -251,7 +233,6 @@ public class PlayerController : MonoBehaviour
                 Quaternion toRotation = Quaternion.LookRotation(playerMove, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
             }
-        }
     }
 
     public void AttackTrigle()
