@@ -13,8 +13,7 @@ public class Bullet : MonoBehaviour
 
     public GameObject owner;
     public bool SetRoration;
-
-    private bool velocitySet = false;
+    public bool isRotate = false;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -56,13 +55,18 @@ public class Bullet : MonoBehaviour
     }
     private void Update()
     {
-        if (SetRoration)
+        if (SetRoration || isRotate)
         {
             // Xoay theo hướng bay đã tính
             if (shootDirection != Vector3.zero)
             {
-                Quaternion lookRotation = Quaternion.LookRotation(shootDirection);
-                transform.rotation = lookRotation * Quaternion.Euler(-90, 0, 0);
+                // Lấy rotation LookRotation theo hướng bay, trục up = world up
+                Quaternion lookRotation = Quaternion.LookRotation(shootDirection, Vector3.up);
+
+                // Lấy Euler angles, ép X luôn = -90
+                Vector3 euler = lookRotation.eulerAngles;
+                euler.x = -90f; // luôn giữ X = -90
+                transform.rotation = Quaternion.Euler(euler);
             }
         }
         else
@@ -75,6 +79,7 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject == owner) return;
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            if (GameManager.instance.playerController.isGetGift) return;
             Destroy(gameObject);
         }
         if (collision.gameObject.CompareTag("EnemyController"))

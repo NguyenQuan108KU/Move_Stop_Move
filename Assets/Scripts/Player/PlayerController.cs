@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject PantsOfPlayer;
 
     public bool isGetGift = false;
+    public bool isLevelUp = false;
 
     //[SerializeField] private Bullet bullet1;
     void Start()
@@ -285,16 +286,27 @@ public class PlayerController : MonoBehaviour
     public void SetOffAttack() => anim.SetBool("Attack", false);
     public void Shooting()
     {
+        GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
+        Bullet bulletScript = bulletObj.GetComponent<Bullet>();
+        
         if (isDead)
         {
             AudioManager.instance.StopSFX(0);
         }
         playerMove = Vector3.zero;
         AudioManager.instance.PlayerSFX(0);
-        GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
-        Bullet bulletScript = bulletObj.GetComponent<Bullet>();
         bulletScript.SetOwner(gameObject);
         bulletScript.SetTarget(target);
+        if (isGetGift)
+        {
+            bulletScript.isRotate = true;
+            StartCoroutine(ScaleBullet(bulletObj, 3f, 130f, 0.3f)); // từ 39 lên 100 trong 1 giây
+        }
+        else
+        {
+            bulletObj.transform.localScale = new Vector3(39, 39, 39);
+            bulletScript.isRotate = false;
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -315,27 +327,42 @@ public class PlayerController : MonoBehaviour
         {
             isGetGift = true;
             Destroy(collision.gameObject);
-            radius = 6.5f;
+            radius = 8f;
             DrawCircle circle = GetComponentInChildren<DrawCircle>();
             if(circle != null)
             {
-                circle.radius = 6.5f;
+                circle.radius = 8f;
                 circle.DrawCircleUnderFeet();
             }
-            bullet1.transform.localScale = new Vector3(100, 100, 100);
         }
     }
+    private IEnumerator ScaleBullet(GameObject bullet, float startScale, float endScale, float duration)
+    {
+        float time = 0f;
+        while (time < duration)
+        {
+            if (bullet == null) yield break; // nếu bullet bị hủy → thoát Coroutine
+            time += Time.deltaTime;
+            float scale = Mathf.Lerp(startScale, endScale, time / duration);
+            bullet.transform.localScale = new Vector3(scale, scale, scale);
+            yield return null;
+        }
+        if (bullet != null)
+            bullet.transform.localScale = new Vector3(endScale, endScale, endScale);
+    }
+
     public void DestroyPlayer()
     {
         gameObject.SetActive(false);
     }
     public void UpLevel()
     {
-        if(countAttack >= 3)
+        if(countAttack >= 1)
         {
             effectLevelUp.SetActive(true);
-            transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
-            UIManager.instance.up = 4.5f;
+            transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
+            UIManager.instance.up = 4.7f;
+            isLevelUp = true;
         }
     }
     public void SetDeufalt()

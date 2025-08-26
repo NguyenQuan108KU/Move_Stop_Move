@@ -1900,6 +1900,7 @@ MonoBehaviour:
   point: 0
   pointOfEnemy: {fileID: 584047824249063001}
   isGetGift: 0
+  fireCooldown: 3
 --- !u!114 &1330244777685495638
 MonoBehaviour:
   m_ObjectHideFlags: 0

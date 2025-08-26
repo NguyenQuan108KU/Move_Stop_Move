@@ -41,6 +41,10 @@ public class Enemy : MonoBehaviour
 
     public bool isGetGift = false;
 
+    public float attackCoolDown = 3.0f;
+    public float attackTimer;
+
+    public bool isAttacking = false; // cờ kiểm soát
     private void Awake()
     {
         foreach (var item in render)
@@ -53,12 +57,15 @@ public class Enemy : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         nameEnemy.text = listName[Random.Range(0, listName.Count)].name.ToString();
-        
-        
+        attackTimer = attackCoolDown;
+        //Set đạn mặ 
+        detectionRange = 8f;
+        bulletPrefabs.transform.localScale = new Vector3(39, 39, 39);
     }
 
     private void Update()
     {
+        attackTimer -= Time.deltaTime;
         if (GameManager.instance.playerController.isPlayerDie)
         {
             //anim.SetBool("Idle", true);
@@ -66,23 +73,19 @@ public class Enemy : MonoBehaviour
             anim.SetBool("Move", false);
             return;
         }
-        EnemyMovement();
         EnemyAttack();
+        if (!isAttacking)  // thay vì !isAttacking
+        {
+            EnemyMovement();
+        }
         if (timeStartBullet > 0)
             timeStartBullet -= Time.deltaTime;
-        //setVitriScoreEnemy();
-        
-    }
-    private void LateUpdate()
-    {
-        //setVitriScoreEnemy();
     }
     public void EnemyMovement()
     {
         if (isDead || target != null || GameManager.instance.playerController.isPlayerDie) return; // Không di chuyển nếu đã chết hoặc đang tấn công
-
         timer += Time.deltaTime;
-        if (timer >= changeDirectionTime || CheckWall())
+        if ((timer >= changeDirectionTime || CheckWall()))
         {
             anim.SetBool("Move", true);
             randomDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
@@ -107,35 +110,38 @@ public class Enemy : MonoBehaviour
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRange);
         bool foundTarget = false;
-
         foreach (var hit in colliders)
         {
             if (hit.transform == gameObject.transform) continue;
             if (hit.gameObject.CompareTag("Player") || hit.gameObject.CompareTag("Enemy"))
             {
-
-                target = hit.transform;
-                anim.SetBool("Attack", true);
-                // Quay mặt về hướng Player
-                Vector3 directionEnemy = hit.transform.position - transform.position;
-                directionEnemy.y = 0;
-                Quaternion toRotation = Quaternion.LookRotation(directionEnemy);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
-
-                foundTarget = true;
-                break; // Dừng kiểm tra nếu đã tìm thấy Player
+                if(attackTimer <= 0)
+                {
+                    target = hit.transform;
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    anim.SetBool("Attack", true);
+                    isAttacking = true;
+                    // Quay mặt về hướng Player
+                    Vector3 directionEnemy = hit.transform.position - transform.position;
+                    directionEnemy.y = 0;
+                    Quaternion toRotation = Quaternion.LookRotation(directionEnemy);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
+                    foundTarget = true;
+                    break; // Dừng kiểm tra nếu đã tìm thấy Player
+                }
+                
             }
         }
 
         if (!foundTarget)
         {
             // Player đã rời khỏi phạm vi → quay lại trạng thái di chuyển ngẫu nhiên
+            Debug.Log("sjnj");
             target = null;
             anim.SetBool("Attack", false);
         }
     }
-
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Bullet1"))
@@ -179,11 +185,10 @@ public class Enemy : MonoBehaviour
         {
             isGetGift = true;
             Destroy(collision.gameObject);
-            detectionRange = 12f;
-            bulletPrefabs.transform.localScale = new Vector3(100, 100, 100);
+            //detectionRange = 12f;
+            //bulletPrefabs.transform.localScale = new Vector3(100, 100, 100);
         }
     }
-
 
     public void Shooting()
     {
@@ -193,11 +198,31 @@ public class Enemy : MonoBehaviour
         //Bullet bulletScript = bulletObj.GetComponent<Bullet>();
         bulletScript.SetOwner(gameObject);
         bulletScript.SetTarget(target);
+        if (isGetGift)
+        {
+            StartCoroutine(ScaleBullet(bulletObj, 39f, 100f, 1.0f)); // từ 39 lên 100 trong 1 giây
+            detectionRange = 12f;
+        }
+        else
+        {
+            bulletObj.transform.localScale = new Vector3(39, 39, 39);
+            detectionRange = 8f;
+        }
+        attackTimer = attackCoolDown;
+        //isAttacking = false; // cho phép di chuyển tiếp
+        StartCoroutine(OnAttackEnd());
     }
-    void setVitriScoreEnemy()
+    private IEnumerator ScaleBullet(GameObject bullet, float startScale, float endScale, float duration)
     {
-        Vector3 enemyScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(-0.6f, 4, 0));
-        textEnemy.rectTransform.position = enemyScreenPosition;
+        float time = 0f;
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float scale = Mathf.Lerp(startScale, endScale, time / duration);
+            bullet.transform.localScale = new Vector3(scale, scale, scale);
+            yield return null;
+        }
+        bullet.transform.localScale = new Vector3(endScale, endScale, endScale);
     }
     public void DestroyEnemy() => Destroy(gameObject);
     public bool CheckWall()
@@ -220,5 +245,11 @@ public class Enemy : MonoBehaviour
             detectionRange = 8f;
             bulletPrefabs.transform.localScale = new Vector3(39, 39, 39);
         }
+    }
+    public IEnumerator OnAttackEnd()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("false");
+        isAttacking = false; 
     }
 }

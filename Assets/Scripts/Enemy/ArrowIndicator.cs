@@ -14,6 +14,17 @@ public class ArrowIndicator : MonoBehaviour
     public TextMeshProUGUI text;
     private Image[] images;
 
+    void Awake()
+    {
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main; // tự động lấy camera chính
+        }
+        if (canvasTransform == null)
+            canvasTransform = GameObject.Find("MainCanvas").GetComponent<RectTransform>();
+    }
+
+
     void Start()
     {
         enemy = GetComponent<Enemy>();
@@ -21,7 +32,7 @@ public class ArrowIndicator : MonoBehaviour
         arrowUI = Instantiate(arrowPrefab, canvasTransform);
         images = arrowUI.GetComponentsInChildren<Image>();
         images[0].color = enemy.render[0].material.color; // Image cha
-        images[1].color = enemy.render[1].material.color; // Image con (thứ 2)
+        images[1].color = enemy.render[0].material.color; // Image con (thứ 2)
         text = arrowUI.GetComponentInChildren<TextMeshProUGUI>();
         arrowUI.SetActive(false);
     }
