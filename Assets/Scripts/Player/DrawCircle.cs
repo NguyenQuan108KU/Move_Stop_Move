@@ -34,7 +34,7 @@ public class DrawCircle : MonoBehaviour
 
         lineRenderer.SetPositions(points);
     }
-    void Update()
+    private void LateUpdate()
     {
         DrawCircleUnderFeet();
     }

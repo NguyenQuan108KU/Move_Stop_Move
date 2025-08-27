@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class PlayerCity_Controller : MonoBehaviour
@@ -73,7 +75,24 @@ public class PlayerCity_Controller : MonoBehaviour
 
     public bool isOffPlayer = false;
     private int functionBullet;
-    //[SerializeField] private Bullet bullet1;
+
+    //Func 1
+    public bool isProtectPlayer = false;
+    public GameObject circlePtotect;
+    public float timerProtectPlayer;
+    public int countProtect;
+    public TextMeshProUGUI textCount;
+    //Func2
+    public TextMeshProUGUI textSpeed;
+    public int countSpeed;
+
+    //Func3
+    public DrawCircle drawCircle;
+    public bool isSetCircle;
+    public TextMeshProUGUI textCircleRange;
+    public int sizeCircle;
+
+
     void Start()
     {
         coinOfPlayer = 0;
@@ -96,6 +115,20 @@ public class PlayerCity_Controller : MonoBehaviour
         //Len level
         UpLevel();
         SetWinner();
+        if (circlePtotect.activeSelf)
+        {
+            timerProtectPlayer += Time.deltaTime;
+            if(timerProtectPlayer >= 3)
+            {
+                circlePtotect.SetActive(false);
+                timerProtectPlayer = 0;
+                countProtect -= 1;
+            }
+            if(countProtect <= 0)
+            {
+                isProtectPlayer = false;
+            }
+        }
     }
     void changeWepon()
     {
@@ -320,7 +353,7 @@ public class PlayerCity_Controller : MonoBehaviour
         }
         else if(functionBullet == 0)
         {
-            ShootingDouble(25);
+            ShootingDouble(45);
         }
         else if(functionBullet == 1)
         {
@@ -332,7 +365,7 @@ public class PlayerCity_Controller : MonoBehaviour
         }
         else if (functionBullet == 2)
         {
-            ShootingTriple(20);
+            ShootingTriple();
         }
     }
     public void ShootingDefault()
@@ -374,8 +407,6 @@ public class PlayerCity_Controller : MonoBehaviour
         b2.SetOwner(gameObject);
         b2.SetDirection(dir);
     }
-
-
     public void ShootingDouble(float angle)
     {
         if (target == null) return;
@@ -383,55 +414,55 @@ public class PlayerCity_Controller : MonoBehaviour
         playerMove = Vector3.zero;
         AudioManager.instance.PlayerSFX(0);
 
+        // Hướng chuẩn đến enemy
         Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
 
-        // Góc lệch sang trái
-        Vector3 leftDir = Quaternion.Euler(0, -angle, 0) * dirToTarget;
-        GameObject bulletLeft = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(leftDir));
-        Bullet bulletLeftScript = bulletLeft.GetComponent<Bullet>();
-        bulletLeftScript.SetOwner(gameObject);
-        bulletLeftScript.SetDirection(leftDir);
+        // === Viên đạn số 1: luôn trúng enemy ===
+        GameObject bulletMain = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(dirToTarget));
+        Bullet bMain = bulletMain.GetComponent<Bullet>();
+        bMain.SetOwner(gameObject);
+        bMain.SetDirection(dirToTarget);
 
-        // Góc lệch sang phải
-        Vector3 rightDir = Quaternion.Euler(0, angle, 0) * dirToTarget;
-        GameObject bulletRight = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(rightDir));
-        Bullet bulletRightScript = bulletRight.GetComponent<Bullet>();
-        bulletRightScript.SetOwner(gameObject);
-        bulletRightScript.SetDirection(rightDir);
+        // === Viên đạn số 2: cùng vị trí spawn, lệch góc bay ===
+        Quaternion rot = Quaternion.AngleAxis(angle, Vector3.up); // xoay quanh trục thẳng đứng
+        Vector3 sideDir = rot * dirToTarget;
+
+        GameObject bulletSide = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(sideDir));
+        Bullet bSide = bulletSide.GetComponent<Bullet>();
+        bSide.SetOwner(gameObject);
+        bSide.SetDirection(sideDir);
     }
 
-    public void ShootingTriple(float angle)
+    public void ShootingTriple()
     {
         if (target == null) return;
 
         playerMove = Vector3.zero;
         AudioManager.instance.PlayerSFX(0);
 
+        // Hướng chuẩn đến enemy
         Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
 
-        // Góc lệch sang trái
-        Vector3 leftDir = Quaternion.Euler(0, -angle, 0) * dirToTarget;
+        // === Viên giữa: luôn trúng enemy ===
+        GameObject bulletMid = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(dirToTarget));
+        Bullet bMid = bulletMid.GetComponent<Bullet>();
+        bMid.SetOwner(gameObject);
+        bMid.SetDirection(dirToTarget);
+
+        // === Viên trái: lệch -90 độ quanh trục Y ===
+        Vector3 leftDir = Quaternion.AngleAxis(-90f, Vector3.up) * dirToTarget;
         GameObject bulletLeft = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(leftDir));
-        Bullet bulletLeftScript = bulletLeft.GetComponent<Bullet>();
-        bulletLeftScript.SetOwner(gameObject);
-        bulletLeftScript.SetDirection(leftDir);
+        Bullet bLeft = bulletLeft.GetComponent<Bullet>();
+        bLeft.SetOwner(gameObject);
+        bLeft.SetDirection(leftDir);
 
-        // Góc lệch sang phải
-        Vector3 rightDir = Quaternion.Euler(0, angle, 0) * dirToTarget;
+        // === Viên phải: lệch +90 độ quanh trục Y ===
+        Vector3 rightDir = Quaternion.AngleAxis(90f, Vector3.up) * dirToTarget;
         GameObject bulletRight = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(rightDir));
-        Bullet bulletRightScript = bulletRight.GetComponent<Bullet>();
-        bulletRightScript.SetOwner(gameObject);
-        bulletRightScript.SetDirection(rightDir);
-
-        //Lệch giữa
-        Vector3 betweenDir = Quaternion.Euler(0, 0, 0) * dirToTarget;
-        GameObject bulletbetween = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(betweenDir));
-        Bullet bulletBetweenScript = bulletbetween.GetComponent<Bullet>();
-        bulletBetweenScript.SetOwner(gameObject);
-        bulletBetweenScript.SetDirection(betweenDir);
+        Bullet bRight = bulletRight.GetComponent<Bullet>();
+        bRight.SetOwner(gameObject);
+        bRight.SetDirection(rightDir);
     }
-
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Bullet2"))
@@ -448,12 +479,19 @@ public class PlayerCity_Controller : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("EnemyController"))
         {
-            //AudioManager.instance.PlayerSFX(3);
-            dead1.SetActive(true);
-            UIManager.instance.StartDead();
-            isDead = true;
-            anim.SetBool("Death", true);
-            isOffPlayer = true;
+            if (isProtectPlayer)
+            {
+                circlePtotect.SetActive(true);
+
+            }
+            else
+            {
+                dead1.SetActive(true);
+                UIManager.instance.StartDead();
+                isDead = true;
+                anim.SetBool("Death", true);
+                isOffPlayer = true;
+            }
         }
     }
     public void DestroyPlayer()
@@ -482,5 +520,25 @@ public class PlayerCity_Controller : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Time.timeScale = 0f;
+    }
+    public void OnProtect()
+    {
+        countProtect += 1;
+        textCount.text = countProtect.ToString();
+        isProtectPlayer = true;
+    }
+    public void SetVelocity()
+    {
+        countSpeed += 10;
+        textSpeed.text = countSpeed.ToString(); 
+        moveSpeed = moveSpeed + (moveSpeed * 0.2f);
+    }
+    public void SetCircleRange()
+    {
+        sizeCircle += 10;
+        drawCircle.radius = 6.0f;
+        radius = 6.0f;
+        isSetCircle = true;
+        textCircleRange.text = sizeCircle.ToString();
     }
 }

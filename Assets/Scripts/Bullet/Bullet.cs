@@ -79,7 +79,11 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject == owner) return;
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            if (GameManager.instance.playerController.isGetGift) return;
+            if (GameManager.instance.playerController.isGetGift)
+            {
+                collision.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+                return;
+            }
             Destroy(gameObject);
         }
         if (collision.gameObject.CompareTag("EnemyController"))

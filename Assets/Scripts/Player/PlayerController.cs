@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
         point = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         anim = GetComponent<Animator>();
+        isGetGift = false;
     }
     void Update()
     {

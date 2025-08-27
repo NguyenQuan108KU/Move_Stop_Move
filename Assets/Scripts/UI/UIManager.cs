@@ -47,10 +47,13 @@ public class UIManager : MonoBehaviour
 
     public GameObject GiftOpen;
 
+    public GameObject nameOfPlayer;
+    public GameObject circleOfPlayer;
+
 
     private void Start()
     {
-        enemyAliveTotal = 10;
+        enemyAliveTotal = 1;
         countNumber = 5;
 
         countdownDuration = 5;
@@ -94,7 +97,10 @@ public class UIManager : MonoBehaviour
         {
             enemyAliveTotal = 0;
             Winner.SetActive(true);
-            StartCoroutine(StopGameAfterDelay(1f)); // gọi coroutine sau 1s
+            nameOfPlayer.SetActive(false);
+            circleOfPlayer.SetActive(false);
+            GameManager.instance.playerController.anim.SetTrigger("Dancer");
+            //StartCoroutine(StopGameAfterDelay(1f)); // gọi coroutine sau 1s
         }
     }
 
