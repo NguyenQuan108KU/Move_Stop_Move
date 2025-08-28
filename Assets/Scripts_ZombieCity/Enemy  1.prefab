@@ -965,7 +965,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7996178460848746351
 Transform:
   m_ObjectHideFlags: 0
@@ -998,7 +998,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 0
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -6578,7 +6578,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9104122229043768944}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -6612,10 +6612,16 @@ MonoBehaviour:
   listColors: {fileID: 11400000, guid: 65048c7e16096e641a3929b279b705bf, type: 2}
   lookRadius: 40
   rotationSpeed: 4
-  praticleSystem: {fileID: 5173333838870779741}
+  praticleSystem: {fileID: 4141308942985619210, guid: 30c4ef20527f5ef458f82f7eb1f7f9c0, type: 3}
   colorEnemy: {fileID: 6523510951311826058}
   targetEnemy: {fileID: 52061959327055970}
   isDead: 0
+  isGetGift: 0
+  isBoss: 0
+  isBossLevel1: 0
+  isBossLevel2: 0
+  countAttack: 0
+  hatColor: {fileID: 0}
 --- !u!195 &5396681731297850218
 NavMeshAgent:
   m_ObjectHideFlags: 0

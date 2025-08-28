@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        enemyAliveTotal = 1;
+        enemyAliveTotal = 10;
         countNumber = 5;
 
         countdownDuration = 5;

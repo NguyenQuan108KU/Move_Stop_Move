@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Enemy : MonoBehaviour
 {
@@ -51,6 +52,8 @@ public class Enemy : MonoBehaviour
         {
             item.material.color = Random.ColorHSV();
         }
+        var ps = BloodParticle.GetComponent<ParticleSystem>().main;
+        ps.startColor = render[0].material.color;
     }
 
     private void Start()

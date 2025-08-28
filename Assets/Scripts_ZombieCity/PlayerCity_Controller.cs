@@ -8,6 +8,8 @@ using UnityEngine;
 public class PlayerCity_Controller : MonoBehaviour
 {
     public Animator anim;
+    public Animator animText;
+    public GameObject textAnim;
     public Joystick joystick;
 
     [Header("Bullet")]
@@ -75,6 +77,7 @@ public class PlayerCity_Controller : MonoBehaviour
 
     public bool isOffPlayer = false;
     private int functionBullet;
+    public int level;
 
     //Func 1
     public bool isProtectPlayer = false;
@@ -96,7 +99,7 @@ public class PlayerCity_Controller : MonoBehaviour
     void Start()
     {
         coinOfPlayer = 0;
-        EnemyAlive = 10;
+        EnemyAlive = 20;
         point = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         anim = GetComponent<Animator>();
@@ -349,7 +352,14 @@ public class PlayerCity_Controller : MonoBehaviour
         functionBullet = PlayerPrefs.GetInt("Function");
         if (functionBullet == -1)
         {
-            ShootingDefault();
+            if(level == 0)
+            {
+                ShootingDefault();
+            }
+            else if(level == 1)
+            {
+                ShootingLevelUp(0.3f);
+            }
         }
         else if(functionBullet == 0)
         {
@@ -407,6 +417,39 @@ public class PlayerCity_Controller : MonoBehaviour
         b2.SetOwner(gameObject);
         b2.SetDirection(dir);
     }
+    public void ShootingLevelUp (float offsetDistance)
+    {
+        if (target == null) return;
+
+        playerMove = Vector3.zero;
+        AudioManager.instance.PlayerSFX(0);
+
+        // Hướng bắn (hướng tới enemy, nhưng cả 2 viên đều đi song song theo hướng này)
+        Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
+
+        // Tính vector vuông góc để dịch ngang (dùng cross với Vector3.up để lấy hướng trái/phải)
+        Vector3 sideOffset = Vector3.Cross(Vector3.up, dirToTarget).normalized * offsetDistance;
+
+        // Viên đạn 1 (dịch sang trái)
+        GameObject bulletLeft = Instantiate(
+            bulletPrefabs,
+            firingTransform.position - sideOffset,
+            Quaternion.LookRotation(dirToTarget)
+        );
+        Bullet bLeft = bulletLeft.GetComponent<Bullet>();
+        bLeft.SetOwner(gameObject);
+        bLeft.SetDirection(dirToTarget);
+
+        // Viên đạn 2 (dịch sang phải)
+        GameObject bulletRight = Instantiate(
+            bulletPrefabs,
+            firingTransform.position + sideOffset,
+            Quaternion.LookRotation(dirToTarget)
+        );
+        Bullet bRight = bulletRight.GetComponent<Bullet>();
+        bRight.SetOwner(gameObject);
+        bRight.SetDirection(dirToTarget);
+    }
     public void ShootingDouble(float angle)
     {
         if (target == null) return;
@@ -418,7 +461,11 @@ public class PlayerCity_Controller : MonoBehaviour
         Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
 
         // === Viên đạn số 1: luôn trúng enemy ===
-        GameObject bulletMain = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(dirToTarget));
+        GameObject bulletMain = Instantiate(
+            bulletPrefabs,
+            firingTransform.position,
+            Quaternion.LookRotation(dirToTarget)
+        );
         Bullet bMain = bulletMain.GetComponent<Bullet>();
         bMain.SetOwner(gameObject);
         bMain.SetDirection(dirToTarget);
@@ -427,11 +474,16 @@ public class PlayerCity_Controller : MonoBehaviour
         Quaternion rot = Quaternion.AngleAxis(angle, Vector3.up); // xoay quanh trục thẳng đứng
         Vector3 sideDir = rot * dirToTarget;
 
-        GameObject bulletSide = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(sideDir));
+        GameObject bulletSide = Instantiate(
+            bulletPrefabs,
+            firingTransform.position,
+            Quaternion.LookRotation(sideDir)
+        );
         Bullet bSide = bulletSide.GetComponent<Bullet>();
         bSide.SetOwner(gameObject);
         bSide.SetDirection(sideDir);
     }
+
 
     public void ShootingTriple()
     {
@@ -500,11 +552,14 @@ public class PlayerCity_Controller : MonoBehaviour
     }
     public void UpLevel()
     {
-        if (countAttack >= 1)
+        if (coinOfPlayer == 1)
         {
-            effectLevelUp.SetActive(true);
-            transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
-            UIManager.instance.up = 4.5f;
+            if(textAnim != null || animText != null)
+            {
+                level = 1;
+                textAnim.SetActive(true);
+                animText.SetTrigger("Text_Move");
+            }
         }
     }
     public void SetWinner()

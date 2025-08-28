@@ -6,9 +6,11 @@ using UnityEngine.AI;
 public class SpawnZombie : MonoBehaviour
 {
     [Header("Enemy Settings")]
+    public List<GameObject> enemyPrefabList;
     public GameObject enemyPrefab;
     public Transform player;
-    public int maxEnemies = 10; // Số lượng enemy tối đa
+    public int maxEnemies = 20; // Số lượng enemy tối đa
+    public int countEnemy = 20;
 
     [Header("Spawn Radius")]
     public float minDistance = 5f;
@@ -31,10 +33,10 @@ public class SpawnZombie : MonoBehaviour
         {
             // Xóa các enemy bị hủy khỏi danh sách
             currentEnemies.RemoveAll(e => e == null);
-
             if (currentEnemies.Count < maxEnemies)
             {
                 SpawnEnemy();
+                countEnemy -= 1;
             }
 
             float waitTime = Random.Range(minSpawnInterval, maxSpawnInterval);
@@ -45,8 +47,22 @@ public class SpawnZombie : MonoBehaviour
     void SpawnEnemy()
     {
         Vector3 spawnPos = GetRandomNavmeshPosition(player.position, minDistance, maxDistance);
-        GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-        currentEnemies.Add(enemy);
+        if(countEnemy == 10 || countEnemy == 8 || countEnemy == 5 || countEnemy == 7)
+        {
+            GameObject enemy = Instantiate(enemyPrefabList[2], spawnPos, Quaternion.identity);
+            currentEnemies.Add(enemy);
+        }
+        else if(countEnemy == 2)
+        {
+            GameObject enemy = Instantiate(enemyPrefabList[3], spawnPos, Quaternion.identity);
+            currentEnemies.Add(enemy);
+        }
+        else
+        {
+            int indexEnemy = Random.Range(0, 2);
+            GameObject enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
+            currentEnemies.Add(enemy);
+        }
     }
 
     Vector3 GetRandomNavmeshPosition(Vector3 center, float minDist, float maxDist)

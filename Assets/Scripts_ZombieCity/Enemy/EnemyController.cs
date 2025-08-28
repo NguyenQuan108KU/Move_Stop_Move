@@ -18,7 +18,10 @@ public class EnemyController : MonoBehaviour
     [Header("Praticle System")]
     [SerializeField] private GameObject praticleSystem;
     [Header("Material Enemy")]
-    [SerializeField] private GameObject colorEnemy;    public GameObject targetEnemy;    public bool isDead = false;    public bool isGetGift = false;
+    [SerializeField] private GameObject colorEnemy;    public GameObject targetEnemy;    public bool isDead = false;    public bool isGetGift = false;
+
+    public bool isBoss;
+    public bool isBossLevel1;    public bool isBossLevel2;    public int countAttack;    public GameObject hatColor;
     void Start()
     {
         target = GameManager.instance.playerCityController.transform;
@@ -28,6 +31,15 @@ public class EnemyController : MonoBehaviour
         // Tắt xoay tự động để tự xoay bằng script
         agent.updateRotation = false;
         SetColorEnemy();
+        SetColorHair();
+        if (isBossLevel1)
+        {
+            countAttack = 2;
+        }
+        else if(isBossLevel2)
+        {
+            countAttack = 4;
+        }
     }
 
     void Update()
@@ -78,31 +90,48 @@ public class EnemyController : MonoBehaviour
     {
         int indexColor = Random.Range(0, listColors.colors.Length);
         colorEnemy.GetComponent<SkinnedMeshRenderer>().material = listColors.colors[indexColor].material;
-        ParticleSystem ps = praticleSystem.GetComponent<ParticleSystem>();
-        var main = ps.main;
-        main.startColor = listColors.colors[indexColor].material.color;
+    }
+    public void SetColorHair()
+    {
+        if (hatColor != null)
+        {
+            int indexColor = Random.Range(0, listColors.colors.Length);
+            hatColor.GetComponent<MeshRenderer>().material = listColors.colors[indexColor].material;
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Bullet1"))
         {
-            AudioManager.instance.PlayerSFX(2);
-            GameManager.instance.playerCityController.EnemyAlive -= 1;
-            GameManager.instance.playerCityController.coinOfPlayer += 5;
-
-            // Spawn particle riêng biệt tại vị trí enemy
-            GameObject ps = Instantiate(praticleSystem, transform.position, Quaternion.identity);
-            var particle = ps.GetComponent<ParticleSystem>();
-            particle.Play();
-
-            Destroy(ps, particle.main.duration + particle.main.startLifetime.constantMax); // tự hủy sau khi chạy xong
-
-            Destroy(gameObject); // xóa enemy
+            if (isBoss)
+            {
+                countAttack -= 1;
+                if(countAttack <= 0)
+                {
+                    EnemyDie();
+                }
+            }
+            else
+            {
+                EnemyDie();
+            }
         }
         if (collision.gameObject.CompareTag("Player"))
         {
             isDead = true;
             anim.SetBool("Move", false);
         }
+    }
+    public void EnemyDie()
+    {
+        GameObject effect = Instantiate(praticleSystem);
+        effect.transform.rotation = Quaternion.identity;
+        effect.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+        effect.GetComponent<ParticleSystem>().Play();
+
+        AudioManager.instance.PlayerSFX(2);
+        GameManager.instance.playerCityController.EnemyAlive -= 1;
+        GameManager.instance.playerCityController.coinOfPlayer += 1;
+        Destroy(gameObject); // xóa enemy
     }
 }
