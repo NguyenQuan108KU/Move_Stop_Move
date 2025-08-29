@@ -33,7 +33,7 @@ public class Next_Func : MonoBehaviour
     {
         joystick.SetActive(true);
         Time.timeScale = 1;
-        spawnZombie.SetActive(true);
+        //spawnZombie.SetActive(true);
         menu1.SetActive(false);
         menu2.SetActive(false);
     }

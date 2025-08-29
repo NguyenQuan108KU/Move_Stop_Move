@@ -46,6 +46,7 @@ public class Enemy : MonoBehaviour
     public float attackTimer;
 
     public bool isAttacking = false; // cờ kiểm soát
+    public GameObject GroundCheck;
     private void Awake()
     {
         foreach (var item in render)
@@ -88,7 +89,7 @@ public class Enemy : MonoBehaviour
     {
         if (isDead || target != null || GameManager.instance.playerController.isPlayerDie) return; // Không di chuyển nếu đã chết hoặc đang tấn công
         timer += Time.deltaTime;
-        if ((timer >= changeDirectionTime || CheckWall()))
+        if ((timer >= changeDirectionTime || CheckWall() || !CheckGround()))
         {
             anim.SetBool("Move", true);
             randomDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
@@ -140,7 +141,6 @@ public class Enemy : MonoBehaviour
         if (!foundTarget)
         {
             // Player đã rời khỏi phạm vi → quay lại trạng thái di chuyển ngẫu nhiên
-            Debug.Log("sjnj");
             target = null;
             anim.SetBool("Attack", false);
         }
@@ -154,7 +154,7 @@ public class Enemy : MonoBehaviour
             GameManager.instance.playerController.point += 5;
             GameManager.instance.playerController.coinMoney += 5;
             GameManager.instance.playerController.countAttack += 1;
-            UIManager.instance.UpdateAlive();
+            //UIManager.instance.UpdateAlive();
         }
         if (collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2"))
         {
@@ -179,6 +179,7 @@ public class Enemy : MonoBehaviour
             
             isDead = true;
             //Praticle System
+            UIManager.instance.UpdateAlive();
             BloodParticle.SetActive(true);
             anim.SetBool("Death", true);
             gameObject.tag = "Untagged";
@@ -239,6 +240,18 @@ public class Enemy : MonoBehaviour
             return false;
         }
     }
+    public bool CheckGround()
+    {
+        // Bắn tia từ GroundCheck xuống dưới 2 đơn vị
+        if (Physics.Raycast(GroundCheck.transform.position, Vector3.down, out RaycastHit hit, 2f))
+        {
+            // Kiểm tra tag nếu muốn chắc chắn là "Ground"
+            return hit.collider.CompareTag("Ground");
+        }
+
+        return false;
+    }
+
 
     public void SetDeufalt()
     {

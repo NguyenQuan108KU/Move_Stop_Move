@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -50,10 +52,19 @@ public class UIManager : MonoBehaviour
     public GameObject nameOfPlayer;
     public GameObject circleOfPlayer;
 
+    [Header("-----------------")]
+    public TextMeshProUGUI readyCity;
+    public float numberOfReadyCity = 3;
+    public GameObject menuReady;
+    public List<GameObject> spawn;
+    public GameObject weaponLoad;
+    public GameObject menuLoad;
+    public bool isLoadMenu;
 
     private void Start()
     {
-        enemyAliveTotal = 10;
+        isLoadMenu = false;
+        enemyAliveTotal = 12;
         countNumber = 5;
 
         countdownDuration = 5;
@@ -85,6 +96,15 @@ public class UIManager : MonoBehaviour
         //Load();
         if(loadGift != null)
             loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
+
+        if((readyCity != null || menuReady != null) && isLoadMenu)
+        {
+            LoadCity();
+        }
+        if (weaponLoad != null)
+        {
+            RorateWeapon();
+        }
     }
     private void LateUpdate()
     {
@@ -109,11 +129,6 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(delay); // chờ 1 giây
         Time.timeScale = 0;
     }
-    void setVitriScorePlayer()
-    {
-        Vector3 enemyScreenPosition = Camera.main.WorldToScreenPoint(GameManager.instance.playerController.transform.position + new Vector3(0, up, 0));
-        namePlayer.transform.position = enemyScreenPosition;
-    }
     //Load khi player chết
 
     public void StartDead()
@@ -133,6 +148,32 @@ public class UIManager : MonoBehaviour
             Canvas_Dead_2.SetActive(true);
         }
     }
+    public void LoadCity()
+    {
+        numberOfReadyCity -= Time.deltaTime;
+        if(numberOfReadyCity < 0)
+        {
+            menuReady.SetActive(false);
+            foreach(var i in spawn)
+            {
+                i.SetActive(true); 
+            }
+        }
+        readyCity.text = (Mathf.RoundToInt(numberOfReadyCity)).ToString();
+    }
+    public void RorateWeapon()
+    {
+        
+        weaponLoad.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
+        float number = 2.5f;
+        number -= Time.time;
+        if(number < 0)
+        {
+            menuLoad.SetActive(false);
+        }
+        Debug.Log("number" + number);
+    }
+    public void SetBoolMenu() => isLoadMenu = true;
     public void StopGame() => Time.timeScale = 0;
     public void ContinueGame() => Time.timeScale = 1;
     public void SaveGift() => PlayerPrefs.SetInt("Gift", 1);

@@ -10,29 +10,31 @@ public class SpawnZombie : MonoBehaviour
     public GameObject enemyPrefab;
     public Transform player;
     public int maxEnemies = 20; // Số lượng enemy tối đa
-    public int countEnemy = 20;
+    public int countEnemy = 30;
 
     [Header("Spawn Radius")]
-    public float minDistance = 5f;
-    public float maxDistance = 15f;
+    public float minDistance = 8f;
+    public float maxDistance = 13f;
 
     [Header("Spawn Time")]
     public float minSpawnInterval = 2f;
-    public float maxSpawnInterval = 6f;
+    public float maxSpawnInterval = 4f;
 
     private List<GameObject> currentEnemies = new List<GameObject>();
 
     void Start()
     {
-        StartCoroutine(SpawnEnemyRoutine());
+        StartCoroutine(SpawnEnemyRoutine()); // chỉ gọi 1 lần ở Start
     }
 
     IEnumerator SpawnEnemyRoutine()
     {
-        while (true)
+        while (countEnemy > 0)
         {
-            // Xóa các enemy bị hủy khỏi danh sách
+            // dọn rác enemy đã chết
             currentEnemies.RemoveAll(e => e == null);
+
+            // chỉ spawn khi chưa đủ maxEnemies
             if (currentEnemies.Count < maxEnemies)
             {
                 SpawnEnemy();
@@ -47,21 +49,18 @@ public class SpawnZombie : MonoBehaviour
     void SpawnEnemy()
     {
         Vector3 spawnPos = GetRandomNavmeshPosition(player.position, minDistance, maxDistance);
-        if(countEnemy == 10 || countEnemy == 8 || countEnemy == 5 || countEnemy == 7)
+        if(countEnemy == 24 || countEnemy == 25 || countEnemy == 28 || countEnemy == 27)
         {
             GameObject enemy = Instantiate(enemyPrefabList[2], spawnPos, Quaternion.identity);
-            currentEnemies.Add(enemy);
         }
-        else if(countEnemy == 2)
+        else if(countEnemy == 2 || countEnemy == 1 || countEnemy == 29 || countEnemy == 26 || countEnemy == 22)
         {
             GameObject enemy = Instantiate(enemyPrefabList[3], spawnPos, Quaternion.identity);
-            currentEnemies.Add(enemy);
         }
         else
         {
-            int indexEnemy = Random.Range(0, 2);
+            int indexEnemy = Random.Range(0, 4);
             GameObject enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
-            currentEnemies.Add(enemy);
         }
     }
 

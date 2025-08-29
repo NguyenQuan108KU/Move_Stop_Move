@@ -22,13 +22,13 @@ public class SpawnEnemy : MonoBehaviour
         _timeUnitSpawn -= Time.deltaTime;
 
         // Xóa enemy null (đã chết/destroy)
-        _enemyList.RemoveAll(enemy => enemy == null);
+        //_enemyList.RemoveAll(enemy => enemy == null);
 
         if (_timeUnitSpawn < 0 && _enemyList.Count < maxEnemyCount)
         {
             // Tạo enemy mới
-            Vector3 spawnPos = GameManager.instance.playerController.transform.position +
-                               new Vector3(Random.Range(-35, 35), 0, Random.Range(-35, 35));
+            Vector3 spawnPos = transform.position +
+                               new Vector3(Random.Range(-40, 40), 0, Random.Range(-25, 40));
 
             GameObject enemy = Instantiate(_enemyPrefabs, spawnPos, Quaternion.identity);
             _enemyList.Add(enemy);

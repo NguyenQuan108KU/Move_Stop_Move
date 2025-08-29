@@ -10,8 +10,7 @@ public class TextFollowCamera : MonoBehaviour
         mainCam = Camera.main;
         initialScale = transform.localScale; // lưu kích thước ban đầu
     }
-
-    void Update()
+    private void LateUpdate()
     {
         // luôn nhìn thẳng vào camera
         transform.LookAt(

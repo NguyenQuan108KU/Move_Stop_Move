@@ -99,7 +99,7 @@ public class PlayerCity_Controller : MonoBehaviour
     void Start()
     {
         coinOfPlayer = 0;
-        EnemyAlive = 20;
+        EnemyAlive = 25;
         point = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         anim = GetComponent<Animator>();
@@ -502,14 +502,14 @@ public class PlayerCity_Controller : MonoBehaviour
         bMid.SetDirection(dirToTarget);
 
         // === Viên trái: lệch -90 độ quanh trục Y ===
-        Vector3 leftDir = Quaternion.AngleAxis(-90f, Vector3.up) * dirToTarget;
+        Vector3 leftDir = Quaternion.AngleAxis(-60f, Vector3.up) * dirToTarget;
         GameObject bulletLeft = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(leftDir));
         Bullet bLeft = bulletLeft.GetComponent<Bullet>();
         bLeft.SetOwner(gameObject);
         bLeft.SetDirection(leftDir);
 
         // === Viên phải: lệch +90 độ quanh trục Y ===
-        Vector3 rightDir = Quaternion.AngleAxis(90f, Vector3.up) * dirToTarget;
+        Vector3 rightDir = Quaternion.AngleAxis(60f, Vector3.up) * dirToTarget;
         GameObject bulletRight = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.LookRotation(rightDir));
         Bullet bRight = bulletRight.GetComponent<Bullet>();
         bRight.SetOwner(gameObject);
@@ -552,7 +552,7 @@ public class PlayerCity_Controller : MonoBehaviour
     }
     public void UpLevel()
     {
-        if (coinOfPlayer == 1)
+        if (coinOfPlayer == 15)
         {
             if(textAnim != null || animText != null)
             {

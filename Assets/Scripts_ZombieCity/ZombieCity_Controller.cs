@@ -7,6 +7,6 @@ public class ZombieCity_Controller : MonoBehaviour
     
     void Start()
     {
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
     }
 }
