@@ -15190,8 +15190,6 @@ MonoBehaviour:
   spawn:
   - {fileID: 440326427}
   - {fileID: 1838372980}
-  weaponLoad: {fileID: 49050363}
-  menuLoad: {fileID: 762202242}
   isLoadMenu: 0
 --- !u!4 &1225140696
 Transform:
@@ -73397,9 +73395,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HandPlayer: {fileID: 5355527596550981297}
-  x: -0.12
-  y: 0.22
-  z: 0.42
+  x: -0.09
+  y: 0.31
+  z: 0
 --- !u!33 &7289850939041331095
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -74695,6 +74693,9 @@ MonoBehaviour:
   initialShadingOfPlayer: {fileID: 7187798725034207792}
   PantsOfPlayer: {fileID: 4614907669081214070}
   fireRate: 0.5
+  weaponLoad: {fileID: 49050363}
+  menuLoad: {fileID: 762202242}
+  speedRotation: 200
   EnemyAlive: 0
   winner: {fileID: 670300146}
   coinOfPlayer: 0

@@ -6312,7 +6312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &132835232
 Transform:
   m_ObjectHideFlags: 0
@@ -6628,7 +6628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &211370598
 Transform:
   m_ObjectHideFlags: 0
@@ -21327,9 +21327,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HandPlayer: {fileID: 3373197663231860453}
-  x: -0.12
-  y: 0.22
-  z: 0.42
+  x: -0.09
+  y: 0.31
+  z: 0
 --- !u!1 &3489676245369407144
 GameObject:
   m_ObjectHideFlags: 0

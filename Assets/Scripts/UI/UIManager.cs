@@ -57,8 +57,6 @@ public class UIManager : MonoBehaviour
     public float numberOfReadyCity = 3;
     public GameObject menuReady;
     public List<GameObject> spawn;
-    public GameObject weaponLoad;
-    public GameObject menuLoad;
     public bool isLoadMenu;
 
     private void Start()
@@ -100,10 +98,6 @@ public class UIManager : MonoBehaviour
         if((readyCity != null || menuReady != null) && isLoadMenu)
         {
             LoadCity();
-        }
-        if (weaponLoad != null)
-        {
-            RorateWeapon();
         }
     }
     private void LateUpdate()
@@ -160,18 +154,6 @@ public class UIManager : MonoBehaviour
             }
         }
         readyCity.text = (Mathf.RoundToInt(numberOfReadyCity)).ToString();
-    }
-    public void RorateWeapon()
-    {
-        
-        weaponLoad.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
-        float number = 2.5f;
-        number -= Time.time;
-        if(number < 0)
-        {
-            menuLoad.SetActive(false);
-        }
-        Debug.Log("number" + number);
     }
     public void SetBoolMenu() => isLoadMenu = true;
     public void StopGame() => Time.timeScale = 0;

@@ -71,6 +71,11 @@ public class PlayerCity_Controller : MonoBehaviour
     [SerializeField] private float fireRate = 0.5f; // thời gian chờ giữa các lần bắn
     private float nextFireTime = 0f;
 
+
+    public GameObject weaponLoad;
+    public GameObject menuLoad;
+    [SerializeField] public float speedRotation;
+
     public int EnemyAlive;
     public GameObject winner;
     public int coinOfPlayer;
@@ -94,10 +99,12 @@ public class PlayerCity_Controller : MonoBehaviour
     public bool isSetCircle;
     public TextMeshProUGUI textCircleRange;
     public int sizeCircle;
+    float number;
 
 
     void Start()
     {
+        number = 2f;
         coinOfPlayer = 0;
         EnemyAlive = 25;
         point = 0;
@@ -131,6 +138,10 @@ public class PlayerCity_Controller : MonoBehaviour
             {
                 isProtectPlayer = false;
             }
+        }
+        if (weaponLoad != null)
+        {
+            RorateWeapon();
         }
     }
     void changeWepon()
@@ -602,5 +613,17 @@ public class PlayerCity_Controller : MonoBehaviour
         radius = 6.0f;
         isSetCircle = true;
         textCircleRange.text = sizeCircle.ToString();
+    }
+
+    public void RorateWeapon()
+    {
+
+        weaponLoad.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
+        number -= Time.deltaTime;
+        if (number < 0)
+        {
+            menuLoad.SetActive(false);
+        }
+        Debug.Log("number" + number);
     }
 }
