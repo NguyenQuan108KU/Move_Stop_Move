@@ -163,6 +163,15 @@ public class PlayerCity_Controller : MonoBehaviour
                 {
                     bullet1.SetRoration = false;
                 }
+
+                if (test.list[i].isBomerang)
+                {
+                    bullet1.SetBoomerang = true;
+                }
+                else
+                {
+                    bullet1.SetBoomerang = false;
+                }
             }
         }
     }
@@ -483,8 +492,6 @@ public class PlayerCity_Controller : MonoBehaviour
         bSide.SetOwner(gameObject);
         bSide.SetDirection(sideDir);
     }
-
-
     public void ShootingTriple()
     {
         if (target == null) return;

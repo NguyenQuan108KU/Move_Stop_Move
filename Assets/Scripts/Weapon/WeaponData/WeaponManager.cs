@@ -62,6 +62,7 @@ public class WeaponManager : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log("W" + selectedOption);
         coinOfPlayerText.text = coinOfPlayer.ToString();
         indexGift = PlayerPrefs.GetInt("Gift");
         if(selectedOption == 5 && indexGift != 1)
@@ -234,14 +235,15 @@ public class WeaponManager : MonoBehaviour
         Weapon weapon = weaponDB.GetWeapon(selectedOption);
         if (weapon.isBought || weapon.isGift)
         {
-            int indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption);
+            int indexSelectOption = PlayerPrefs.GetInt("IndexWeapon");
+            int indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexSelectOption);
             MeshRenderer meshRenderer = Weapon.GetComponent<MeshRenderer>();
             // Lấy toàn bộ materials ra
             Material[] mats = meshRenderer.materials;
 
-            for (int j = 0; j < weaponDB.listOfMaterials[selectedOption].materialOfHammer[indexMaterial].materials.Length; j++)
+            for (int j = 0; j < weaponDB.listOfMaterials[indexSelectOption].materialOfHammer[indexMaterial].materials.Length; j++)
             {
-                mats[j] = weaponDB.listOfMaterials[selectedOption].materialOfHammer[indexMaterial].materials[j];
+                mats[j] = weaponDB.listOfMaterials[indexSelectOption].materialOfHammer[indexMaterial].materials[j];
             }
             meshRenderer.materials = mats;
         }

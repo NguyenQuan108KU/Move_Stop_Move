@@ -8,4 +8,5 @@ public class ChooseWeapon
     public int index;
     public Mesh weaponMesh;
     public bool isRotate;
+    public bool isBomerang;
 }

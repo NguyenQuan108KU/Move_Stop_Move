@@ -13166,6 +13166,13 @@ MonoBehaviour:
   GiftOpen: {fileID: 1981487841}
   nameOfPlayer: {fileID: 87766973}
   circleOfPlayer: {fileID: 635503167}
+  readyCity: {fileID: 0}
+  numberOfReadyCity: 3
+  menuReady: {fileID: 0}
+  spawn: []
+  weaponLoad: {fileID: 0}
+  menuLoad: {fileID: 0}
+  isLoadMenu: 0
 --- !u!4 &1225140696
 Transform:
   m_ObjectHideFlags: 0
@@ -21320,6 +21327,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HandPlayer: {fileID: 3373197663231860453}
+  x: -0.12
+  y: 0.22
+  z: 0.42
 --- !u!1 &3489676245369407144
 GameObject:
   m_ObjectHideFlags: 0

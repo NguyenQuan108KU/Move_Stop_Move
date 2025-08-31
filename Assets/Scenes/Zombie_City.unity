@@ -45933,6 +45933,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HandPlayer: {fileID: 3373197663231860453}
+  x: 0
+  y: 0
+  z: 0
 --- !u!1 &3479309858937027639
 GameObject:
   m_ObjectHideFlags: 0
@@ -73394,6 +73397,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HandPlayer: {fileID: 5355527596550981297}
+  x: -0.12
+  y: 0.22
+  z: 0.42
 --- !u!33 &7289850939041331095
 MeshFilter:
   m_ObjectHideFlags: 0
