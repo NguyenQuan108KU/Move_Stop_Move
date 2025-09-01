@@ -265,7 +265,6 @@ public class Enemy : MonoBehaviour
     public IEnumerator OnAttackEnd()
     {
         yield return new WaitForSeconds(0.5f);
-        Debug.Log("false");
         isAttacking = false; 
     }
 }

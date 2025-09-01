@@ -624,6 +624,5 @@ public class PlayerCity_Controller : MonoBehaviour
         {
             menuLoad.SetActive(false);
         }
-        Debug.Log("number" + number);
     }
 }

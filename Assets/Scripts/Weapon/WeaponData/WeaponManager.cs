@@ -40,7 +40,18 @@ public class WeaponManager : MonoBehaviour
 
     public GameObject[] buttons;
     public int indexWeapon;
+    public RectTransform rawImageRect;
 
+    //--------------Custom----------------
+    [SerializeField] private GameObject material3;
+    [SerializeField] private GameObject material2;
+
+    [SerializeField] private GameObject imageWeaponss;
+    [SerializeField] private GameObject listColor;
+    [SerializeField] private GameObject textureImage;
+
+    [SerializeField] private List<Mesh> listRawImage;
+    [SerializeField] private GameObject weaponCustom;
     private void Start()
     {
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
@@ -62,7 +73,6 @@ public class WeaponManager : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log("W" + selectedOption);
         coinOfPlayerText.text = coinOfPlayer.ToString();
         indexGift = PlayerPrefs.GetInt("Gift");
         if(selectedOption == 5 && indexGift != 1)
@@ -73,6 +83,8 @@ public class WeaponManager : MonoBehaviour
         {
             button.GetComponent<Button>().interactable = true;
         }
+        UpdateMenuCustom();
+        CheckMaterial();
     }
     public void NextOption()
     {
@@ -82,6 +94,8 @@ public class WeaponManager : MonoBehaviour
             selectedOption = 0;
         }
         UpdateWeapon(selectedOption);
+        PlayerPrefs.SetInt("MenuCustom" + selectedOption, 0);
+        ChangeMeshWeapon();
         //SetButtonWeapon();
     }
     public void BackOption()
@@ -92,13 +106,22 @@ public class WeaponManager : MonoBehaviour
             selectedOption = weaponDB.WeaponCount() - 1;
         }
         UpdateWeapon(selectedOption);
+        PlayerPrefs.SetInt("MenuCustom" + selectedOption, 0);
+        ChangeMeshWeapon();
         //SetButtonWeapon();
     }
     public void UpdateWeapon(int selectedOption)
     {
         UpdateGift();
         int index = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption, 0);
+        Debug.Log(index);
         Weapon weapon = weaponDB.GetWeapon(selectedOption);
+
+        if (index < 0 || index >= weapon.weaponImage.Count())
+        {
+            index = 0; // hoặc bạn có thể cho = weapon.weaponImage.Length - 1
+            PlayerPrefs.SetInt("MaterialOfWeapon" + selectedOption, index);
+        }
 
         image.sprite = weapon.weaponImage[index];
         nameText.text = weapon.weaponName;
@@ -220,7 +243,6 @@ public class WeaponManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("dhdbdhi");
             Weapon weapon1 = weaponDB.GetWeapon(5);
             //weapon1.weaponImage[0] = gift_lock;
             image.sprite = gift_lock;
@@ -275,5 +297,69 @@ public class WeaponManager : MonoBehaviour
     public void SaveWeapon()
     {
         PlayerPrefs.SetInt("IndexWeapon", GetSelectedOption());
+    }
+    //----------------Custom Weapon-----------------------
+    public void CheckMaterial()
+    {
+        if(selectedOption == 0)
+        {
+            material3.SetActive(false);
+            material2.SetActive(true);
+        }else if(selectedOption == 2)
+        {
+            material2.SetActive(true);
+            material3.SetActive(true);
+        }else if(selectedOption == 4)
+        {
+            material2.SetActive(false);
+            material3.SetActive(false);
+        }else if(selectedOption == 5)
+        {
+            material3.SetActive(false);
+            material2.SetActive(true);
+        }
+    }
+    public void SaveMenuCustom()
+    {
+        PlayerPrefs.SetInt("MenuCustom" + selectedOption, 1);
+    }
+    public void UpdateMenuCustom()
+    {
+        int index = PlayerPrefs.GetInt("MenuCustom" + selectedOption);
+        if(index == 0)
+        {
+            imageWeaponss.SetActive(true);
+            listColor.SetActive(false);
+            textureImage.SetActive(false);
+        }
+    }
+    public void ChangeMeshWeapon()
+    {
+        weaponCustom.GetComponent<MeshFilter>().mesh = listRawImage[selectedOption];
+        if (selectedOption == 1)
+        {
+            rawImageRect.localPosition = new Vector3(26, -88, -0.001806259f);
+            rawImageRect.sizeDelta = new Vector2(360, 500);
+            //-0.001806259
+        }
+        if (selectedOption == 2)
+        {
+            rawImageRect.localPosition = new Vector3(34, -72, -0.001806259f);
+            rawImageRect.sizeDelta = new Vector2(1100, 500);
+            //-0.001806259
+        }
+        //-0.001806259
+        if (selectedOption == 4)
+        {
+            rawImageRect.localPosition = new Vector3(-11, -79, -0.001806259f);
+            rawImageRect.sizeDelta = new Vector2(360, 400);
+
+        }
+        if (selectedOption == 5)
+        {
+            rawImageRect.localPosition = new Vector3(33.28f, -72.7f, -0.001806259f);
+            rawImageRect.sizeDelta = new Vector2(1200, 600);
+
+        }
     }
 }

@@ -14,7 +14,6 @@ public class WeaponFollow : MonoBehaviour
     }
     private void Update()
     {
-        //Debug.Log("mesh.name" + mesh.mesh.name);
         if (mesh.mesh.name == "Plane Instance")
         {
             Scene currentScene = SceneManager.GetActiveScene();
