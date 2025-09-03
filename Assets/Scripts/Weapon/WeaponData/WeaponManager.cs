@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -42,6 +43,7 @@ public class WeaponManager : MonoBehaviour
     public int indexWeapon;
     public RectTransform rawImageRect;
 
+
     //--------------Custom----------------
     [SerializeField] private GameObject material3;
     [SerializeField] private GameObject material2;
@@ -52,6 +54,15 @@ public class WeaponManager : MonoBehaviour
 
     [SerializeField] private List<Mesh> listRawImage;
     [SerializeField] private GameObject weaponCustom;
+
+    [SerializeField] private GameObject weaponButtonColor;
+
+    public RectTransform rawImageRectOfButton;
+    public GameObject waeponButton;
+
+    public GameObject[] buttonOfMaterial;
+    private int indexButtonOfMaterial;
+    public Material[] listMaterialOfColor;
     private void Start()
     {
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
@@ -67,6 +78,15 @@ public class WeaponManager : MonoBehaviour
                 //SetMaterial();
                 SetButtonMaterial(buttons[index].layer);
                 image.sprite = weapon.weaponImage[indexWeapon];
+            });
+        }
+
+        for(int i = 0; i < buttonOfMaterial.Length; i++)
+        {
+            int x = i;
+            buttonOfMaterial[x].GetComponent<Button>().onClick.AddListener(() =>
+            {
+                indexButtonOfMaterial = buttonOfMaterial[x].layer;
             });
         }
         //SetButtonWeapon();
@@ -96,6 +116,7 @@ public class WeaponManager : MonoBehaviour
         UpdateWeapon(selectedOption);
         PlayerPrefs.SetInt("MenuCustom" + selectedOption, 0);
         ChangeMeshWeapon();
+        ChangeWeaponButtonColor();
         //SetButtonWeapon();
     }
     public void BackOption()
@@ -108,13 +129,13 @@ public class WeaponManager : MonoBehaviour
         UpdateWeapon(selectedOption);
         PlayerPrefs.SetInt("MenuCustom" + selectedOption, 0);
         ChangeMeshWeapon();
+        ChangeWeaponButtonColor();
         //SetButtonWeapon();
     }
     public void UpdateWeapon(int selectedOption)
     {
         UpdateGift();
         int index = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption, 0);
-        Debug.Log(index);
         Weapon weapon = weaponDB.GetWeapon(selectedOption);
 
         if (index < 0 || index >= weapon.weaponImage.Count())
@@ -362,4 +383,95 @@ public class WeaponManager : MonoBehaviour
 
         }
     }
+    public void ChangeWeaponButtonColor()
+    {
+        weaponButtonColor.GetComponent<MeshFilter>().mesh = listRawImage[selectedOption];
+        if(selectedOption == 0)
+        {
+            rawImageRectOfButton.localPosition = new Vector3(-10.1f, -2.7f, -29.24f);
+            rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 11.9f, 72f);
+            rawImageRectOfButton.sizeDelta = new Vector2(150, 150);
+            waeponButton.transform.localScale = new Vector3(3500, 3500, 3500);
+        }
+        if(selectedOption == 2)
+        {
+            rawImageRectOfButton.localPosition = new Vector3(3.1f, -3.3f, -29.24f);
+            rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 11.9f, 72f);
+            waeponButton.transform.localScale = new Vector3(9000, 3500, 3500);
+        }
+        if (selectedOption == 4)
+        {
+            rawImageRectOfButton.localPosition = new Vector3(-9f, 1f, -29.24f);
+            waeponButton.transform.localScale = new Vector3(2750, 2750, 2750);
+            rawImageRectOfButton.sizeDelta = new Vector2(150, 150f);
+            rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 11.9f, -12f);
+        }
+
+        if (selectedOption == 5)
+        {
+            rawImageRectOfButton.localPosition = new Vector3(1.2f, -1f, -29.24f);
+            rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 0, 82f);
+            rawImageRectOfButton.sizeDelta = new Vector2(150, 550);
+            waeponButton.transform.localScale = new Vector3(3500, 3500, 3500);
+        }
+
+    }
+    public void SetColorOfWeapon(int indexColor)
+    {
+        MeshRenderer renderer = weaponButtonColor.GetComponent<MeshRenderer>();
+        Material[] mats = renderer.materials;
+
+        MeshRenderer renderer1 = weaponCustom.GetComponent<MeshRenderer>();
+        Material[] mats1 = renderer1.materials;
+
+        string[] colorString = new string[]
+    {
+        "0.043, 0, 1",    // 0B00FF
+        "1, 0.741, 0",    // FFBD00
+        "1, 0, 0",        // FF0000
+        "1, 0, 0.631",    // FF00A1
+        "0, 0, 0",        // 000000
+        "0, 1, 0.894",    // 00FFE4
+        "1, 0.518, 0",    // FF8400
+        "0.671, 1, 0",    // ABFF00
+        "0, 0.627, 1",    // 00A0FF
+        "0.905, 0, 1"     // E700FF
+    };
+
+       
+        if (indexButtonOfMaterial == 1)
+        {
+            mats[0] = listMaterialOfColor[indexColor];
+            mats1[0] = listMaterialOfColor[indexColor];
+            float[] values = colorString[indexColor].Split(',')
+                                    .Select(s => float.Parse(s.Trim()))
+                                    .ToArray();
+            Color newColor = new Color(values[0], values[1], values[2]);
+            buttonOfMaterial[0].GetComponent<Image>().color = newColor;
+        }
+        else if (indexButtonOfMaterial == 2)
+        {
+            mats[1] = listMaterialOfColor[indexColor];
+            mats1[1] = listMaterialOfColor[indexColor];
+            float[] values = colorString[indexColor].Split(',')
+                                    .Select(s => float.Parse(s.Trim()))
+                                    .ToArray();
+            Color newColor = new Color(values[0], values[1], values[2]);
+            buttonOfMaterial[1].GetComponent<Image>().color = newColor;
+        }
+        else if (indexButtonOfMaterial == 3)
+        {
+            mats[2] = listMaterialOfColor[indexColor];
+            mats1[2] = listMaterialOfColor[indexColor];
+            float[] values = colorString[indexColor].Split(',')
+                                    .Select(s => float.Parse(s.Trim()))
+                                    .ToArray();
+            Color newColor = new Color(values[0], values[1], values[2]);
+            buttonOfMaterial[2].GetComponent<Image>().color = newColor;
+        }
+
+        renderer.materials = mats; // bắt buộc phải gán lại thì mới update
+        renderer1.materials = mats1;
+    }
+
 }

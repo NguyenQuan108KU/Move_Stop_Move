@@ -49,17 +49,17 @@ public class SpawnZombie : MonoBehaviour
     void SpawnEnemy()
     {
         Vector3 spawnPos = GetRandomNavmeshPosition(player.position, minDistance, maxDistance);
-        if(countEnemy == 24 || countEnemy == 25 || countEnemy == 28 || countEnemy == 27)
+        if (countEnemy == 24  || countEnemy == 28 || countEnemy == 27 || countEnemy == 26 || countEnemy == 22)
         {
             GameObject enemy = Instantiate(enemyPrefabList[2], spawnPos, Quaternion.identity);
         }
-        else if(countEnemy == 2 || countEnemy == 1 || countEnemy == 29 || countEnemy == 26 || countEnemy == 22)
+        else if (countEnemy == 2 || countEnemy == 1 || countEnemy == 7)
         {
             GameObject enemy = Instantiate(enemyPrefabList[3], spawnPos, Quaternion.identity);
         }
         else
         {
-            int indexEnemy = Random.Range(0, 4);
+            int indexEnemy = Random.Range(0, 2);
             GameObject enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
         }
     }

@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour
     public float timeStartBullet;
 
     private Vector3 randomDirection;
-    private float changeDirectionTime = 3f;
+    private float changeDirectionTime = 1.5f;
     private float timer = 0f;
     public TextMeshProUGUI textEnemy;
 

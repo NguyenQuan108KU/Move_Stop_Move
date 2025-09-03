@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         isLoadMenu = false;
-        enemyAliveTotal = 12;
+        enemyAliveTotal = 8;
         countNumber = 5;
 
         countdownDuration = 5;

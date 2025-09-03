@@ -19,6 +19,7 @@ public class SpawnEnemy : MonoBehaviour
 
     private void Update()
     {
+        
         _timeUnitSpawn -= Time.deltaTime;
 
         // Xóa enemy null (đã chết/destroy)
