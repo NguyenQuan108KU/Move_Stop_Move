@@ -80,16 +80,15 @@ public class WeaponManager : MonoBehaviour
                 image.sprite = weapon.weaponImage[indexWeapon];
             });
         }
-
         for(int i = 0; i < buttonOfMaterial.Length; i++)
         {
+            indexButtonOfMaterial = 1;
             int x = i;
             buttonOfMaterial[x].GetComponent<Button>().onClick.AddListener(() =>
             {
                 indexButtonOfMaterial = buttonOfMaterial[x].layer;
             });
         }
-        //SetButtonWeapon();
     }
     private void Update()
     {

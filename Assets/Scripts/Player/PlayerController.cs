@@ -7,59 +7,55 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+
     public Animator anim;
     public Joystick joystick;
 
-    [Header("Bullet")]
-    [SerializeField] private GameObject bulletPrefabs;
-    [SerializeField] private Transform firingTransform;
+    [Header("------------------Bullet------------------")]
+    public GameObject bulletPrefabs;   //Prefabs của viên đạn
+    public Transform firingTransform;  //Nơi viên đạn được bắn ra
 
-    [Header("Move Info")]
-    [SerializeField] private float moveSpeed;
-    private Vector3 playerMove;
+    [Header("------------------Move Info------------------")]
+    public float moveSpeedOfPlayer;    //Tốc độ di chuyển của nhân vật
+    private Vector3 directionOfPlayer;        // Hướng di chuyển của nhân vật dựa trên joystick
 
-    [Header("Radius")]
-    [SerializeField] private float radius;
+    [Header("------------------Radius------------------")]
+    public float radiusAttackOfPlayer;  //Bán kính vòng tròn phát hiện Enemy của Player
 
-    [SerializeField] private GameObject Harmmer;
-    [SerializeField] private Transform target;
-    public  bool isAttack = false;
-    float timer;
-    [SerializeField] private float attackDuration = 1f; // thời gian duy trì trạng thái attack
-    private float attackTimer = 0f;
-    public int point;
-    private Enemy enemyCurrent;
-    private bool isDetech = false;
-    private bool isDead = false;
-
+    public GameObject Harmmer;          //Vũ khí của nhân vật
+    private Transform targetEnemy;      //Vị trí của Enemy
+    public bool isAttack = false;       // Cho biết xem có tấn công hay không
+    public float attackDuration = 1f;   // Thời gian duy trì trạng thái tấn công
+    public int point;                   //Điểm của người chơi
+    private Enemy enemyCurrent;                            
+    public bool isDead = false;   //Kiểm tra xem nhân vật đã chết hay chưa
     public GameObject dead1;
-    public int coinMoney;
+    public int coinMoney;       //Tiền của người chơi
 
+    //Thay đổi vũ khi của player
     [Header("Change Weapon")]
     public WeaponDatabase weaponDB;
     public Test test;
     public GameObject weaponChoose;
-    public Bullet bullet1;
+    public Bullet bullet1;              //Viên đạn của người chơi
     private int indexWeapon;
-    public bool isPlayerDie = false;
     [SerializeField] private int indexMaterial;
-
     public int countAttack;
     public GameObject effectLevelUp;
-    [Header("Change Pants")]
+    [Header("------------------Change Pants------------------")]
     [SerializeField] private int indexPants;
     [SerializeField] private ListPants listPants;
     [SerializeField] private GameObject pantsOdPlayer;
 
-    [Header("Change Hats")]
+    [Header("------------------Change Hats------------------")]
     [SerializeField] private int indexHats;
     [SerializeField] private HATS hatOfPlayer;
 
-    [Header("Change Protect")]
+    [Header("------------------Change Protect------------------")]
     [SerializeField] private int indexProtect;
     [SerializeField] private Protect protectOfPlayer;
 
-    [Header("Change Clothes Player")]
+    [Header("------------------Change Clothes Player------------------")]
     [SerializeField] private int indexClothes;
     [SerializeField] private ClothesSet[] listClothes;
     [SerializeField] private GameObject initialShadingOfPlayer;
@@ -67,13 +63,10 @@ public class PlayerController : MonoBehaviour
 
     public bool isGetGift = false;
     public bool isLevelUp = false;
-
-    //[SerializeField] private Bullet bullet1;
     void Start()
     {
         point = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
-        anim = GetComponent<Animator>();
         isGetGift = false;
     }
     void Update()
@@ -82,7 +75,7 @@ public class PlayerController : MonoBehaviour
         PlayerMove();
         AttackTrigle();
         //Thay doi quan ao, vu khi
-        changeWepon();
+        ChangeWepon();
         changePants();
         changeHats();
         changeProtect();
@@ -91,7 +84,7 @@ public class PlayerController : MonoBehaviour
         UpLevel();
     }
     //Thay đổi vũ khí
-    void changeWepon()
+    void ChangeWepon()
     {
         indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
         indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);
@@ -219,29 +212,26 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    //Di chuyển nhân vật
-    private void PlayerMove()
-    {
-            playerMove.x = joystick.Horizontal;
-            playerMove.z = joystick.Vertical;
-            playerMove.y = 0;
 
-            Vector3 movement = playerMove * moveSpeed * Time.deltaTime;
-            transform.Translate(movement, Space.World);
-            anim.SetFloat("Speed", playerMove.sqrMagnitude);
+    //Hàm di chuyển nhân vật
+    private void PlayerMove(){
+        //Lấy hướng di chuyển từ joystick
+        directionOfPlayer.x = joystick.Horizontal;
+        directionOfPlayer.z = joystick.Vertical;
+        directionOfPlayer.y = 0;
 
-            if (playerMove.sqrMagnitude > 0.01f)
-            {
-                Quaternion toRotation = Quaternion.LookRotation(playerMove, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
-            }
+        transform.Translate(directionOfPlayer * moveSpeedOfPlayer * Time.deltaTime, Space.World);   //Di chuyển nhân vật bằng Translate
+        anim.SetFloat("Speed", directionOfPlayer.sqrMagnitude);    //Chuyển sang animation di chuyển
+        if (directionOfPlayer.sqrMagnitude > 0.01f){               //Nếu nhân vật đang có hướng di chuyển thì xoay theo hướng đó 
+            Quaternion toRotation = Quaternion.LookRotation(directionOfPlayer, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
+        }
     }
 
-    public void AttackTrigle()
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
+    //Hàm phát hiện enemy 
+    public void AttackTrigle(){
+        Collider[] colliders = Physics.OverlapSphere(transform.position, radiusAttackOfPlayer);
         Enemy firstEnemyDetected = null;
-
         foreach (var hit in colliders)
         {
             if (hit.CompareTag("Enemy"))
@@ -260,11 +250,11 @@ public class PlayerController : MonoBehaviour
 
             enemyCurrent = firstEnemyDetected;
             enemyCurrent.targetEnemy.SetActive(true); // Bật enemy mới
-            if (playerMove.sqrMagnitude == 0.0f)
+            if (directionOfPlayer.sqrMagnitude == 0.0f)
             {
-                target = enemyCurrent.transform;
+                targetEnemy = enemyCurrent.transform;
                 anim.SetBool("Attack", true);
-                Vector3 directionEnemy = target.position - transform.position;
+                Vector3 directionEnemy = targetEnemy.position - transform.position;
                 directionEnemy.y = 0;
                 Quaternion toRotation = Quaternion.LookRotation(directionEnemy);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
@@ -294,10 +284,10 @@ public class PlayerController : MonoBehaviour
         {
             AudioManager.instance.StopSFX(0);
         }
-        playerMove = Vector3.zero;
+        directionOfPlayer = Vector3.zero;
         AudioManager.instance.PlayerSFX(0);
         bulletScript.SetOwner(gameObject);
-        bulletScript.SetTarget(target);
+        bulletScript.SetTarget(targetEnemy);
         if (isGetGift)
         {
             bulletScript.isRotate = true;
@@ -321,14 +311,13 @@ public class PlayerController : MonoBehaviour
             Harmmer.SetActive(false);
             isDead = true;
             PlayerPrefs.SetInt("coinMoney", coinMoney);
-            isPlayerDie = true;
         }
 
         if (collision.gameObject.CompareTag("Gift"))
         {
             isGetGift = true;
             Destroy(collision.gameObject);
-            radius = 8f;
+            radiusAttackOfPlayer = 8f;
             DrawCircle circle = GetComponentInChildren<DrawCircle>();
             if(circle != null)
             {
@@ -371,7 +360,7 @@ public class PlayerController : MonoBehaviour
         if (isGetGift)
         {
             isGetGift = false;
-            radius = 5f;
+            radiusAttackOfPlayer = 5f;
             DrawCircle circle = GetComponentInChildren<DrawCircle>();
             if (circle != null)
             {
@@ -384,6 +373,6 @@ public class PlayerController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, radius);
+        Gizmos.DrawWireSphere(transform.position, radiusAttackOfPlayer);
     }
 }

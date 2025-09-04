@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         attackTimer -= Time.deltaTime;
-        if (GameManager.instance.playerController.isPlayerDie)
+        if (GameManager.instance.playerController.isDead)
         {
             //anim.SetBool("Idle", true);
             anim.SetBool("Attack", false);
@@ -87,7 +87,7 @@ public class Enemy : MonoBehaviour
     }
     public void EnemyMovement()
     {
-        if (isDead || target != null || GameManager.instance.playerController.isPlayerDie) return; // Không di chuyển nếu đã chết hoặc đang tấn công
+        if (isDead || target != null || GameManager.instance.playerController.isDead) return; // Không di chuyển nếu đã chết hoặc đang tấn công
         timer += Time.deltaTime;
         if ((timer >= changeDirectionTime || CheckWall() || !CheckGround()))
         {
@@ -109,7 +109,7 @@ public class Enemy : MonoBehaviour
 
     public void EnemyAttack()
     {
-        if (GameManager.instance.playerController.isPlayerDie) return;
+        if (GameManager.instance.playerController.isDead) return;
         if (isDead) return;
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRange);

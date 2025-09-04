@@ -6079,20 +6079,19 @@ MonoBehaviour:
   joystick: {fileID: 1590925552}
   bulletPrefabs: {fileID: 348641515877151161, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   firingTransform: {fileID: 3373197663231860453}
-  moveSpeed: 8
-  radius: 5
+  moveSpeedOfPlayer: 8
+  radiusAttackOfPlayer: 5
   Harmmer: {fileID: 910033303506345432}
-  target: {fileID: 0}
   isAttack: 0
   attackDuration: 1
   point: 0
+  isDead: 0
   dead1: {fileID: 1150709141}
   coinMoney: 0
   weaponDB: {fileID: 11400000, guid: 845548f4dabb27241b1710421213ffb4, type: 2}
   test: {fileID: 11400000, guid: e7f6953fe215ebb4da92281e8f8b1767, type: 2}
   weaponChoose: {fileID: 910033303506345432}
   bullet1: {fileID: 694607201790650757, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
-  isPlayerDie: 0
   indexMaterial: 0
   countAttack: 0
   effectLevelUp: {fileID: 4900915}

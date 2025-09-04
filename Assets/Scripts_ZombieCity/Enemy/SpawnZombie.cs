@@ -81,7 +81,6 @@ public class SpawnZombie : MonoBehaviour
         {
             return hit.position;
         }
-
         return center;
     }
 }

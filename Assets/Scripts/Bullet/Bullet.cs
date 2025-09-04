@@ -82,7 +82,6 @@ public class Bullet : MonoBehaviour
             rb.velocity = shootDirection * bulletSpeed;
         }
     }
-
     private void Update()
     {
         if (SetBoomerang && !returning && !SetRoration)
