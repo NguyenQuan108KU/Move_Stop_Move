@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35eb3aba63a951b4aa6447d65a3f3873, type: 3}
+  m_Name: Hat_Data
+  m_EditorClassIdentifier: 
+  hats:
+  - index: Hats_0
+    hatPrefab: {fileID: 9028126116628524532, guid: 2111a6902c9ddc347bd5c5c13c275d9c, type: 3}
+    coinOfHat: 0
+  - index: Hats_1
+    hatPrefab: {fileID: 1835601975960446233, guid: 8dba392f5c2101241b765cb467c73ee8, type: 3}
+    coinOfHat: 0
+  - index: Hats_2
+    hatPrefab: {fileID: 6406794000655523456, guid: 6ac1b0494e094f04b99836b472b611bb, type: 3}
+    coinOfHat: 0
+  - index: Hats_3
+    hatPrefab: {fileID: 1501196208810534264, guid: 4e77db5b9edaa5e4ab0a493248fbaee2, type: 3}
+    coinOfHat: 0
+  - index: Hats_4
+    hatPrefab: {fileID: 5634204999512719565, guid: e1d63a67826665d4db63a66d3b0201a1, type: 3}
+    coinOfHat: 0
+  - index: Hats_5
+    hatPrefab: {fileID: 6619914916581824169, guid: b7bab5b8a9b17244380cc56355d98ed7, type: 3}
+    coinOfHat: 0
+  - index: Hats_6
+    hatPrefab: {fileID: 4555957703100788282, guid: 23764564536771b469df6ae450611419, type: 3}
+    coinOfHat: 0
+  - index: Hats_7
+    hatPrefab: {fileID: 441212099341946956, guid: 362067501a1051e41acb82b18d6b29bd, type: 3}
+    coinOfHat: 0

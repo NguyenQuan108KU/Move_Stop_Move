@@ -18,12 +18,7 @@ public class UIMenu : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         score = PlayerPrefs.GetInt("coinMoney");
-        //pants.SetPants(pants.LoadPants());
-        pants.SetPaintsPlayer();
-        hair.SetHairPlayer();
         weapon.SetWeapon(weapon.LoadWeapon());
-        clothes.SetClothesPlayer();
-        protect.SetProtectPlayer();
     }
 
     // Update is called once per frame
@@ -31,9 +26,5 @@ public class UIMenu : MonoBehaviour
     {
         coinOfPlayerText.text = score.ToString();
         scoreMenu.text = score.ToString();
-    }
-    public void SaveWeapon()
-    {
-        //PlayerPrefs.SetInt("IndexWeapon", WeaponManager.instance.GetSelectedOption());
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
@@ -9,163 +11,163 @@ using Image = UnityEngine.UI.Image;
 
 public class PantsManager : MonoBehaviour
 {
-    public PantsDatabases pantsDatabases;
-    public GameObject[] buttons;
-    public int[] paintsPrices;
-    public GameObject pantsOfPlayer;
-    public int layerButton;
-
-    public GameObject ButtonBuy;
-    private TextMeshProUGUI txt;
-    private int indexButton;
-
-    [Header("Buy Paints")]
-    public int coinOfPlayer;
-    public TextMeshProUGUI coinOfPaints;
-
-    public GameObject BuyByCoin;
-    public GameObject BuyByAds;
-    public GameObject SelectPaint;
-
+    [Header("-------------------Pants Data-------------------")]
+    public PantsDatabases pantsDatabases;         //Dữ liệu quần trong game
+    public int[] paintsPrices;                      
+    public SkinnedMeshRenderer pantsOfPlayer;    //GameObject quần nhân vật
+    [Header("-------------------UI Elements-------------------")]
+    public Button[] list_Buttons;       //Danh sách các nút chọn quần  
+    public int currentButtonIndex;      //Dùng để lưu trữ vị trí các nút chọn quần 
+    public GameObject selectPaint;      //Nút chọn quần 
+    public GameObject buyByCoin;                //Nút mua quần bằng tiền 
+    public GameObject buyByAds;                 //Nút mua quần bằng xem quảng cáo  
+    public TextMeshProUGUI textOfButtonSelect;  //Chữ của nút button khi chọn (Chưa chọn thì text là Select khi đã chọn thì là Unequip"
+    public Image imageOfButtonSelect;           //Màu của nút button khi chọn
+    public TextMeshProUGUI coinOfPaints;  
     public ClothesManager clothesManager;
-    private void Start()
-    {
-        SetPaintsPlayer();
-        coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
-        txt = ButtonBuy.GetComponentInChildren<TextMeshProUGUI>();
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            int index = i; 
-            buttons[index].GetComponent<Button>().onClick.AddListener(() =>
-            {
-                layerButton = buttons[index].layer;
-                SetPaintsDefault(layerButton);
-                SavePants();
-                SetPants(layerButton);
-                if (coinOfPaints != null)
-                {
-                    coinOfPaints.text = paintsPrices[layerButton].ToString();
-                }
-            });
-        }
-    }
-    private void Update()
-    {
-        indexButton = PlayerPrefs.GetInt("SlectPaint", -1);
-        if (layerButton == indexButton)
-        {
-            txt.text = "Unequip";
-            ButtonBuy.GetComponent<Image>().color = new Color(1f, 1f, 1f);
-        }
-        else
-        {
-            txt.text = "SELECT";
-            ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
-        }
-    }
-    public void SetPants(int x)
-    {
-        if (clothesManager != null)
-        {
-            clothesManager.ResetClothes();
-        }
-        if (pantsOfPlayer != null)
-            pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[x].material;
-    }
-    public void SavePants()
-    {
-        PlayerPrefs.SetInt("IndexPants",layerButton);
 
+    public bool isSetPant;
+    [Header("-------------------Player Data-------------------")]
+    public int coinOfPlayer;                //Tiền của người chơi 
+    private void Start(){
+        coinOfPlayer = DataManager.Ins.gameSave.coin;       //Lấy tiền từ dữ liệu 
+        //Duyệt qua từng nút
+        for (int i = 0; i < list_Buttons.Length; i++)
+        {
+            int index = i;
+            list_Buttons[index].onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
+            {
+                currentButtonIndex = index;                //Lưu lại index của từng nút button khi click 
+                StatePaintOfPlayer(currentButtonIndex);      //Set trạng thái quần cho nhân vật khi click (set khi ấn vào các nút button quần)
+                StateOfButton(currentButtonIndex);         //Trạng thái (mua/chưa mua) cho button
+                RefreshActionButton();
+            }));
+        }
     }
-    public int LoadPants()
-    {
-        int x = PlayerPrefs.GetInt("IndexPants");
-        return x;
-    }
+    //public void StateOfPant(int x)
+    //{
+    //if (clothesManager != null)
+    //{
+    //  clothesManager.ResetClothes();
+    //}
+    //  if (pantsOfPlayer != null)
+    //    pantsOfPlayer.material = pantsDatabases.pants[x].material;
+    //}
     public void ButtonClick()
     {
-        if (txt.text == "SELECT")
+        if (textOfButtonSelect.text == "SELECT")
         {
-            clothesManager.ResetClothesWhenSelect();
-            clothesManager.isSetFull = false;
-            PlayerPrefs.SetInt("SlectPaint", layerButton);
-            txt.text = "Unequip";
-            ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 255f / 255f, 255f / 255f);
-            SavePants();
-            SetPants(layerButton);
+            if(clothesManager.isResetClothes)
+                ResetSkinOfPlayer();
+            clothesManager.isResetClothes = false;
+            isSetPant = true;
+            string pantName = pantsDatabases.pants[currentButtonIndex].index;
+            DataManager.Ins.gameSave.idPant = pantName;
+            DataManager.Ins.SaveGame();
+            SetActionButton("Unequip", Color.white);
         }
-        else if (txt.text == "Unequip")
+        else if (textOfButtonSelect.text == "Unequip")
         {
-            PlayerPrefs.DeleteKey("SlectPaint");
-            txt.text = "SELECT";
-            ButtonBuy.GetComponent<Image>().color = new Color(255f / 255f, 221f / 255f, 0f / 255f);
-            SetPants(6);
+            clothesManager.isResetClothes = true;
+            isSetPant = false;
+            string pantName = pantsDatabases.pants[pantsDatabases.pants.Length - 1].index;
+            DataManager.Ins.gameSave.idPant = pantName;
+            DataManager.Ins.SaveGame();
+            SetActionButton("SELECT", new Color(1f, 221f / 255f, 0f));
         }
+        SetPaintOfPlayer();
     }
-    public void BuyPaints()
+    public void BuyPants()
     {
-        int indexBuy = PlayerPrefs.GetInt("IndexPants");
-        int price = paintsPrices[indexBuy];
-        if (coinOfPlayer >= price)
+        string pantName = pantsDatabases.pants[currentButtonIndex].index;
+        int coinOfPant = pantsDatabases.pants[currentButtonIndex].coinOfPant;
+        if(coinOfPlayer >= coinOfPant)
         {
-            coinOfPlayer -= price;
+            coinOfPlayer -= coinOfPant;
             PlayerPrefs.SetInt("coinMoney", coinOfPlayer);
-
-            // Lưu trạng thái mua
-            PlayerPrefs.SetInt("PantsBought_" + indexBuy, 1);
-
-            BuyByAds.SetActive(false);
-            BuyByCoin.SetActive(false);
-            SelectPaint.SetActive(true);
-        }
-    }
-    public void SetPaintsDefault(int i)
-    {
-        if (PlayerPrefs.GetInt("PantsBought_" + i) == 1)
-        {
-            BuyByAds.SetActive(false);
-            BuyByCoin.SetActive(false);
-            SelectPaint.SetActive(true);
-        }
-        else
-        {
-            BuyByAds.SetActive(true);
-            BuyByCoin.SetActive(true);
-            SelectPaint.SetActive(false);
-        }
-    }
-    public void SetPaintsPlayer()
-    {
-        int index = PlayerPrefs.GetInt("SlectPaint", -1);
-        if (index == -1)
-        {
-            if (clothesManager.isSetFull)
+            if (!DataManager.Ins.gameSave.objectsBought.Contains(pantName))
             {
-                pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[7].material;
+                DataManager.Ins.gameSave.objectsBought.Add(pantName);
             }
-            else
-            {
-                pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[6].material;
-            }
-        }
-        else
-        {
-            pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[index].material;
+            DataManager.Ins.SaveGame();
+            buyByAds.SetActive(false);
+            buyByCoin.SetActive(false);
+            selectPaint.SetActive(true);
         }
     }
-    public void ResetPaints()
+
+    //Set trạng thái của button nếu đã mua quần thì sẽ chỉ hiển thị nút để select nếu chưa mua thì hiển thị 2 nút mua (mua bằng tiền hoặc xem quảng cáo)
+    public void StateOfButton(int index){
+        string pantName = pantsDatabases.pants[index].index;             //Lấy index của quần khi click vào button quần 
+        if (DataManager.Ins.gameSave.objectsBought.Contains(pantName)){  // Kiểm tra xem dữ liệu quần đã có quần vừa click chưa (Nếu có tức là đã mua thì set trạng thái select cho button)
+            buyByAds.SetActive(false);
+            buyByCoin.SetActive(false);
+            selectPaint.SetActive(true);
+        }
+        else{
+            buyByAds.SetActive(true);
+            buyByCoin.SetActive(true);
+            selectPaint.SetActive(false);
+        }
+    }
+   public void StatePaintOfPlayer(int index)
     {
-        // Tắt toàn bộ pants
-        pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[7].material;
+        if (clothesManager.isResetClothes)
+            clothesManager.StateSkinOfPlayer(clothesManager.skinDatabases.skin.Length - 1);
+        pantsOfPlayer.material = pantsDatabases.pants[index].material;
+    }
+    public void SetPaintOfPlayer()
+    {
+        if (pantsDatabases == null || pantsOfPlayer == null) return;
+        string pantName = DataManager.Ins?.gameSave?.idPant;
+        if (string.IsNullOrEmpty(pantName)) return;
+        for (int i = 0; i < pantsDatabases.pants.Length; i++)
+        {
+            if (pantsDatabases.pants[i].index == pantName)
+            {
+                pantsOfPlayer.material = pantsDatabases.pants[i].material;
+            }
+        }
+    }
+    //Hàm thay đổi text và màu của button khi chọn 
+    private void SetActionButton(string text, Color color)
+    {
+        if (textOfButtonSelect != null)
+            textOfButtonSelect.text = text;
+
+        if (imageOfButtonSelect != null)
+            imageOfButtonSelect.color = color;
+    }
+    private void RefreshActionButton()
+    {
+        string selectedPant = DataManager.Ins.gameSave.idPant;
+        if (string.IsNullOrEmpty(selectedPant)) return;
+
+        bool isEquipped = pantsDatabases.pants[currentButtonIndex].index == selectedPant;
+        SetActionButton(isEquipped ? "Unequip" : "SELECT",
+                        isEquipped ? Color.white : new Color(1f, 221f / 255f, 0f));
+    }
+    public void ResetSkinOfPlayer()
+    {
+        DataManager.Ins.gameSave.idSkin = "Skin_2";
+        DataManager.Ins.SaveGame();
+        clothesManager.SetSkinOfPlayer();
     }
     public void ResetPaintsWhenSelect()
+{
+    PlayerPrefs.DeleteKey("SlectPaint");
+    pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[6].material;
+    if (textOfButtonSelect != null)
     {
-        PlayerPrefs.DeleteKey("SlectPaint");
-        pantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = pantsDatabases.pants[6].material;
-        if(txt != null)
-        {
-            txt.text = "SELECT";
-        }
-        ButtonBuy.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
+        textOfButtonSelect.text = "SELECT";
+    }
+    selectPaint.GetComponent<Image>().color = new Color(1f, 221f / 255f, 0f);
+}
+    private void OnDisable()
+    {
+        if (!clothesManager.isResetClothes)
+            SetPaintOfPlayer(); // quay lại đúng quần đã SELECT
+        else if (isSetPant || clothesManager.isResetClothes)
+            clothesManager.SetSkinOfPlayer();
     }
 }

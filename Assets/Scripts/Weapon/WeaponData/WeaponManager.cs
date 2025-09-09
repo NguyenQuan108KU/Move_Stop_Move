@@ -16,14 +16,14 @@ public class WeaponManager : MonoBehaviour
         else
             instance = this;
     }
-    public WeaponDatabase weaponDB;
 
+    public WeaponDatabase weaponDB;
     public TextMeshProUGUI nameText;
     public Image image;
-    public TextMeshProUGUI coin;
-    public TextMeshProUGUI isLock;
-    public TextMeshProUGUI damage;
-    private int selectedOption = 0;
+    public TextMeshProUGUI coin;     //thông tin tiền của người chơi
+    public TextMeshProUGUI isLock;   //cờ kiểm tra vũ khí đó được mở khở hay chưa
+    public TextMeshProUGUI damage;   //thông tin về damage của vũ khí 
+    private int selectedOption = 0;  //lựa chọn của vũ khí hiện tại
 
     public GameObject Weapon;
 
@@ -40,7 +40,7 @@ public class WeaponManager : MonoBehaviour
     public GameObject MenuSelect;
 
     public GameObject[] buttons;
-    public int indexWeapon;
+    public int indexWeapon;  //Vị trí của weapon
     public RectTransform rawImageRect;
 
 
@@ -75,7 +75,6 @@ public class WeaponManager : MonoBehaviour
                 indexWeapon = buttons[index].layer;
                 PlayerPrefs.SetInt("MaterialOfWeapon" + selectedOption, indexWeapon);
                 Weapon weapon = weaponDB.GetWeapon(selectedOption);
-                //SetMaterial();
                 SetButtonMaterial(buttons[index].layer);
                 image.sprite = weapon.weaponImage[indexWeapon];
             });
@@ -116,7 +115,6 @@ public class WeaponManager : MonoBehaviour
         PlayerPrefs.SetInt("MenuCustom" + selectedOption, 0);
         ChangeMeshWeapon();
         ChangeWeaponButtonColor();
-        //SetButtonWeapon();
     }
     public void BackOption()
     {
@@ -129,7 +127,6 @@ public class WeaponManager : MonoBehaviour
         PlayerPrefs.SetInt("MenuCustom" + selectedOption, 0);
         ChangeMeshWeapon();
         ChangeWeaponButtonColor();
-        //SetButtonWeapon();
     }
     public void UpdateWeapon(int selectedOption)
     {
@@ -220,7 +217,6 @@ public class WeaponManager : MonoBehaviour
         {
             button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
             coin.text = "Equipped";
-            //SetButtonMaterial();
         }
         else
         {
@@ -228,7 +224,6 @@ public class WeaponManager : MonoBehaviour
             {
                 button.GetComponent<Image>().color = new Color(254f / 255f, 204f / 255f, 45f / 255f);
                 coin.text = "Select";
-                //SetButtonMaterial();
             }
             else
             {
@@ -254,7 +249,6 @@ public class WeaponManager : MonoBehaviour
         if (indexGift == 1)
         {
             Weapon weapon1 = weaponDB.GetWeapon(5);
-            //weapon1.weaponImage = gift;
             weapon1.weaponName = "Weapon";
             weapon1.isLock = "Unlock";
             weapon1.damageWeapon = "+10 damage";
@@ -264,7 +258,6 @@ public class WeaponManager : MonoBehaviour
         else
         {
             Weapon weapon1 = weaponDB.GetWeapon(5);
-            //weapon1.weaponImage[0] = gift_lock;
             image.sprite = gift_lock;
             weapon1.weaponName = "Gift";
             weapon1.isLock = "Lock";

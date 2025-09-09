@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.VersionControl;
@@ -8,58 +9,57 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
 
-    public Animator anim;
-    public Joystick joystick;
+    public Animator anim;        // Animator của nhân vật
+    public Joystick joystick;    // Joystick điều khiển nhân vật
 
     [Header("------------------Bullet------------------")]
-    public GameObject bulletPrefabs;   //Prefabs của viên đạn
-    public Transform firingTransform;  //Nơi viên đạn được bắn ra
+    public GameObject bulletPrefabs;   // Prefabs của viên đạn
+    public Transform firingTransform;  // Vị trí viên đạn được bắn ra
 
     [Header("------------------Move Info------------------")]
-    public float moveSpeedOfPlayer;    //Tốc độ di chuyển của nhân vật
+    public float moveSpeedOfPlayer;           // Tốc độ di chuyển của nhân vật
     private Vector3 directionOfPlayer;        // Hướng di chuyển của nhân vật dựa trên joystick
 
     [Header("------------------Radius------------------")]
-    public float radiusAttackOfPlayer;  //Bán kính vòng tròn phát hiện Enemy của Player
+    public float radiusAttackOfPlayer;  //  kính vòng tròn phát hiện Enemy của Player
 
-    public GameObject Harmmer;          //Vũ khí của nhân vật
-    private Transform targetEnemy;      //Vị trí của Enemy
+    public GameObject Harmmer;          // Vũ khí của nhân vật
+    private Transform targetEnemy;      // Vị trí của Enemy
     public bool isAttack = false;       // Cho biết xem có tấn công hay không
     public float attackDuration = 1f;   // Thời gian duy trì trạng thái tấn công
-    public int point;                   //Điểm của người chơi
+    public int point;                   // Điểm của người chơi
     private Enemy enemyCurrent;                            
-    public bool isDead = false;   //Kiểm tra xem nhân vật đã chết hay chưa
+    public bool isDead = false;   // Kiểm tra xem nhân vật đã chết hay chưa
     public GameObject dead1;
-    public int coinMoney;       //Tiền của người chơi
+    public int coinMoney;       // Tiền của người chơi
 
-    //Thay đổi vũ khi của player
-    [Header("Change Weapon")]
+    [Header("------------------Change Weapon------------------")]
     public WeaponDatabase weaponDB;
     public Test test;
     public GameObject weaponChoose;
-    public Bullet bullet1;              //Viên đạn của người chơi
+    public Bullet bullet1;              // Viên đạn của người chơi
     private int indexWeapon;
     [SerializeField] private int indexMaterial;
     public int countAttack;
     public GameObject effectLevelUp;
     [Header("------------------Change Pants------------------")]
-    [SerializeField] private int indexPants;
-    [SerializeField] private ListPants listPants;
-    [SerializeField] private GameObject pantsOdPlayer;
+    public PantsDatabases pantsData;                 // Data quần 
+    public SkinnedMeshRenderer pantsOdPlayer;        // Renderer của quần nhân vật
 
     [Header("------------------Change Hats------------------")]
-    [SerializeField] private int indexHats;
-    [SerializeField] private HATS hatOfPlayer;
+    public HatDatabases hatsData;                   // Data mũ
+    public Transform hatAnchor;                     //Vị trí gắn mũ
 
     [Header("------------------Change Protect------------------")]
-    [SerializeField] private int indexProtect;
-    [SerializeField] private Protect protectOfPlayer;
-
+    public ShieldDatabases shieldData;              // Data khiên 
+    public Transform shieldAnchor;                  // Vị trí gắn khiên
     [Header("------------------Change Clothes Player------------------")]
-    [SerializeField] private int indexClothes;
-    [SerializeField] private ClothesSet[] listClothes;
-    [SerializeField] private GameObject initialShadingOfPlayer;
-    [SerializeField] private GameObject PantsOfPlayer;
+    public SkinDatabases skinData;                          // Data skin nhân vật
+    public SkinnedMeshRenderer initialShadingOfPlayer;      // Renderer thân của nhân vật
+    public Transform[] list_anchorsOfSkin;                  // Danh sách anchor của skin
+    public Transform wingAnchor;                            // Vị trí gắn cánh
+    public Transform tailAnchor;                            // Vị trí gắn đuôi
+
 
     public bool isGetGift = false;
     public bool isLevelUp = false;
@@ -68,23 +68,26 @@ public class PlayerController : MonoBehaviour
         point = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         isGetGift = false;
+        if (DataManager.Ins.gameSave.idSkin != "Skin_2")
+        {
+            SetSkinOfPlayer();
+        }
+        else
+        {
+            SetShieldOfPlayer();
+            SetPantOfPlayer();
+            SetHatOfPlayer();
+        }
     }
     void Update()
     {
         if (isDead) return;
         PlayerMove();
         AttackTrigle();
-        //Thay doi quan ao, vu khi
-        ChangeWepon();
-        changePants();
-        changeHats();
-        changeProtect();
-        changeClothesPlayer();
-        //Len level
         UpLevel();
     }
     //Thay đổi vũ khí
-    void ChangeWepon()
+     void SetWeaponOfPlayer()
     {
         indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
         indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);
@@ -118,136 +121,122 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    //Thay đổi giày 
-    void changePants()
+
+    //Thay đổi quần của nhân vật 
+    void SetPantOfPlayer()
     {
-        
-        indexHats = PlayerPrefs.GetInt("SlectPaint", -1);
-        //indexPants = PlayerPrefs.GetInt("IndexPants");
-        if (indexHats == -1)
+        string pantName = DataManager.Ins.gameSave.idPant;
+        if (!string.IsNullOrEmpty(pantName))
         {
-            pantsOdPlayer.GetComponent<SkinnedMeshRenderer>().material = listPants.pantsObjects[6].materialPants;
-        }
-        for (int i = 0; i < listPants.pantsObjects.Count(); i++)
-        {
-            if (listPants.pantsObjects[i].index == indexHats)
+            for (int i = 0; i < pantsData.pants.Length; i++)
             {
-                pantsOdPlayer.GetComponent<SkinnedMeshRenderer>().material = listPants.pantsObjects[i].materialPants;
+                if (pantsData.pants[i].index == pantName)
+                {
+                    pantsOdPlayer.material = pantsData.pants[i].material;
+                }
             }
         }
     }
-    //Thay đổi mũ
-    void changeHats()
+
+    //Thay đổi mũ của nhân vật
+    void SetHatOfPlayer()
     {
-        //indexHats = PlayerPrefs.GetInt("IndexHat");
-        indexHats = PlayerPrefs.GetInt("SlectHat", -1); 
-        if(indexHats == -1)
+        string hatName = DataManager.Ins.gameSave.idHat;
+        if (!string.IsNullOrEmpty(hatName))
         {
-            hatOfPlayer.games[6].SetActive(true);
-        }
-        for (int i = 0; i < hatOfPlayer.games.Count(); i++)
-        {
-            if(indexHats == i)
+            foreach (Transform child in hatAnchor.transform)
             {
-                hatOfPlayer.games[i].SetActive(true);
+                Destroy(child.gameObject);
             }
-            else{
-                hatOfPlayer.games[i].SetActive(false);
+            for (int i = 0; i < hatsData.hats.Length; i++)
+            {
+                if (hatsData.hats[i].index == hatName)
+                {
+                    Instantiate(hatsData.hats[i].hatPrefab, hatAnchor.transform);
+                }
             }
         }
     }
-    //Thay đổi khiên
-    void changeProtect()
+
+    //Thay đổi khiên của nhân vật
+    void SetShieldOfPlayer()
     {
-        indexProtect = PlayerPrefs.GetInt("SlectProtect", -1);
-        if (indexProtect == -1)
+        string shieldName = DataManager.Ins.gameSave.idShield;
+        if (!string.IsNullOrEmpty(shieldName))
         {
-            protectOfPlayer.protect[2].SetActive(true);
-        }
-        for (int i = 0; i < protectOfPlayer.protect.Count(); i++)
-        {
-            if (indexProtect == i)
+            foreach (Transform child in shieldAnchor.transform)
             {
-                protectOfPlayer.protect[i].SetActive(true);
+                Destroy(child.gameObject);
             }
-            else
+            for (int i = 0; i < shieldData.shields.Length; i++)
             {
-                protectOfPlayer.protect[i].SetActive(false);
+                if (shieldData.shields[i].index == shieldName)
+                {
+                    Instantiate(shieldData.shields[i].shieldPrefab, shieldAnchor.transform);
+                }
             }
         }
     }
-    //Thay đổi full set 
-    void changeClothesPlayer()
+
+    //Thay đổi skin của nhân vật 
+    void SetSkinOfPlayer()
     {
-        indexClothes = PlayerPrefs.GetInt("SlectClothes", -1);
-        if (indexProtect == -1)
+        string skinName = DataManager.Ins?.gameSave?.idSkin;
+        if (string.IsNullOrEmpty(skinName)) return;
+
+        foreach (Transform anchor in list_anchorsOfSkin)
         {
-            listClothes[2].hatOfSet.SetActive(true);
-            listClothes[2].wingOfSet.SetActive(true);
-            listClothes[2].protectOfSet.SetActive(true);
-            listClothes[2].tailOfSet.SetActive(true);
-            //initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
-            //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
-            //return;
-        }
-        for (int i = 0; i < listClothes.Count(); i++)
-        {
-            if (indexClothes == i)
+            foreach (Transform child in anchor)
             {
-                listClothes[i].hatOfSet.SetActive(true);
-                listClothes[i].wingOfSet.SetActive(true);
-                listClothes[i].protectOfSet.SetActive(true);
-                listClothes[i].tailOfSet.SetActive(true);
-                initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[i].material;
-                PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[i].material;
+                Destroy(child.gameObject);
             }
-            else
+        }
+        for (int i = 0; i < skinData.skin.Length; i++)
+        {
+            if (skinData.skin[i].index == skinName)
             {
-                listClothes[2].hatOfSet.SetActive(false);
-                listClothes[2].wingOfSet.SetActive(false);
-                listClothes[2].protectOfSet.SetActive(false);
-                listClothes[2].tailOfSet.SetActive(false);
-                //initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
-                //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
+                Instantiate(skinData.skin[i].hatOfSkin, hatAnchor.transform);
+                Instantiate(skinData.skin[i].shieldOfSkin, shieldAnchor.transform);
+                Instantiate(skinData.skin[i].wingOfSkin, wingAnchor.transform);
+                Instantiate(skinData.skin[i].tailOfSkin, tailAnchor.transform);
+                initialShadingOfPlayer.material = skinData.skin[i].materialOfPlayer;
+                pantsOdPlayer.material = skinData.skin[i].materialOfPlayer;
             }
         }
     }
 
     //Hàm di chuyển nhân vật
     private void PlayerMove(){
-        //Lấy hướng di chuyển từ joystick
-        directionOfPlayer.x = joystick.Horizontal;
-        directionOfPlayer.z = joystick.Vertical;
-        directionOfPlayer.y = 0;
-
-        transform.Translate(directionOfPlayer * moveSpeedOfPlayer * Time.deltaTime, Space.World);   //Di chuyển nhân vật bằng Translate
-        anim.SetFloat("Speed", directionOfPlayer.sqrMagnitude);    //Chuyển sang animation di chuyển
-        if (directionOfPlayer.sqrMagnitude > 0.01f){               //Nếu nhân vật đang có hướng di chuyển thì xoay theo hướng đó 
-            Quaternion toRotation = Quaternion.LookRotation(directionOfPlayer, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
+        // Lấy giá trị đầu vào từ joystick để xác định hướng di chuyển
+        directionOfPlayer.x = joystick.Horizontal;   // Trục X
+        directionOfPlayer.z = joystick.Vertical;     // Trục Z
+        directionOfPlayer.y = 0;              // Không thay đổi chiều cao (Y = 0)
+        transform.Translate(directionOfPlayer * moveSpeedOfPlayer * Time.deltaTime, Space.World);   // Di chuyển nhân vật theo hướng đã lấy được
+        anim.SetFloat("Speed", directionOfPlayer.sqrMagnitude);    // Gửi giá trị để điều khiển animation
+        
+        // Nếu nhân vật thực sự có di chuyển (vector khác 0)
+        if (directionOfPlayer.sqrMagnitude > 0.01f){    
+            Quaternion toRotation = Quaternion.LookRotation(directionOfPlayer, Vector3.up);                 // Tạo hướng xoay dựa trên vector di chuyển
+            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);    // Xoay nhân vật mượt về hướng di chuyển
         }
     }
 
-    //Hàm phát hiện enemy 
+    // Hàm phát hiện enemy trong phạm vi tấn công
     public void AttackTrigle(){
+        // Tạo một mảng colliders để chứa tất cả đối tượng trong bán kính phát hiện
         Collider[] colliders = Physics.OverlapSphere(transform.position, radiusAttackOfPlayer);
         Enemy firstEnemyDetected = null;
-        foreach (var hit in colliders)
-        {
+        foreach (var hit in colliders){
             if (hit.CompareTag("Enemy"))
             {
                 firstEnemyDetected = hit.GetComponent<Enemy>();
                 break; // chỉ lấy enemy đầu tiên
             }
         }
-
-        if (firstEnemyDetected != null)
-        {
-            if (enemyCurrent != null && enemyCurrent != firstEnemyDetected)
-            {
+        if (firstEnemyDetected != null){
+            if (enemyCurrent != null && enemyCurrent != firstEnemyDetected){
                 enemyCurrent.targetEnemy.SetActive(false); // Tắt enemy cũ nếu khác
             }
-
             enemyCurrent = firstEnemyDetected;
             enemyCurrent.targetEnemy.SetActive(true); // Bật enemy mới
             if (directionOfPlayer.sqrMagnitude == 0.0f)
@@ -259,15 +248,12 @@ public class PlayerController : MonoBehaviour
                 Quaternion toRotation = Quaternion.LookRotation(directionEnemy);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
             }
-            else
-            {
+            else{
                 anim.SetBool("Attack", false);
             }
         }
-        else
-        {
-            if (enemyCurrent != null)
-            {
+        else{
+            if (enemyCurrent != null){
                 enemyCurrent.targetEnemy.SetActive(false);
                 enemyCurrent = null;
             }
