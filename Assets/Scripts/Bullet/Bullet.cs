@@ -14,7 +14,7 @@ public class Bullet : MonoBehaviour
 
     public GameObject owner;
     public bool SetRoration;
-    public bool isRotate = false;
+    public bool isOffRotate = false;
 
     [Header("Boomerang")]
     public bool SetRotation = false;
@@ -97,7 +97,7 @@ public class Bullet : MonoBehaviour
         }
 
         // xử lý xoay như code cũ
-        if ((SetRoration || isRotate) && !SetBoomerang)
+        if ((SetRoration || isOffRotate) && !SetBoomerang)
         {
             if (shootDirection != Vector3.zero)
             {

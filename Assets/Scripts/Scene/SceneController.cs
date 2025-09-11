@@ -5,6 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
+    public static SceneController instance;
+    private void Awake()
+    {
+        if (instance != null)
+            Destroy(instance.gameObject);
+        else
+            instance = this;
+    }
     public void LoadSceneMenu()
     {
         Time.timeScale = 1.0f;

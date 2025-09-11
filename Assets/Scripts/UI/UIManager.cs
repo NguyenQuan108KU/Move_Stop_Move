@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         isLoadMenu = false;
-        enemyAliveTotal = 8;
+        enemyAliveTotal = 2;
         countNumber = 5;
 
         countdownDuration = 5;
@@ -107,10 +107,12 @@ public class UIManager : MonoBehaviour
     public void UpdateAlive()
     {
         enemyAliveTotal -= 1;
-        if (enemyAliveTotal <= 0 && !Canvas_Dead_1.activeSelf && !Canvas_Dead_2.activeSelf)
+        if (enemyAliveTotal <= 0)
         {
+            Debug.Log("djndkj");
+            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Win);
             enemyAliveTotal = 0;
-            Winner.SetActive(true);
+            Instantiate(Winner, transform.position, Quaternion.identity);
             nameOfPlayer.SetActive(false);
             circleOfPlayer.SetActive(false);
             GameManager.instance.playerController.anim.SetTrigger("Dancer");
@@ -132,7 +134,6 @@ public class UIManager : MonoBehaviour
     }
     public void Load()
     {
-        //Canvas_Dead_1.SetActive(true);
         loadCircle.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
         int count = countdownDuration - Mathf.FloorToInt(Time.time - deadStartTime);
         number.text = count.ToString();
@@ -159,5 +160,8 @@ public class UIManager : MonoBehaviour
     public void StopGame() => Time.timeScale = 0;
     public void ContinueGame() => Time.timeScale = 1;
     public void SaveGift() => PlayerPrefs.SetInt("Gift", 1);
-    public void SetGift() => GiftOpen.SetActive(true);
+    public void SetGift()
+    {
+        Instantiate(GiftOpen, transform.position, Quaternion.identity);
+    }
 }

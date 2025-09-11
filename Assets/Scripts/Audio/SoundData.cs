@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "soundData", menuName = "Data/Sound Data")]
-public class SoundData : MonoBehaviour
+public class SoundData : ScriptableObject
 {
     public SoundName soundName;
     public AudioClip audioClip;
@@ -18,6 +18,12 @@ public class SoundData : MonoBehaviour
         Confetti,//Âm thanh pháo hoa
         GameFail,//Âm thanh thua
         GameWin,//Âm thanh thắng
+        Attack, //Âm thanh tấn công 
+        Die,  //Âm thanh khi enemy chết 
+        Get_Gift,  //Nhặt quà
+        Lose,    //Thua
+        Win,     //Thắng
+        Level_Up,  //Nâng cấp
         BreakTile,
         Clear,
         AddGrid,

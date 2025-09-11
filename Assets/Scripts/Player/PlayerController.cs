@@ -69,6 +69,8 @@ public class PlayerController : MonoBehaviour
 
     public bool isGetGift = false;
     public bool isLevelUp = false;
+    private bool hasPlayedLevelUp = false;
+    public GameObject popupLose;
     void Start()
     {
         point = 0;
@@ -226,7 +228,7 @@ public class PlayerController : MonoBehaviour
         // Lấy giá trị đầu vào từ joystick để xác định hướng di chuyển
         directionOfPlayer.x = joystick.Horizontal;   // Trục X
         directionOfPlayer.z = joystick.Vertical;     // Trục Z
-        directionOfPlayer.y = 0;              // Không thay đổi chiều cao (Y = 0)
+        directionOfPlayer.y = 0;                     // Không thay đổi chiều cao (Y = 0)
         transform.Translate(directionOfPlayer * moveSpeedOfPlayer * Time.deltaTime, Space.World);   // Di chuyển nhân vật theo hướng đã lấy được
         anim.SetFloat("Speed", directionOfPlayer.sqrMagnitude);    // Gửi giá trị để điều khiển animation
         
@@ -239,87 +241,66 @@ public class PlayerController : MonoBehaviour
 
     // Hàm phát hiện enemy trong phạm vi tấn công
     public void AttackTrigle(){
-        // Tạo một mảng colliders để chứa tất cả đối tượng trong bán kính phát hiện
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radiusAttackOfPlayer);
-        Enemy firstEnemyDetected = null;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, radiusAttackOfPlayer);     // Lấy tất cả các Collider xung quanh player trong bán kính radiusAttackOfPlayer
+        Enemy firstEnemyDetected = null;         // Biến lưu enemy đầu tiên phát hiện
+
+        // Duyệt tất cả collider để tìm enemy đầu tiên
         foreach (var hit in colliders){
-            if (hit.CompareTag("Enemy"))
-            {
-                firstEnemyDetected = hit.GetComponent<Enemy>();
-
-
-                break; // chỉ lấy enemy đầu tiên
+            if (hit.CompareTag("Enemy")){
+                firstEnemyDetected = hit.GetComponent<Enemy>();    // Lấy component Enemy từ collider
+                break;                                             // Chỉ lấy enemy đầu tiên, dừng vòng lặp
             }
         }
+        // Nếu tìm thấy enemy
         if (firstEnemyDetected != null){
+
+            // Nếu enemy cũ khác enemy mới, tắt hiển thị enemy cũ
             if (enemyCurrent != null && enemyCurrent != firstEnemyDetected){
                 enemyCurrent.targetEnemy.SetActive(false); // Tắt enemy cũ nếu khác
             }
-            enemyCurrent = firstEnemyDetected;
-            enemyCurrent.targetEnemy.SetActive(true); // Bật enemy mới
-            if (directionOfPlayer.sqrMagnitude == 0.0f)
-            {
+            enemyCurrent = firstEnemyDetected;             // Cập nhật enemy hiện tại
+            enemyCurrent.targetEnemy.SetActive(true);      // Bật hiển thị enemy mới
+
+            // Nếu player không di chuyển
+            if (directionOfPlayer.sqrMagnitude < 0.001f){
                 targetEnemy = enemyCurrent.transform;
                 anim.SetBool("Attack", true);
-                Vector3 directionEnemy = targetEnemy.position - transform.position;
-                directionEnemy.y = 0;
+                Vector3 directionEnemy = targetEnemy.position - transform.position;    // Tính toán hướng quay về target enemy
+                directionEnemy.y = 0;      // Giữ chiều cao không đổi
                 Quaternion toRotation = Quaternion.LookRotation(directionEnemy);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);      // Quay player về hướng enemy một cách mượt mà
             }
             else{
-                anim.SetBool("Attack", false);
+                anim.SetBool("Attack", false);      // Nếu player đang di chuyển, tắt animation tấn công
             }
         }
         else{
+
+            // Nếu không còn enemy nào trong bán kính
             if (enemyCurrent != null){
-                enemyCurrent.targetEnemy.SetActive(false);
-                enemyCurrent = null;
+                enemyCurrent.targetEnemy.SetActive(false);   // Tắt hiển thị enemy cũ
+                enemyCurrent = null;                         // Reset enemy hiện tại
             }
         }
     }
 
-    public void SetOffAttack() => anim.SetBool("Attack", false);
-    public void Shooting()
-    {
-        GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
-        Bullet bulletScript = bulletObj.GetComponent<Bullet>();
-        directionOfPlayer = Vector3.zero;
-        bulletScript.SetOwner(gameObject);
-        bulletScript.SetTarget(targetEnemy);
-        if (isGetGift)
-        {
-            bulletScript.isRotate = true;
-            StartCoroutine(ScaleBullet(bulletObj, 3f, 130f, 0.3f)); // từ 39 lên 100 trong 1 giây
-        }
-        else
-        {
-            bulletObj.transform.localScale = new Vector3(39, 39, 39);
-            bulletScript.isRotate = false;
-        }
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Bullet2"))
-        {
-            dead1.SetActive(true);
-            UIManager.instance.StartDead();
-            anim.SetBool("Death", true);
-            Harmmer.SetActive(false);
-            isDead = true;
-            PlayerPrefs.SetInt("coinMoney", coinMoney);
-        }
+    //Hàm bắn Enemy. Hàm này gọi trong event của animation
+    public void Shooting(){
+        GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);   // Tạo một viên đạn mới từ prefab tại vị trí firingTransform
+        Bullet bulletScript = bulletObj.GetComponent<Bullet>();     // Lấy component Bullet từ viên đạn vừa tạo
+        directionOfPlayer = Vector3.zero;                           // Reset hướng di chuyển của player (hoặc hướng bắn) về Vector3.zero
+        bulletScript.SetOwner(gameObject);                          // Thiết lập owner của viên đạn là chính player (tránh tự chết do viên đạn của mình)
+        bulletScript.SetTarget(targetEnemy);                        // Thiết lập target của viên đạn là enemy hiện tại
+        AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Attack);
 
-        if (collision.gameObject.CompareTag("Gift"))
-        {
-            isGetGift = true;
-            Destroy(collision.gameObject);
-            radiusAttackOfPlayer = 8f;
-            DrawCircle circle = GetComponentInChildren<DrawCircle>();
-            if(circle != null)
-            {
-                circle.radius = 8f;
-                circle.DrawCircleUnderFeet();
-            }
+        // Nếu player đang có gift (ăn được quà)
+        if (isGetGift){
+            bulletScript.isOffRotate = true;                           // Bật chế độ viên đạn không xoay
+            StartCoroutine(ScaleBullet(bulletObj, 3f, 130f, 0.3f));    // Bắt đầu tăng scale viên đạn từ kích thước ban đầu lên to hơn 
+        }
+        else{
+            bulletObj.transform.localScale = new Vector3(39, 39, 39);  // Nếu không có gift, đặt scale viên đạn cố định
+            bulletScript.isOffRotate = false;                          // Tắt để viên đạn xoay như bình thường
         }
     }
     private IEnumerator ScaleBullet(GameObject bullet, float startScale, float endScale, float duration)
@@ -336,15 +317,14 @@ public class PlayerController : MonoBehaviour
         if (bullet != null)
             bullet.transform.localScale = new Vector3(endScale, endScale, endScale);
     }
+    
+    //Hàm tăng level cho player
+    public void UpLevel(){
 
-    public void DestroyPlayer()
-    {
-        gameObject.SetActive(false);
-    }
-    public void UpLevel()
-    {
-        if(countAttack >= 1)
-        {
+        // Kiểm tra điều kiện để nâng cấp
+        if (countAttack >= 3 && !hasPlayedLevelUp){
+            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Level_Up);
+            hasPlayedLevelUp = true;                                    // Đánh dấu đã phát Level Up để không phát lại nhiều lần
             effectLevelUp.SetActive(true);
             transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
             UIManager.instance.up = 4.7f;
@@ -370,5 +350,32 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, radiusAttackOfPlayer);
+    }
+    public void SetOffAttack() => anim.SetBool("Attack", false);
+    public void DestroyPlayer() => gameObject.SetActive(false);
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet2"))
+        {
+            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Lose);
+            Instantiate(popupLose, transform.position, Quaternion.identity);
+            anim.SetBool("Death", true);
+            Harmmer.SetActive(false);
+            PlayerPrefs.SetInt("coinMoney", coinMoney);
+        }
+
+        if (collision.gameObject.CompareTag("Gift"))
+        {
+            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Get_Gift);
+            isGetGift = true;
+            Destroy(collision.gameObject);
+            radiusAttackOfPlayer = 8f;
+            DrawCircle circle = GetComponentInChildren<DrawCircle>();
+            if(circle != null)
+            {
+                circle.radius = 8f;
+                circle.DrawCircleUnderFeet();
+            }
+        }
     }
 }

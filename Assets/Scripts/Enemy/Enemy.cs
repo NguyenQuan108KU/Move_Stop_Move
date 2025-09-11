@@ -150,6 +150,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet1"))
         {
+            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);
             if (GameManager.instance.playerController.isGetGift)
             {
                 Collider enemyCollider = GetComponent<Collider>();
@@ -165,7 +166,6 @@ public class Enemy : MonoBehaviour
             GameManager.instance.playerController.point += 5;
             GameManager.instance.playerController.coinMoney += 5;
             GameManager.instance.playerController.countAttack += 1;
-            //UIManager.instance.UpdateAlive();
         }
         if ((collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2")) && !hasBeenHit)
         {

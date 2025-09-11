@@ -9,10 +9,11 @@ public class SoundController : MonoBehaviour
     public bool isMusic;//Có phải là âm nhạc hay không
     public SoundData soundData { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.playOnAwake = false;
+        audioSource.playOnAwake = false; // ✅ tắt ngay từ Awake
+        audioSource.clip = null;          // AudioSource rỗng, không tự phát
     }
 
     public void PlaySound(SoundData.SoundName soundName)

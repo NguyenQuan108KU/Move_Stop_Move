@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class AudioManager : MonoBehaviour
 {
@@ -64,8 +64,8 @@ public class AudioManager : MonoBehaviour
     public void PlaySound_ButtonClick()
     {
         soundButtonClick.PlaySound(SoundData.SoundName.Button_Click);
-        if (DataManager.Ins != null && DataManager.Ins.gameSave.vibrateAmount > 0)
-            Vibration.VibrateButton();
+        //if (DataManager.Ins != null && DataManager.Ins.gameSave.vibrateAmount > 0)
+           // Vibration.VibrateButton();
     }
 
     public void PauseAllSound()
@@ -130,4 +130,34 @@ public class AudioManager : MonoBehaviour
         Debug.LogWarning("Don't have sound " + soundName);
         return soundDatas[0];
     }
+    public void PlaySoundEffect(SoundData.SoundName soundName)
+    {
+        if (!CanPlaySound(soundName)) return;
+
+        // Tìm SoundController nào chưa dùng cho SFX
+        SoundController sfxController = null;
+        foreach (var sc in soundList)
+        {
+            if (!sc.isMusic)
+            {
+                sfxController = sc;
+                break;
+            }
+        }
+
+        // Nếu chưa có, tạo tạm
+        if (sfxController == null)
+        {
+            GameObject obj = new GameObject("Temp_SFX");
+            obj.transform.SetParent(this.transform);
+            sfxController = obj.AddComponent<SoundController>();
+            sfxController.isMusic = false;
+            sfxController.audioSource = obj.AddComponent<AudioSource>();
+            sfxController.audioSource.playOnAwake = false;
+            AddSoundList(sfxController);
+        }
+
+        sfxController.PlaySound(soundName);
+    }
+
 }
