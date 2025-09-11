@@ -18,7 +18,7 @@ public class UIMenu : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         score = PlayerPrefs.GetInt("coinMoney");
-        weapon.SetWeapon(weapon.LoadWeapon());
+        weapon.SetWeapon();
     }
 
     // Update is called once per frame

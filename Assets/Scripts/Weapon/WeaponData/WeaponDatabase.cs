@@ -16,7 +16,13 @@ public class WeaponDatabase : ScriptableObject
     {
         return weapon[index];
     }
-    
+    private void OnValidate()
+    {
+        for (int i = 0; i < weapon.Length; i++)
+        {
+            weapon[i].index = "Weapon_" + i;
+        }
+    }
 
 
 }

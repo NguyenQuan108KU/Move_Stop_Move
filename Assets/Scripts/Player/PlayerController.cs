@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     public int coinMoney;       // Tiền của người chơi
 
     [Header("------------------Change Weapon------------------")]
-    public WeaponDatabase weaponDB;
+    public WeaponDatabase weaponData;
     public Test test;
     public GameObject weaponChoose;
     public Bullet bullet1;              // Viên đạn của người chơi
@@ -42,6 +42,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int indexMaterial;
     public int countAttack;
     public GameObject effectLevelUp;
+
+    public MeshRenderer weaponRenderer;
+    public MeshFilter weaponMeshFilter;
+
+    public MeshRenderer bulletRenderer;
+    public MeshFilter bulletMeshFilter;
     [Header("------------------Change Pants------------------")]
     public PantsDatabases pantsData;                 // Data quần 
     public SkinnedMeshRenderer pantsOdPlayer;        // Renderer của quần nhân vật
@@ -78,6 +84,7 @@ public class PlayerController : MonoBehaviour
             SetPantOfPlayer();
             SetHatOfPlayer();
         }
+        SetWeaponOfPlayer();
     }
     void Update()
     {
@@ -89,34 +96,43 @@ public class PlayerController : MonoBehaviour
     //Thay đổi vũ khí
      void SetWeaponOfPlayer()
     {
-        indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
+        indexWeapon = PlayerPrefs.GetInt("SelectOption");
         indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);
-        MeshRenderer meshRenderer = weaponChoose.GetComponent<MeshRenderer>();
-        MeshRenderer meshRendererOfButton = bullet1.GetComponent<MeshRenderer>();
-        // Lấy toàn bộ materials ra
+        MeshRenderer meshRenderer = weaponRenderer;
+        MeshRenderer meshRendererOfButton = bulletRenderer;
         Material[] mats = meshRenderer.materials;
         Material[] matsOfButton = meshRendererOfButton.sharedMaterials;
-        for (int i = 0; i < test.list.Count(); i++)
+        string idWeapon = DataManager.Ins.gameSave.idWeapon;
+        for (int i = 0; i < weaponData.weapon.Count(); i++)
         {
-            if (test.list[i].index == indexWeapon)
+            if (weaponData.weapon[i].index == idWeapon)
             {
-                weaponChoose.GetComponent<MeshFilter>().mesh = test.list[i].weaponMesh;
-                bullet1.GetComponent<MeshFilter>().mesh = test.list[i].weaponMesh;
-                for (int j = 0; j < weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++)
+                weaponMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
+                bulletMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
+                for (int j = 0; j < weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++)
                 {
-                    mats[j] = weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
-                    matsOfButton[j] = weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                    mats[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                    matsOfButton[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
                 }
                 meshRenderer.materials = mats;
                 meshRendererOfButton.materials = matsOfButton;
 
-                if (test.list[i].isRotate)
+                if (weaponData.weapon[i].isRotate)
                 {
                     bullet1.SetRoration = true;
                 }
                 else
                 {
                     bullet1.SetRoration = false;
+                }
+
+                if (weaponData.weapon[i].isBomerang)
+                {
+                    bullet1.SetBoomerang = true;
+                }
+                else
+                {
+                    bullet1.SetBoomerang = false;
                 }
             }
         }
@@ -230,6 +246,8 @@ public class PlayerController : MonoBehaviour
             if (hit.CompareTag("Enemy"))
             {
                 firstEnemyDetected = hit.GetComponent<Enemy>();
+
+
                 break; // chỉ lấy enemy đầu tiên
             }
         }
@@ -265,13 +283,7 @@ public class PlayerController : MonoBehaviour
     {
         GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
-        
-        if (isDead)
-        {
-            AudioManager.instance.StopSFX(0);
-        }
         directionOfPlayer = Vector3.zero;
-        AudioManager.instance.PlayerSFX(0);
         bulletScript.SetOwner(gameObject);
         bulletScript.SetTarget(targetEnemy);
         if (isGetGift)
@@ -289,8 +301,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet2"))
         {
-            AudioManager.instance.isPlayerBGM = false;
-            AudioManager.instance.PlayerSFX(0);
             dead1.SetActive(true);
             UIManager.instance.StartDead();
             anim.SetBool("Death", true);

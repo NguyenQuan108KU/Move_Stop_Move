@@ -47,6 +47,9 @@ public class Enemy : MonoBehaviour
 
     public bool isAttacking = false; // cờ kiểm soát
     public GameObject GroundCheck;
+
+    private bool hasBeenHit = false;
+
     private void Awake()
     {
         foreach (var item in render)
@@ -62,7 +65,6 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         nameEnemy.text = listName[Random.Range(0, listName.Count)].name.ToString();
         attackTimer = attackCoolDown;
-        //Set đạn mặ 
         detectionRange = 8f;
         bulletPrefabs.transform.localScale = new Vector3(39, 39, 39);
     }
@@ -72,7 +74,6 @@ public class Enemy : MonoBehaviour
         attackTimer -= Time.deltaTime;
         if (GameManager.instance.playerController.isDead)
         {
-            //anim.SetBool("Idle", true);
             anim.SetBool("Attack", false);
             anim.SetBool("Move", false);
             return;
@@ -149,15 +150,26 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet1"))
         {
+            if (GameManager.instance.playerController.isGetGift)
+            {
+                Collider enemyCollider = GetComponent<Collider>();
+                Collider bulletCollider = collision.collider; // collider của viên đạn
+
+                if (enemyCollider != null && bulletCollider != null)
+                {
+                    Physics.IgnoreCollision(enemyCollider, bulletCollider);
+                }
+            }
+
             GameManager.instance.playerController.SetDeufalt();
-            AudioManager.instance.PlayerSFX(2);
             GameManager.instance.playerController.point += 5;
             GameManager.instance.playerController.coinMoney += 5;
             GameManager.instance.playerController.countAttack += 1;
             //UIManager.instance.UpdateAlive();
         }
-        if (collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2"))
+        if ((collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2")) && !hasBeenHit)
         {
+            hasBeenHit = true;
             Bullet bulletScript = collision.gameObject.GetComponent<Bullet>();
             if (bulletScript == null) return;
             if (bulletScript.owner == this.gameObject)
@@ -177,11 +189,11 @@ public class Enemy : MonoBehaviour
                 GameManager.instance.playerController.coinMoney += 50;
             }
             
+            anim.SetBool("Death", true);
             isDead = true;
             //Praticle System
             UIManager.instance.UpdateAlive();
             BloodParticle.SetActive(true);
-            anim.SetBool("Death", true);
             gameObject.tag = "Untagged";
         }
 

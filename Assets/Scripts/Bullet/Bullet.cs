@@ -10,12 +10,14 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float speedRotation;
     [SerializeField] private Vector3 shootDirection;
     public float destroyTimer;
+    private bool isDestroyed = false; // cờ kiểm soát
 
     public GameObject owner;
     public bool SetRoration;
     public bool isRotate = false;
 
     [Header("Boomerang")]
+    public bool SetRotation = false;
     public bool SetBoomerang = false;
     private Vector3 startPos;
     private bool returning = false;
@@ -24,6 +26,7 @@ public class Bullet : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
     }
 
     private void Start()
@@ -124,11 +127,7 @@ public class Bullet : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            if (GameManager.instance.playerController.isGetGift)
-            {
-                collision.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
-                return;
-            }
+            if (GameManager.instance.playerController.isGetGift) return;
             Destroy(gameObject);
         }
 

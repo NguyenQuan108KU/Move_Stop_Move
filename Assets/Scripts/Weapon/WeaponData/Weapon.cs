@@ -5,6 +5,8 @@ using UnityEngine.UI;
 [System.Serializable]
 public class Weapon
 {
+    public string index;
+    public List<GameObject> weaponPrefabs;
     public string weaponName;
     public List<Sprite> weaponImage;
     public string coin;
@@ -12,5 +14,8 @@ public class Weapon
     public string damageWeapon;
     public Mesh meshWeapon;
     public bool isBought;
-    public bool isGift;
+    public bool isRotate;
+    public bool isBomerang;
+
+    //p
 }

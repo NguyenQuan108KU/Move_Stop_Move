@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -38,7 +36,7 @@ public class PlayerCity_Controller : MonoBehaviour
     public int coinMoney;
 
     [Header("Change Weapon")]
-    public WeaponDatabase weaponDB;
+    public WeaponDatabase weaponData;
     public Test test;
     public GameObject weaponChoose;
     public Bullet bullet1;
@@ -48,24 +46,24 @@ public class PlayerCity_Controller : MonoBehaviour
 
     public int countAttack;
     public GameObject effectLevelUp;
-    [Header("Change Pants")]
-    [SerializeField] private int indexPants;
-    [SerializeField] private ListPants listPants;
-    [SerializeField] private GameObject pantsOdPlayer;
+    [Header("------------------Change Pants------------------")]
+    public PantsDatabases pantsData;                 // Data quần 
+    public SkinnedMeshRenderer pantsOdPlayer;        // Renderer của quần nhân vật
 
-    [Header("Change Hats")]
-    [SerializeField] private int indexHats;
-    [SerializeField] private HATS hatOfPlayer;
+    [Header("------------------Change Hats------------------")]
+    public HatDatabases hatsData;                   // Data mũ
+    public Transform hatAnchor;                     //Vị trí gắn mũ
 
-    [Header("Change Protect")]
-    [SerializeField] private int indexProtect;
-    [SerializeField] private Protect protectOfPlayer;
+    [Header("------------------Change Protect------------------")]
+    public ShieldDatabases shieldData;              // Data khiên 
+    public Transform shieldAnchor;                  // Vị trí gắn khiên
 
-    [Header("Change Clothes Player")]
-    [SerializeField] private int indexClothes;
-    [SerializeField] private ClothesSet[] listClothes;
-    [SerializeField] private GameObject initialShadingOfPlayer;
-    [SerializeField] private GameObject PantsOfPlayer;
+    [Header("------------------Change Clothes Player------------------")]
+    public SkinDatabases skinData;                          // Data skin nhân vật
+    public SkinnedMeshRenderer initialShadingOfPlayer;      // Renderer thân của nhân vật
+    public Transform[] list_anchorsOfSkin;                  // Danh sách anchor của skin
+    public Transform wingAnchor;                            // Vị trí gắn cánh
+    public Transform tailAnchor;                            // Vị trí gắn đuôi
 
     [Header("Attack Settings")]
     [SerializeField] private float fireRate = 0.5f; // thời gian chờ giữa các lần bắn
@@ -110,6 +108,18 @@ public class PlayerCity_Controller : MonoBehaviour
         point = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         anim = GetComponent<Animator>();
+
+        if (DataManager.Ins.gameSave.idSkin != "Skin_2")
+        {
+            SetSkinOfPlayer();
+        }
+        else
+        {
+            SetShieldOfPlayer();
+            SetPantOfPlayer();
+            SetHatOfPlayer();
+        }
+        SetWeaponOfPlayer();
     }
     void Update()
     {
@@ -117,11 +127,7 @@ public class PlayerCity_Controller : MonoBehaviour
         PlayerMove();
         AttackTrigle();
         //Thay doi quan ao, vu khi
-        changeWepon();
-        changePants();
-        changeHats();
-        changeProtect();
-        changeClothesPlayer();
+
         //Len level
         UpLevel();
         SetWinner();
@@ -144,29 +150,30 @@ public class PlayerCity_Controller : MonoBehaviour
             RorateWeapon();
         }
     }
-    void changeWepon()
+    void SetWeaponOfPlayer()
     {
-        indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
+        indexWeapon = PlayerPrefs.GetInt("SelectOption");
         indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);
         MeshRenderer meshRenderer = weaponChoose.GetComponent<MeshRenderer>();
         MeshRenderer meshRendererOfButton = bullet1.GetComponent<MeshRenderer>();
-        // Lấy toàn bộ materials ra
         Material[] mats = meshRenderer.materials;
         Material[] matsOfButton = meshRendererOfButton.sharedMaterials;
-        for (int i = 0; i < test.list.Count(); i++)
+        string idWeapon = DataManager.Ins.gameSave.idWeapon;
+        for (int i = 0; i < weaponData.weapon.Count(); i++)
         {
-            if (test.list[i].index == indexWeapon)
+            if (weaponData.weapon[i].index == idWeapon)
             {
-                weaponChoose.GetComponent<MeshFilter>().mesh = test.list[i].weaponMesh;
-                bullet1.GetComponent<MeshFilter>().mesh = test.list[i].weaponMesh;
-                for (int j = 0; j < weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++)
+                weaponChoose.GetComponent<MeshFilter>().mesh = weaponData.weapon[i].meshWeapon;
+                bullet1.GetComponent<MeshFilter>().mesh = weaponData.weapon[i].meshWeapon;
+                for (int j = 0; j < weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++)
                 {
-                    mats[j] = weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
-                    matsOfButton[j] = weaponDB.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                    mats[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                    matsOfButton[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
                 }
                 meshRenderer.materials = mats;
                 meshRendererOfButton.materials = matsOfButton;
-                if (test.list[i].isRotate)
+
+                if (weaponData.weapon[i].isRotate)
                 {
                     bullet1.SetRoration = true;
                 }
@@ -175,7 +182,7 @@ public class PlayerCity_Controller : MonoBehaviour
                     bullet1.SetRoration = false;
                 }
 
-                if (test.list[i].isBomerang)
+                if (weaponData.weapon[i].isBomerang)
                 {
                     bullet1.SetBoomerang = true;
                 }
@@ -186,95 +193,79 @@ public class PlayerCity_Controller : MonoBehaviour
             }
         }
     }
-    void changePants()
+    void SetPantOfPlayer()
     {
-
-        indexHats = PlayerPrefs.GetInt("SlectPaint", -1);
-        //indexPants = PlayerPrefs.GetInt("IndexPants");
-        if (indexHats == -1)
+        string pantName = DataManager.Ins.gameSave.idPant;
+        if (!string.IsNullOrEmpty(pantName))
         {
-            pantsOdPlayer.GetComponent<SkinnedMeshRenderer>().material = listPants.pantsObjects[6].materialPants;
-        }
-        for (int i = 0; i < listPants.pantsObjects.Count(); i++)
-        {
-            if (listPants.pantsObjects[i].index == indexHats)
+            for (int i = 0; i < pantsData.pants.Length; i++)
             {
-                pantsOdPlayer.GetComponent<SkinnedMeshRenderer>().material = listPants.pantsObjects[i].materialPants;
+                if (pantsData.pants[i].index == pantName)
+                {
+                    pantsOdPlayer.material = pantsData.pants[i].material;
+                }
             }
         }
     }
-    void changeHats()
+    void SetHatOfPlayer()
     {
-        //indexHats = PlayerPrefs.GetInt("IndexHat");
-        indexHats = PlayerPrefs.GetInt("SlectHat", -1);
-        if (indexHats == -1)
+        string hatName = DataManager.Ins.gameSave.idHat;
+        if (!string.IsNullOrEmpty(hatName))
         {
-            hatOfPlayer.games[6].SetActive(true);
-        }
-        for (int i = 0; i < hatOfPlayer.games.Count(); i++)
-        {
-            if (indexHats == i)
+            foreach (Transform child in hatAnchor.transform)
             {
-                hatOfPlayer.games[i].SetActive(true);
+                Destroy(child.gameObject);
             }
-            else
+            for (int i = 0; i < hatsData.hats.Length; i++)
             {
-                hatOfPlayer.games[i].SetActive(false);
+                if (hatsData.hats[i].index == hatName)
+                {
+                    Instantiate(hatsData.hats[i].hatPrefab, hatAnchor.transform);
+                }
             }
         }
     }
-    void changeProtect()
+    void SetShieldOfPlayer()
     {
-        indexProtect = PlayerPrefs.GetInt("SlectProtect", -1);
-        if (indexProtect == -1)
+        string shieldName = DataManager.Ins.gameSave.idShield;
+        if (!string.IsNullOrEmpty(shieldName))
         {
-            protectOfPlayer.protect[2].SetActive(true);
-        }
-        for (int i = 0; i < protectOfPlayer.protect.Count(); i++)
-        {
-            if (indexProtect == i)
+            foreach (Transform child in shieldAnchor.transform)
             {
-                protectOfPlayer.protect[i].SetActive(true);
+                Destroy(child.gameObject);
             }
-            else
+            for (int i = 0; i < shieldData.shields.Length; i++)
             {
-                protectOfPlayer.protect[i].SetActive(false);
+                if (shieldData.shields[i].index == shieldName)
+                {
+                    Instantiate(shieldData.shields[i].shieldPrefab, shieldAnchor.transform);
+                }
             }
         }
     }
 
-    void changeClothesPlayer()
+    void SetSkinOfPlayer()
     {
-        indexClothes = PlayerPrefs.GetInt("SlectClothes", -1);
-        if (indexProtect == -1)
+        string skinName = DataManager.Ins?.gameSave?.idSkin;
+        if (string.IsNullOrEmpty(skinName)) return;
+
+        foreach (Transform anchor in list_anchorsOfSkin)
         {
-            listClothes[2].hatOfSet.SetActive(true);
-            listClothes[2].wingOfSet.SetActive(true);
-            listClothes[2].protectOfSet.SetActive(true);
-            listClothes[2].tailOfSet.SetActive(true);
-            //initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
-            //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
-            //return;
-        }
-        for (int i = 0; i < listClothes.Count(); i++)
-        {
-            if (indexClothes == i)
+            foreach (Transform child in anchor)
             {
-                listClothes[i].hatOfSet.SetActive(true);
-                listClothes[i].wingOfSet.SetActive(true);
-                listClothes[i].protectOfSet.SetActive(true);
-                listClothes[i].tailOfSet.SetActive(true);
-                initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[i].material;
-                PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[i].material;
+                Destroy(child.gameObject);
             }
-            else
+        }
+        for (int i = 0; i < skinData.skin.Length; i++)
+        {
+            if (skinData.skin[i].index == skinName)
             {
-                listClothes[2].hatOfSet.SetActive(false);
-                listClothes[2].wingOfSet.SetActive(false);
-                listClothes[2].protectOfSet.SetActive(false);
-                listClothes[2].tailOfSet.SetActive(false);
-                //initialShadingOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
-                //PantsOfPlayer.GetComponent<SkinnedMeshRenderer>().material = listClothes[2].material;
+                Instantiate(skinData.skin[i].hatOfSkin, hatAnchor.transform);
+                Instantiate(skinData.skin[i].shieldOfSkin, shieldAnchor.transform);
+                Instantiate(skinData.skin[i].wingOfSkin, wingAnchor.transform);
+                Instantiate(skinData.skin[i].tailOfSkin, tailAnchor.transform);
+                initialShadingOfPlayer.material = skinData.skin[i].materialOfPlayer;
+                pantsOdPlayer.material = skinData.skin[i].materialOfPlayer;
             }
         }
     }
@@ -401,7 +392,6 @@ public class PlayerCity_Controller : MonoBehaviour
     public void ShootingDefault()
     {
         playerMove = Vector3.zero;
-        AudioManager.instance.PlayerSFX(0);
         GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
         bulletScript.SetOwner(gameObject);
@@ -410,8 +400,6 @@ public class PlayerCity_Controller : MonoBehaviour
     private IEnumerator ShootLevel1()
     {
         Vector3 saveTranform = firingTransform.position;
-        // Phát âm thanh bắn
-        AudioManager.instance.PlayerSFX(0);
 
         // Dừng di chuyển của player khi bắn
         playerMove = Vector3.zero;
@@ -442,7 +430,6 @@ public class PlayerCity_Controller : MonoBehaviour
         if (target == null) return;
 
         playerMove = Vector3.zero;
-        AudioManager.instance.PlayerSFX(0);
 
         // Hướng bắn (hướng tới enemy, nhưng cả 2 viên đều đi song song theo hướng này)
         Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
@@ -475,7 +462,6 @@ public class PlayerCity_Controller : MonoBehaviour
         if (target == null) return;
 
         playerMove = Vector3.zero;
-        AudioManager.instance.PlayerSFX(0);
 
         // Hướng chuẩn đến enemy
         Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
@@ -508,7 +494,6 @@ public class PlayerCity_Controller : MonoBehaviour
         if (target == null) return;
 
         playerMove = Vector3.zero;
-        AudioManager.instance.PlayerSFX(0);
 
         // Hướng chuẩn đến enemy
         Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
@@ -537,8 +522,6 @@ public class PlayerCity_Controller : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet2"))
         {
-            //AudioManager.instance.isPlayerBGM = false;
-            //AudioManager.instance.PlayerSFX(0);
             dead1.SetActive(true);
             UIManager.instance.StartDead();
             anim.SetBool("Death", true);

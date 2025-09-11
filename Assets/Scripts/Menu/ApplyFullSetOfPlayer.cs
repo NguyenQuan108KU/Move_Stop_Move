@@ -8,6 +8,7 @@ public class ApplyFullSetOfPlayer : MonoBehaviour
     public ProtectManager shieldManager;
     public PantsManager pantManager;
     public ClothesManager skinManager;
+    public WeaponManager weaponManager;
     private void Start()
     {
         if(DataManager.Ins.gameSave.idSkin != "Skin_2")
@@ -24,5 +25,6 @@ public class ApplyFullSetOfPlayer : MonoBehaviour
             pantManager.SetPaintOfPlayer();
             hatManager.SetHatOfPlayer();
         }
+        weaponManager.LoadColorOfWeapon(PlayerPrefs.GetInt("SelectOption"));
     }
 }

@@ -21,7 +21,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private GameObject colorEnemy;    public GameObject targetEnemy;    public bool isDead = false;    public bool isGetGift = false;
 
     public bool isBoss;
-    public bool isBossLevel1;    public bool isBossLevel2;    public int countAttack;    public GameObject hatColor;
+    public bool isBossLevel1;    public bool isBossLevel2;    public bool isBossLevel3;    public int countAttack;    public GameObject hatColor;
     void Start()
     {
         target = GameManager.instance.playerCityController.transform;
@@ -36,7 +36,7 @@ public class EnemyController : MonoBehaviour
         {
             countAttack = 2;
         }
-        else if(isBossLevel2)
+        else if(isBossLevel2 || isBossLevel3)
         {
             countAttack = 4;
         }
@@ -103,12 +103,24 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet1"))
         {
+            
             if (isBoss)
             {
-                countAttack -= 1;
-                if(countAttack <= 0)
+                if (isBossLevel3)
                 {
+                    Vector3 newScale = transform.localScale - new Vector3(0.5f, 0.5f, 0.5f);
+                    transform.localScale = newScale;
+                    if (transform.localScale.x < 1f || transform.localScale.y < 1f || transform.localScale.z < 1f)
+                    {
+                        EnemyDie();
+                    }
+                }
+                else
+                {
+                countAttack -= 1;
+                if(countAttack <= 0){
                     EnemyDie();
+                }
                 }
             }
             else
@@ -129,7 +141,6 @@ public class EnemyController : MonoBehaviour
         effect.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
         effect.GetComponent<ParticleSystem>().Play();
 
-        AudioManager.instance.PlayerSFX(2);
         GameManager.instance.playerCityController.EnemyAlive -= 1;
         GameManager.instance.playerCityController.coinOfPlayer += 1;
         Destroy(gameObject); // xóa enemy
