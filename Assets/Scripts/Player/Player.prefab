@@ -926,25 +926,40 @@ MonoBehaviour:
   joystick: {fileID: 0}
   bulletPrefabs: {fileID: 348641515877151161, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   firingTransform: {fileID: 1692873221281596374}
-  moveSpeed: 10
-  radius: 5
+  moveSpeedOfPlayer: 0
+  radiusAttackOfPlayer: 0
   Harmmer: {fileID: 9080388726463016847}
-  target: {fileID: 0}
+  isAttack: 0
   attackDuration: 1
   point: 0
+  isDead: 0
   dead1: {fileID: 0}
   coinMoney: 0
+  weaponData: {fileID: 0}
   test: {fileID: 11400000, guid: e7f6953fe215ebb4da92281e8f8b1767, type: 2}
   weaponChoose: {fileID: 9080388726463016847}
   bullet1: {fileID: 694607201790650757, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
-  isPlayerDie: 0
+  indexMaterial: 0
   countAttack: 0
   effectLevelUp: {fileID: 8130266135288740542}
-  indexPants: 0
-  listPants: {fileID: 11400000, guid: be58fc94eb84c6141a112b9f1ef44035, type: 2}
-  pantsOdPlayer: {fileID: 3035814576118848715}
-  indexHats: 0
-  hatOfPlayer: {fileID: 3372027362170739447}
+  weaponRenderer: {fileID: 0}
+  weaponMeshFilter: {fileID: 0}
+  bulletRenderer: {fileID: 0}
+  bulletMeshFilter: {fileID: 0}
+  pantsData: {fileID: 0}
+  pantsOdPlayer: {fileID: 8081272282567346840}
+  hatsData: {fileID: 0}
+  hatAnchor: {fileID: 0}
+  shieldData: {fileID: 0}
+  shieldAnchor: {fileID: 0}
+  skinData: {fileID: 0}
+  initialShadingOfPlayer: {fileID: 0}
+  list_anchorsOfSkin: []
+  wingAnchor: {fileID: 0}
+  tailAnchor: {fileID: 0}
+  isGetGift: 0
+  isLevelUp: 0
+  popupLose: {fileID: 0}
 --- !u!114 &5602920484187067160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -958,6 +973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 8255904242071336545}
+  playerCityController: {fileID: 0}
 --- !u!1 &2623023357899636398
 GameObject:
   m_ObjectHideFlags: 0
@@ -8486,6 +8502,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HandPlayer: {fileID: 1692873221281596374}
+  x: 0
+  y: 0
+  z: 0
 --- !u!1 &9144220710160737685
 GameObject:
   m_ObjectHideFlags: 0

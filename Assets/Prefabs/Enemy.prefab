@@ -1825,7 +1825,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.45
+  m_Radius: 0.55
   m_Height: 2.3661466
   m_Direction: 1
   m_Center: {x: 0, y: 1.1301758, z: 0}
@@ -1869,24 +1869,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 449139140182421204}
-  EnemySpeed: 3
+  anim: {fileID: 8094703547617527751}
   bulletPrefabs: {fileID: 348641515877151161, guid: a48ea611c30b97e4698d99d2affd1452, type: 3}
   firingTransform: {fileID: 6378755179001133314}
   target: {fileID: 0}
   detectionRange: 8
   attackRange: 0
-  targetTags:
-  - Player
-  - Enemy
+  attackCoolDown: 6
+  attackTimer: 0
   render:
   - {fileID: 4576397930793064325}
   - {fileID: 426329328400034011}
   BloodParticle: {fileID: 78613635240327925}
-  isDead: 0
-  targetEnemy: {fileID: 5378882499550004379}
+  circleTargetEnemy: {fileID: 5378882499550004379}
+  isEnemyDied: 0
+  isEnemyGetGift: 0
+  isEnemyAttacking: 0
+  EnemySpeed: 3
   timeStartBullet: 0
   textEnemy: {fileID: 7994588033871830317}
   nameEnemy: {fileID: 7994588033871830317}
+  pointOfEnemy: {fileID: 584047824249063001}
   listName:
   - {fileID: 11400000, guid: 0b2681cd8e0084d4594ee918d98f64e7, type: 2}
   - {fileID: 11400000, guid: f3c0b599f2d028d4fa995af4ba5f7fc3, type: 2}
@@ -1899,11 +1902,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 793b469ba2f0342408ccc7867852f960, type: 2}
   - {fileID: 11400000, guid: 14d7f88cea181bc43b96093256c85468, type: 2}
   point: 0
-  pointOfEnemy: {fileID: 584047824249063001}
-  isGetGift: 0
-  attackCoolDown: 6
-  attackTimer: 0
-  isAttacking: 0
   GroundCheck: {fileID: 6746558756906028439}
 --- !u!114 &1330244777685495638
 MonoBehaviour:

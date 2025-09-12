@@ -8,30 +8,28 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-
-    public Animator anim;        // Animator của nhân vật
-    public Joystick joystick;    // Joystick điều khiển nhân vật
+    [Header("------------------Player Components------------------")]
+    public Animator anim;                  // Animator của nhân vật
+    public Joystick joystick;             // Joystick điều khiển nhân vật
 
     [Header("------------------Bullet------------------")]
-    public GameObject bulletPrefabs;   // Prefabs của viên đạn
-    public Transform firingTransform;  // Vị trí viên đạn được bắn ra
+    public GameObject bulletPrefabs;      // Prefabs của viên đạn
+    public Transform firingTransform;     // Vị trí viên đạn được bắn ra
 
     [Header("------------------Move Info------------------")]
-    public float moveSpeedOfPlayer;           // Tốc độ di chuyển của nhân vật
-    private Vector3 directionOfPlayer;        // Hướng di chuyển của nhân vật dựa trên joystick
+    public float moveSpeedOfPlayer;      // Tốc độ di chuyển của nhân vật
+    private Vector3 directionOfPlayer;   // Hướng di chuyển của nhân vật dựa trên joystick
 
     [Header("------------------Radius------------------")]
-    public float radiusAttackOfPlayer;  //  kính vòng tròn phát hiện Enemy của Player
+    public float radiusAttackOfPlayer;  // Bán kính vòng tròn phát hiện Enemy của Player
 
-    public GameObject Harmmer;          // Vũ khí của nhân vật
+    public GameObject weaponOfPlayer;   // Vũ khí của nhân vật
     private Transform targetEnemy;      // Vị trí của Enemy
     public bool isAttack = false;       // Cho biết xem có tấn công hay không
-    public float attackDuration = 1f;   // Thời gian duy trì trạng thái tấn công
-    public int point;                   // Điểm của người chơi
+    public int pointOfPlayerDefault;    // Điểm của người chơi
     private Enemy enemyCurrent;                            
-    public bool isDead = false;   // Kiểm tra xem nhân vật đã chết hay chưa
-    public GameObject dead1;
-    public int coinMoney;       // Tiền của người chơi
+    public bool isDead = false;         // Kiểm tra xem nhân vật đã chết hay chưa
+    public int coinMoney;               // Tiền của người chơi
 
     [Header("------------------Change Weapon------------------")]
     public WeaponDatabase weaponData;
@@ -39,13 +37,10 @@ public class PlayerController : MonoBehaviour
     public GameObject weaponChoose;
     public Bullet bullet1;              // Viên đạn của người chơi
     private int indexWeapon;
-    [SerializeField] private int indexMaterial;
-    public int countAttack;
+    public int indexMaterial;
     public GameObject effectLevelUp;
-
     public MeshRenderer weaponRenderer;
     public MeshFilter weaponMeshFilter;
-
     public MeshRenderer bulletRenderer;
     public MeshFilter bulletMeshFilter;
     [Header("------------------Change Pants------------------")]
@@ -71,9 +66,9 @@ public class PlayerController : MonoBehaviour
     public bool isLevelUp = false;
     private bool hasPlayedLevelUp = false;
     public GameObject popupLose;
-    void Start()
+    public void Init()
     {
-        point = 0;
+        pointOfPlayerDefault = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         isGetGift = false;
         if (DataManager.Ins.gameSave.idSkin != "Skin_2")
@@ -96,80 +91,77 @@ public class PlayerController : MonoBehaviour
         UpLevel();
     }
     //Thay đổi vũ khí
-     void SetWeaponOfPlayer()
-    {
-        indexWeapon = PlayerPrefs.GetInt("SelectOption");
-        indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);
+     public void SetWeaponOfPlayer(){
+        indexWeapon = PlayerPrefs.GetInt("SelectOption");     //Lấy index của vũ khí 
+        indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);       //Lấy index của loại vũ khí 
         MeshRenderer meshRenderer = weaponRenderer;
         MeshRenderer meshRendererOfButton = bulletRenderer;
         Material[] mats = meshRenderer.materials;
         Material[] matsOfButton = meshRendererOfButton.sharedMaterials;
-        string idWeapon = DataManager.Ins.gameSave.idWeapon;
-        for (int i = 0; i < weaponData.weapon.Count(); i++)
-        {
-            if (weaponData.weapon[i].index == idWeapon)
-            {
+        string idWeapon = DataManager.Ins.gameSave.idWeapon;                // Lấy ID vũ khí hiện tại từ gameSave
+        for (int i = 0; i < weaponData.weapon.Count(); i++){                // Duyệt danh sách vũ khí để tìm vũ khí khớp với idWeapon
+            if (weaponData.weapon[i].index == idWeapon){
+                // Gán mesh của vũ khí cho player và bullet
                 weaponMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
                 bulletMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
-                for (int j = 0; j < weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++)
-                {
+
+                // Thay đổi materials của vũ khí và bullet
+                for (int j = 0; j < weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++){
                     mats[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
                     matsOfButton[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
                 }
+
+                // Cập nhật materials cho MeshRenderer
                 meshRenderer.materials = mats;
                 meshRendererOfButton.materials = matsOfButton;
 
+                //Thay đổi loại vũ khí xoay cho bullet 
                 if (weaponData.weapon[i].isRotate)
-                {
                     bullet1.SetRoration = true;
-                }
                 else
-                {
                     bullet1.SetRoration = false;
-                }
-
+                //Thay đổi loại vũ khí bommerang cho bullet 
                 if (weaponData.weapon[i].isBomerang)
-                {
                     bullet1.SetBoomerang = true;
-                }
                 else
-                {
                     bullet1.SetBoomerang = false;
-                }
             }
         }
     }
 
     //Thay đổi quần của nhân vật 
-    void SetPantOfPlayer()
+    public void SetPantOfPlayer()
     {
-        string pantName = DataManager.Ins.gameSave.idPant;
-        if (!string.IsNullOrEmpty(pantName))
-        {
-            for (int i = 0; i < pantsData.pants.Length; i++)
-            {
-                if (pantsData.pants[i].index == pantName)
-                {
-                    pantsOdPlayer.material = pantsData.pants[i].material;
+        string pantName = DataManager.Ins.gameSave.idPant; // Lấy ID quần đã lưu của người chơi
+
+        // Kiểm tra xem pantName có hợp lệ không
+        if (!string.IsNullOrEmpty(pantName)){
+            // Duyệt danh sách tất cả quần trong pantsData
+            for (int i = 0; i < pantsData.pants.Length; i++){
+                // Nếu tìm thấy quần có index trùng với pantName
+                if (pantsData.pants[i].index == pantName){
+                    pantsOdPlayer.material = pantsData.pants[i].material; // Gán material cho player
                 }
             }
         }
     }
 
     //Thay đổi mũ của nhân vật
-    void SetHatOfPlayer()
-    {
-        string hatName = DataManager.Ins.gameSave.idHat;
-        if (!string.IsNullOrEmpty(hatName))
-        {
-            foreach (Transform child in hatAnchor.transform)
-            {
-                Destroy(child.gameObject);
+    public void SetHatOfPlayer(){
+        string hatName = DataManager.Ins.gameSave.idHat; // Lấy ID mũ đã lưu của người chơi
+
+        // Kiểm tra xem hatName có hợp lệ không
+        if (!string.IsNullOrEmpty(hatName)){
+            // Xóa tất cả mũ cũ đang gắn trên hatAnchor
+            foreach (Transform child in hatAnchor.transform){
+                Destroy(child.gameObject); // Hủy từng mũ con
             }
-            for (int i = 0; i < hatsData.hats.Length; i++)
-            {
-                if (hatsData.hats[i].index == hatName)
-                {
+
+            // Duyệt danh sách tất cả mũ trong hatsData
+            for (int i = 0; i < hatsData.hats.Length; i++){
+                // Nếu tìm thấy mũ có index trùng với hatName
+                if (hatsData.hats[i].index == hatName){
+                    // Sinh mũ mới và gắn vào hatAnchor
                     Instantiate(hatsData.hats[i].hatPrefab, hatAnchor.transform);
                 }
             }
@@ -177,19 +169,21 @@ public class PlayerController : MonoBehaviour
     }
 
     //Thay đổi khiên của nhân vật
-    void SetShieldOfPlayer()
-    {
-        string shieldName = DataManager.Ins.gameSave.idShield;
-        if (!string.IsNullOrEmpty(shieldName))
-        {
-            foreach (Transform child in shieldAnchor.transform)
-            {
-                Destroy(child.gameObject);
+    public void SetShieldOfPlayer(){
+        string shieldName = DataManager.Ins.gameSave.idShield; // Lấy ID khiên đã lưu của người chơi
+
+        // Kiểm tra xem shieldName có hợp lệ không
+        if (!string.IsNullOrEmpty(shieldName)){
+            // Xóa tất cả khiên cũ đang gắn trên shieldAnchor
+            foreach (Transform child in shieldAnchor.transform){
+                Destroy(child.gameObject); // Hủy từng khiên con
             }
-            for (int i = 0; i < shieldData.shields.Length; i++)
-            {
-                if (shieldData.shields[i].index == shieldName)
-                {
+
+            // Duyệt danh sách tất cả khiên trong shieldData
+            for (int i = 0; i < shieldData.shields.Length; i++){
+                // Nếu tìm thấy khiên có index trùng với shieldName
+                if (shieldData.shields[i].index == shieldName){
+                    // Sinh khiên mới và gắn vào shieldAnchor
                     Instantiate(shieldData.shields[i].shieldPrefab, shieldAnchor.transform);
                 }
             }
@@ -197,34 +191,38 @@ public class PlayerController : MonoBehaviour
     }
 
     //Thay đổi skin của nhân vật 
-    void SetSkinOfPlayer()
-    {
-        string skinName = DataManager.Ins?.gameSave?.idSkin;
+    public void SetSkinOfPlayer(){
+        string skinName = DataManager.Ins?.gameSave?.idSkin; // Lấy ID skin đã lưu của người chơi
+
+        // Nếu skinName rỗng hoặc null thì thoát khỏi hàm
         if (string.IsNullOrEmpty(skinName)) return;
 
-        foreach (Transform anchor in list_anchorsOfSkin)
-        {
-            foreach (Transform child in anchor)
-            {
-                Destroy(child.gameObject);
+        // Xóa tất cả các item cũ trong list_anchorsOfSkin
+        foreach (Transform anchor in list_anchorsOfSkin){
+            foreach (Transform child in anchor){
+                Destroy(child.gameObject); // Hủy từng child trong anchor
             }
         }
-        for (int i = 0; i < skinData.skin.Length; i++)
-        {
-            if (skinData.skin[i].index == skinName)
-            {
+
+        // Duyệt danh sách skin để tìm skin có index trùng với skinName
+        for (int i = 0; i < skinData.skin.Length; i++){
+            // Nếu tìm thấy skin đúng
+            if (skinData.skin[i].index == skinName){
+                // Sinh các phần của skin (mũ, khiên, cánh, đuôi) vào các anchor tương ứng
                 Instantiate(skinData.skin[i].hatOfSkin, hatAnchor.transform);
                 Instantiate(skinData.skin[i].shieldOfSkin, shieldAnchor.transform);
                 Instantiate(skinData.skin[i].wingOfSkin, wingAnchor.transform);
                 Instantiate(skinData.skin[i].tailOfSkin, tailAnchor.transform);
-                initialShadingOfPlayer.material = skinData.skin[i].materialOfPlayer;
-                pantsOdPlayer.material = skinData.skin[i].materialOfPlayer;
+
+                // Cập nhật material của player và quần theo skin
+                initialShadingOfPlayer.material = skinData.skin[i].materialOfPlayer; // Player
+                pantsOdPlayer.material = skinData.skin[i].materialOfPlayer;          // Pants
             }
         }
     }
 
     //Hàm di chuyển nhân vật
-    private void PlayerMove(){
+    public void PlayerMove(){
         // Lấy giá trị đầu vào từ joystick để xác định hướng di chuyển
         directionOfPlayer.x = joystick.Horizontal;   // Trục X
         directionOfPlayer.z = joystick.Vertical;     // Trục Z
@@ -256,10 +254,10 @@ public class PlayerController : MonoBehaviour
 
             // Nếu enemy cũ khác enemy mới, tắt hiển thị enemy cũ
             if (enemyCurrent != null && enemyCurrent != firstEnemyDetected){
-                enemyCurrent.targetEnemy.SetActive(false); // Tắt enemy cũ nếu khác
+                enemyCurrent.circleTargetEnemy.SetActive(false); // Tắt enemy cũ nếu khác
             }
             enemyCurrent = firstEnemyDetected;             // Cập nhật enemy hiện tại
-            enemyCurrent.targetEnemy.SetActive(true);      // Bật hiển thị enemy mới
+            enemyCurrent.circleTargetEnemy.SetActive(true);      // Bật hiển thị enemy mới
 
             // Nếu player không di chuyển
             if (directionOfPlayer.sqrMagnitude < 0.001f){
@@ -278,7 +276,7 @@ public class PlayerController : MonoBehaviour
 
             // Nếu không còn enemy nào trong bán kính
             if (enemyCurrent != null){
-                enemyCurrent.targetEnemy.SetActive(false);   // Tắt hiển thị enemy cũ
+                enemyCurrent.circleTargetEnemy.SetActive(false);   // Tắt hiển thị enemy cũ
                 enemyCurrent = null;                         // Reset enemy hiện tại
             }
         }
@@ -289,7 +287,7 @@ public class PlayerController : MonoBehaviour
         GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);   // Tạo một viên đạn mới từ prefab tại vị trí firingTransform
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();     // Lấy component Bullet từ viên đạn vừa tạo
         directionOfPlayer = Vector3.zero;                           // Reset hướng di chuyển của player (hoặc hướng bắn) về Vector3.zero
-        bulletScript.SetOwner(gameObject);                          // Thiết lập owner của viên đạn là chính player (tránh tự chết do viên đạn của mình)
+        bulletScript.SetOwner(this.gameObject);                          // Thiết lập owner của viên đạn là chính player (tránh tự chết do viên đạn của mình)
         bulletScript.SetTarget(targetEnemy);                        // Thiết lập target của viên đạn là enemy hiện tại
         AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Attack);
 
@@ -303,78 +301,80 @@ public class PlayerController : MonoBehaviour
             bulletScript.isOffRotate = false;                          // Tắt để viên đạn xoay như bình thường
         }
     }
-    private IEnumerator ScaleBullet(GameObject bullet, float startScale, float endScale, float duration)
-    {
+
+    //Hàm thay đổi kích thước bullet mượt mà theo thời gian.
+    private IEnumerator ScaleBullet(GameObject bullet, float startScale, float endScale, float duration){
         float time = 0f;
-        while (time < duration)
-        {
+        while (time < duration){
             if (bullet == null) yield break; // nếu bullet bị hủy → thoát Coroutine
             time += Time.deltaTime;
-            float scale = Mathf.Lerp(startScale, endScale, time / duration);
-            bullet.transform.localScale = new Vector3(scale, scale, scale);
+            float scale = Mathf.Lerp(startScale, endScale, time / duration);            // Tính scale hiện tại
+            bullet.transform.localScale = new Vector3(scale, scale, scale);             // Áp dụng scale cho bullet (uniform scale cả 3 trục)
             yield return null;
         }
         if (bullet != null)
-            bullet.transform.localScale = new Vector3(endScale, endScale, endScale);
+            bullet.transform.localScale = new Vector3(endScale, endScale, endScale);    // Đảm bảo scale cuối cùng chính xác bằng endScale 
     }
     
     //Hàm tăng level cho player
     public void UpLevel(){
 
         // Kiểm tra điều kiện để nâng cấp
-        if (countAttack >= 3 && !hasPlayedLevelUp){
+        if (pointOfPlayerDefault >= 15 && !hasPlayedLevelUp){
             AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Level_Up);
             hasPlayedLevelUp = true;                                    // Đánh dấu đã phát Level Up để không phát lại nhiều lần
-            effectLevelUp.SetActive(true);
-            transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
-            UIManager.instance.up = 4.7f;
-            isLevelUp = true;
+            effectLevelUp.SetActive(true);      
+            transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);       // Tăng kích thước player
+            GameController.instance.uiManager.up = 4.7f;                               // Cập nhật UI
+            isLevelUp = true;                                           // Đánh dấu trạng thái player đang Level Up
         }
     }
-    public void SetDeufalt()
-    {
-        if (isGetGift)
-        {
-            isGetGift = false;
-            radiusAttackOfPlayer = 5f;
+
+    //Hàm này set lại kích thước về ban đầu  của player sau khi ăn quà xong 
+    public void SetBulletPlayerDeufalt(){
+        if (isGetGift){   
+            isGetGift = false;          // Reset trạng thái gift để có thể ăn lại quà 
+            radiusAttackOfPlayer = 5f;  // Đặt bán kính tấn công của player về mặc định
             DrawCircle circle = GetComponentInChildren<DrawCircle>();
-            if (circle != null)
-            {
-                circle.radius = 5f;
-                circle.DrawCircleUnderFeet();
+            if (circle != null){
+                circle.radius = 5f;             // Reset bán kính hiển thị trên DrawCircle
+                circle.DrawCircleUnderFeet();   // Vẽ lại vòng tròn dưới chân player
             }
-            bullet1.transform.localScale = new Vector3(39, 39, 39);
+            bullet1.transform.localScale = new Vector3(39, 39, 39);   // Reset kích thước viên đạn về mặc định
         }
     }
-    private void OnDrawGizmos()
-    {
+
+    //Hàm vẽ màu cho Gizmos
+    private void OnDrawGizmos(){
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, radiusAttackOfPlayer);
     }
     public void SetOffAttack() => anim.SetBool("Attack", false);
     public void DestroyPlayer() => gameObject.SetActive(false);
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Bullet2"))
-        {
+    private void OnCollisionEnter(Collision collision){
+        //Kiểm tra va chạm với Bullet của enemy
+        if (collision.gameObject.CompareTag("Bullet2")){
+            isDead = true;
             AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Lose);
-            Instantiate(popupLose, transform.position, Quaternion.identity);
-            anim.SetBool("Death", true);
-            Harmmer.SetActive(false);
-            PlayerPrefs.SetInt("coinMoney", coinMoney);
+            //Instantiate(popupLose, transform.position, Quaternion.identity);   //Sinh Popup Lose 
+            anim.SetBool("Death", true);                                       // Kích hoạt animation chết
+            weaponOfPlayer.SetActive(false);                                          //Tắt vũ khí của player khi ném            
+            PlayerPrefs.SetInt("coinMoney", coinMoney);                        //Lưu tiền của playẻ
         }
 
-        if (collision.gameObject.CompareTag("Gift"))
-        {
+        //Kiểm tra va chạm khi ăn quà 
+        if (collision.gameObject.CompareTag("Gift")){
             AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Get_Gift);
-            isGetGift = true;
-            Destroy(collision.gameObject);
-            radiusAttackOfPlayer = 8f;
+            isGetGift = true;                           // Đánh dấu trạng thái nhận gift
+            Destroy(collision.gameObject);              // Hủy gift khỏi scene
+            radiusAttackOfPlayer = 8f;                  // Tăng phạm vi tấn công
+
+            // Cập nhật vòng tròn hiển thị bán kính tấn công
             DrawCircle circle = GetComponentInChildren<DrawCircle>();
             if(circle != null)
             {
-                circle.radius = 8f;
-                circle.DrawCircleUnderFeet();
+                circle.radius = 8f;                     //Tăng bán kính vòng to hơn
+                circle.DrawCircleUnderFeet();           // Vẽ lại vòng tròn
             }
         }
     }

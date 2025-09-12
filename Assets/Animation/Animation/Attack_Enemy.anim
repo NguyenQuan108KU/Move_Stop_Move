@@ -67907,7 +67907,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.32857144
-    functionName: SetDeufalt
+    functionName: SetDeufaltBullet
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

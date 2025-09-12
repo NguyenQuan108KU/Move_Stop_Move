@@ -4,37 +4,32 @@ using UnityEngine;
 
 public class SpawnEnemy : MonoBehaviour
 {
-    [SerializeField] private GameObject _enemyPrefabs;
-    [SerializeField] private float miniumSpawnTime;
-    [SerializeField] private float maxiumSpawnTime;
-    [SerializeField] private int maxEnemyCount; // số lượng tối đa enemy
+    [Header("------------------Enemy Prefabs------------------")]
+    public GameObject _enemyPrefabs;
 
+    [Header("------------------Spawn Timing Settings------------------")]
+    public float miniumSpawnTime;
+    public float maxiumSpawnTime;
+
+    [Header("------------------Spawn Control------------------")]
+    public int maxEnemyCount; // số lượng tối đa enemy
     private float _timeUnitSpawn;
-    private List<GameObject> _enemyList = new List<GameObject>(); // danh sách quản lý enemy
 
-    private void Awake()
-    {
-        SetTimeUnit();
+    [Header("------------------Runtime Enemy List------------------")]
+    private List<GameObject> _enemyList = new List<GameObject>(); // danh sách quản lý enemy
+    private void Awake(){
+        SetTimeUnit();      // Khởi tạo thời gian spawn ngẫu nhiên ban đầu
     }
 
-    private void Update()
-    {
-        
+    private void Update(){
         _timeUnitSpawn -= Time.deltaTime;
-
-        // Xóa enemy null (đã chết/destroy)
-        //_enemyList.RemoveAll(enemy => enemy == null);
-
-        if (_timeUnitSpawn < 0 && _enemyList.Count < maxEnemyCount)
-        {
-            // Tạo enemy mới
+        // Nếu hết thời gian chờ và số lượng enemy hiện tại < giới hạn cho phép
+        if (_timeUnitSpawn < 0 && _enemyList.Count < maxEnemyCount){
             Vector3 spawnPos = transform.position +
-                               new Vector3(Random.Range(-40, 40), 0, Random.Range(-25, 40));
-
-            GameObject enemy = Instantiate(_enemyPrefabs, spawnPos, Quaternion.identity);
+                               new Vector3(Random.Range(-40, 40), 0, Random.Range(-25, 40));     // Random vị trí spawn quanh vị trí gốc của SpawnEnemy
+            GameObject enemy = Instantiate(_enemyPrefabs, spawnPos, Quaternion.identity);        // Tạo enemy mới và thêm vào danh sách quản lý
             _enemyList.Add(enemy);
-
-            SetTimeUnit();
+            SetTimeUnit();      // Reset lại thời gian chờ cho lần spawn tiếp theo
         }
     }
 

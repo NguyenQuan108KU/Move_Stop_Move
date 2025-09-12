@@ -19,33 +19,29 @@ public class UIManager : MonoBehaviour
             instance = this;
         }
     }
-    public TextMeshProUGUI alive;
-    public TextMeshProUGUI pointOfPlayer;
+
+    [Header("--------------Player Info UI--------------")]
+    public TextMeshProUGUI textEnemyAlive;
+    public TextMeshProUGUI pointOfPlayerCity;
+    public TextMeshProUGUI pointOfPlayerDefault;
     public TextMeshProUGUI namePlayer;
+    public TextMeshProUGUI coinOfPlayer;
     public int enemyAliveTotal;
 
-    [Header("Load")]
+    [Header("--------------Enemy Info UI--------------")]
+    [Header("--------------Loading UI--------------")]
+    [Header("--------------Dead UI--------------")]
     [SerializeField] public GameObject loadCircle;
     [SerializeField] public GameObject loadGift;
     [SerializeField] public float speedRotation;
     [SerializeField] TextMeshProUGUI number;
-    private int countNumber;
-
-    [Header("Dead2")]
-    public GameObject Canvas_Dead_1;
-    public GameObject Canvas_Dead_2;
     [SerializeField] public bool isDead = false;
-    private int countdownDuration;
-    private float deadStartTime;
-
-    public TextMeshProUGUI coin;
-
+    public TextMeshProUGUI coinOfPlayerDefault;
     public GameObject Winner;
 
     public float up = 4;
 
     public TextMeshProUGUI enemyCity;
-    public TextMeshProUGUI coinOfPlayer;
 
     public GameObject GiftOpen;
 
@@ -62,86 +58,75 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         isLoadMenu = false;
-        enemyAliveTotal = 2;
-        countNumber = 5;
-
-        countdownDuration = 5;
-        deadStartTime = Time.time;
+        enemyAliveTotal = 8;
     }
     private void Update()
     {
-        if (coin != null && GameManager.instance.playerController != null)
-            coin.text = GameManager.instance.playerController.coinMoney.ToString();
-        if (enemyCity != null)
-            enemyCity.text = GameManager.instance.playerCityController.EnemyAlive.ToString();
-        if (coinOfPlayer != null)
-            coinOfPlayer.text = GameManager.instance.playerCityController.coinOfPlayer.ToString();
-        alive.text = enemyAliveTotal.ToString();
-        //setVitriScorePlayer();
-        if(GameManager.instance.playerController != null)
-        {
-            pointOfPlayer.text = GameManager.instance.playerController.point.ToString();
-        }
-        if (GameManager.instance.playerCityController != null)
-        {
-            pointOfPlayer.text = GameManager.instance.playerCityController.point.ToString();
-        }
-
-        if (isDead)
-        {
-            Load();
-        }
-        //Load();
+        //if (coin != null && GameManager.instance.playerController != null)
+        //    coin.text = GameManager.instance.playerController.coinMoney.ToString();
+        //if (enemyCity != null)
+        //    enemyCity.text = GameManager.instance.playerCityController.EnemyAlive.ToString();
+        //if (coinOfPlayer != null)
+        //    coinOfPlayer.text = GameManager.instance.playerCityController.coinOfPlayer.ToString();
+        //textEnemyAlive.text = enemyAliveTotal.ToString();
+        //if(GameManager.instance.playerController != null)
+        //{
+        //    pointOfPlayerCity.text = GameManager.instance.playerController.pointOfPlayerDefault.ToString();
+        //}
+        //if (GameManager.instance.playerCityController != null)
+        //{
+        //    pointOfPlayerCity.text = GameManager.instance.playerCityController.point.ToString();
+        //}
         if(loadGift != null)
             loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
-
         if((readyCity != null || menuReady != null) && isLoadMenu)
         {
             LoadCity();
         }
+        UpdateAliveZombie();
     }
-    private void LateUpdate()
+    public void UpdateCoin()
     {
-        //setVitriScorePlayer();
+        if (coinOfPlayerDefault != null && GameController.instance.playerController != null)
+            coinOfPlayerDefault.text = GameController.instance.playerController.coinMoney.ToString();
+        if (coinOfPlayer != null)
+            coinOfPlayer.text = GameManager.instance.playerCityController.coinOfPlayerCity.ToString();
     }
-    public void UpdateAlive()
+    public void UpdatePoint()
     {
-        enemyAliveTotal -= 1;
-        if (enemyAliveTotal <= 0)
+        if (GameController.instance.playerController != null)
         {
-            Debug.Log("djndkj");
+            pointOfPlayerDefault.text = GameController.instance.playerController.pointOfPlayerDefault.ToString();
+        }
+        if (GameManager.instance.playerCityController != null)
+        {
+            pointOfPlayerCity.text = GameManager.instance.playerCityController.pointOfPlayerCity.ToString();
+        }
+    }
+    public void UpdateAliveEnemy()
+    {
+        GameController.instance.enemyTotal -= 1;
+        textEnemyAlive.text = GameController.instance.enemyTotal.ToString();
+        if (GameController.instance.enemyTotal <= 0)
+        {
             AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Win);
-            enemyAliveTotal = 0;
-            Instantiate(Winner, transform.position, Quaternion.identity);
+            GameController.instance.enemyTotal = 0;
             nameOfPlayer.SetActive(false);
             circleOfPlayer.SetActive(false);
-            GameManager.instance.playerController.anim.SetTrigger("Dancer");
+            GameController.instance.playerController.anim.SetTrigger("Dancer");
             //StartCoroutine(StopGameAfterDelay(1f)); // gọi coroutine sau 1s
         }
+    }
+    public void UpdateAliveZombie()
+    {
+        if (enemyCity != null)
+            enemyCity.text = GameManager.instance.playerCityController.zombieAlive.ToString();
     }
 
     private IEnumerator StopGameAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay); // chờ 1 giây
         Time.timeScale = 0;
-    }
-    //Load khi player chết
-
-    public void StartDead()
-    {
-        isDead = true;
-        deadStartTime = Time.time; // lưu lại thời điểm chết
-    }
-    public void Load()
-    {
-        loadCircle.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
-        int count = countdownDuration - Mathf.FloorToInt(Time.time - deadStartTime);
-        number.text = count.ToString();
-        if(count <= 0)
-        {
-            Canvas_Dead_1.SetActive(false);
-            Canvas_Dead_2.SetActive(true);
-        }
     }
     public void LoadCity()
     {
@@ -159,9 +144,5 @@ public class UIManager : MonoBehaviour
     public void SetBoolMenu() => isLoadMenu = true;
     public void StopGame() => Time.timeScale = 0;
     public void ContinueGame() => Time.timeScale = 1;
-    public void SaveGift() => PlayerPrefs.SetInt("Gift", 1);
-    public void SetGift()
-    {
-        Instantiate(GiftOpen, transform.position, Quaternion.identity);
-    }
+    public void SetGift() => Instantiate(GiftOpen, transform.position, Quaternion.identity);
 }

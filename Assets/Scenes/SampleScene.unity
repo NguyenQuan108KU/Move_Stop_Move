@@ -5216,8 +5216,9 @@ GameObject:
   - component: {fileID: 65898820}
   - component: {fileID: 65898819}
   - component: {fileID: 65898822}
+  - component: {fileID: 65898823}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: GameController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5263,6 +5264,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 7091091813915466600, guid: db471cb94c431b042895e0db3e67cf0d, type: 3}
+--- !u!114 &65898823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65898818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae2361f45f1cd2478a0e0c91efefdec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 125603555}
+  enemy: {fileID: 7091091813915466600, guid: db471cb94c431b042895e0db3e67cf0d, type: 3}
+  uiManager: {fileID: 1225140695}
+  sceneController: {fileID: 65898819}
+  enemyTotal: 8
+  popupWin: {fileID: 109808153426316559, guid: 05304b687429b4341b9b4a5035f3d496, type: 3}
+  popupLose: {fileID: 7436597365497648609, guid: 9f56ab77370ae744287b25152f96a7c6, type: 3}
+  isChecckWinLose: 0
 --- !u!1 &86356168
 GameObject:
   m_ObjectHideFlags: 0
@@ -5649,21 +5670,18 @@ MonoBehaviour:
   joystick: {fileID: 1590925552}
   bulletPrefabs: {fileID: 348641515877151161, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   firingTransform: {fileID: 3373197663231860453}
-  moveSpeedOfPlayer: 8
+  moveSpeedOfPlayer: 4
   radiusAttackOfPlayer: 5
-  Harmmer: {fileID: 910033303506345432}
+  weaponOfPlayer: {fileID: 910033303506345432}
   isAttack: 0
-  attackDuration: 1
-  point: 0
+  pointOfPlayerDefault: 0
   isDead: 0
-  dead1: {fileID: 1150709141}
   coinMoney: 0
   weaponData: {fileID: 11400000, guid: 0bd5c994c330efe4299a93569adb21e4, type: 2}
   test: {fileID: 11400000, guid: e7f6953fe215ebb4da92281e8f8b1767, type: 2}
   weaponChoose: {fileID: 910033303506345432}
   bullet1: {fileID: 694607201790650757, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   indexMaterial: 0
-  countAttack: 0
   effectLevelUp: {fileID: 4900915}
   weaponRenderer: {fileID: 1702899454134909965}
   weaponMeshFilter: {fileID: 3478218508359829703}
@@ -8101,14 +8119,6 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 963194227}
-    - target: {fileID: 1330244777685495638, guid: db471cb94c431b042895e0db3e67cf0d, type: 3}
-      propertyPath: canvasTransform
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998503663343204715, guid: db471cb94c431b042895e0db3e67cf0d, type: 3}
-      propertyPath: m_Radius
-      value: 0.55
-      objectReference: {fileID: 0}
     - target: {fileID: 4941116919885452685, guid: db471cb94c431b042895e0db3e67cf0d, type: 3}
       propertyPath: m_Name
       value: Enemy1
@@ -10661,7 +10671,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8170153791668043268, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50.2264
+      value: -50.22644
       objectReference: {fileID: 0}
     - target: {fileID: 8170153791668043268, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -11663,22 +11673,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa13f8fa201a8d4080d406764511248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alive: {fileID: 950375946}
-  pointOfPlayer: {fileID: 1555629256}
+  textEnemyAlive: {fileID: 950375946}
+  pointOfPlayerCity: {fileID: 0}
+  pointOfPlayerDefault: {fileID: 1555629256}
   namePlayer: {fileID: 1499400550}
+  coinOfPlayer: {fileID: 0}
   enemyAliveTotal: 12
   loadCircle: {fileID: 1151714613}
   loadGift: {fileID: 0}
   speedRotation: 100
   number: {fileID: 1198211140}
-  Canvas_Dead_1: {fileID: 1150709141}
-  Canvas_Dead_2: {fileID: 738653071}
   isDead: 0
-  coin: {fileID: 2038964229}
+  coinOfPlayerDefault: {fileID: 2038964229}
   Winner: {fileID: 109808153426316559, guid: 05304b687429b4341b9b4a5035f3d496, type: 3}
   up: 4
   enemyCity: {fileID: 0}
-  coinOfPlayer: {fileID: 0}
   GiftOpen: {fileID: 8305726416194589797, guid: 4fd60f1d2a099d548a42092eec73fb86, type: 3}
   nameOfPlayer: {fileID: 87766973}
   circleOfPlayer: {fileID: 635503167}

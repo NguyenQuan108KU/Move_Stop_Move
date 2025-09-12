@@ -5453,7 +5453,6 @@ GameObject:
   m_Component:
   - component: {fileID: 65898820}
   - component: {fileID: 65898819}
-  - component: {fileID: 65898821}
   - component: {fileID: 65898822}
   - component: {fileID: 65898823}
   m_Layer: 0
@@ -5490,29 +5489,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &65898821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 65898818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98625b70fb9c9244b8ab66d09e35f31c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sfx:
-  - {fileID: 1464254261}
-  - {fileID: 1412110752}
-  - {fileID: 1682121567}
-  - {fileID: 1081467711}
-  bgm:
-  - {fileID: 746838869}
-  - {fileID: 1081467711}
-  isPlayerBGM: 0
-  isWinner: 0
-  BGMIndex: 0
 --- !u!114 &65898822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6063,19 +6039,16 @@ MonoBehaviour:
   firingTransform: {fileID: 3373197663231860453}
   moveSpeedOfPlayer: 0
   radiusAttackOfPlayer: 0
-  Harmmer: {fileID: 910033303506345432}
+  weaponOfPlayer: {fileID: 0}
   isAttack: 0
-  attackDuration: 1
-  point: 0
+  pointOfPlayerDefault: 0
   isDead: 0
-  dead1: {fileID: 1150709141}
   coinMoney: 0
   weaponData: {fileID: 0}
   test: {fileID: 11400000, guid: e7f6953fe215ebb4da92281e8f8b1767, type: 2}
   weaponChoose: {fileID: 910033303506345432}
   bullet1: {fileID: 694607201790650757, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   indexMaterial: 0
-  countAttack: 0
   effectLevelUp: {fileID: 4900915}
   weaponRenderer: {fileID: 0}
   weaponMeshFilter: {fileID: 0}
@@ -6094,6 +6067,7 @@ MonoBehaviour:
   tailAnchor: {fileID: 0}
   isGetGift: 0
   isLevelUp: 0
+  popupLose: {fileID: 0}
 --- !u!54 &125603556
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6230,7 +6204,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7464946645431382432}
         m_TargetAssemblyTypeName: PlayerCity_Controller, Assembly-CSharp
-        m_MethodName: OnProtect
+        m_MethodName: FunctionProtectPlayer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8008,7 +7982,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7464946645431382432}
         m_TargetAssemblyTypeName: PlayerCity_Controller, Assembly-CSharp
-        m_MethodName: SetVelocity
+        m_MethodName: FunctionUpVelocity
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8510,6 +8484,7 @@ MonoBehaviour:
   - {fileID: 8739875960674805604, guid: 369bec6d20732424da9f178a0e08a3f4, type: 3}
   - {fileID: 8162081630339002808, guid: 3d135bb37c753604e8594c8c14962357, type: 3}
   - {fileID: 7725064764563076503, guid: 2e776697d1e500547a4bc0f1e45cf473, type: 3}
+  - {fileID: 2594444251153124345, guid: 5e22a2d124a8d474993307afd18027e2, type: 3}
   enemyPrefab: {fileID: 9104122229043768944, guid: aca0cda52e916e74b8010d5b0017275b, type: 3}
   player: {fileID: 2041055804730398945}
   maxEnemies: 20
@@ -15168,22 +15143,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa13f8fa201a8d4080d406764511248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alive: {fileID: 950375946}
-  pointOfPlayer: {fileID: 1555629256}
+  textEnemyAlive: {fileID: 0}
+  pointOfPlayerCity: {fileID: 0}
+  pointOfPlayerDefault: {fileID: 0}
   namePlayer: {fileID: 1499400550}
+  coinOfPlayer: {fileID: 5174548001874604613}
   enemyAliveTotal: 30
   loadCircle: {fileID: 1151714613}
   loadGift: {fileID: 0}
   speedRotation: 200
   number: {fileID: 1198211140}
-  Canvas_Dead_1: {fileID: 1150709141}
-  Canvas_Dead_2: {fileID: 738653071}
   isDead: 0
-  coin: {fileID: 2038964229}
+  coinOfPlayerDefault: {fileID: 0}
   Winner: {fileID: 670300146}
   up: 4
   enemyCity: {fileID: 1261464324}
-  coinOfPlayer: {fileID: 5174548001874604613}
   GiftOpen: {fileID: 0}
   nameOfPlayer: {fileID: 0}
   circleOfPlayer: {fileID: 0}
@@ -15341,9 +15315,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0
-
-'
+  m_text: 25
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -15506,19 +15478,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7464946645431382432}
         m_TargetAssemblyTypeName: PlayerCity_Controller, Assembly-CSharp
-        m_MethodName: SetCircleRange
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7464946645431382432}
-        m_TargetAssemblyTypeName: PlayerCity_Controller, Assembly-CSharp
-        m_MethodName: SetCircleRange
+        m_MethodName: FunctionSetRangeAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16199,6 +16159,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &1437726879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1437726880}
+  m_Layer: 0
+  m_Name: ==========Enemy==========
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1437726880
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437726879}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 540, y: 960, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1442765811
 GameObject:
   m_ObjectHideFlags: 0
@@ -74723,28 +74714,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 7752772033171222279}
-  animText: {fileID: 2029667757}
-  textAnim: {fileID: 2029667755}
+  animTextOfLevelUp: {fileID: 0}
+  textOfAnimLevelUp: {fileID: 0}
   joystick: {fileID: 1048207763}
   bulletPrefabs: {fileID: 348641515877151161, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   firingTransform: {fileID: 5355527596550981297}
-  moveSpeed: 8
-  radius: 5
-  Harmmer: {fileID: 6267869485896919334}
-  target: {fileID: 0}
+  moveSpeedOfPlayerCity: 8
+  radiusAttackOfPlayerCity: 5
+  weaponOfPlayerCity: {fileID: 0}
   attackDuration: 1
-  point: 0
+  pointOfPlayerCity: 0
   isDead: 0
-  dead1: {fileID: 1150709141}
   coinMoney: 0
+  dead1: {fileID: 1150709141}
   weaponData: {fileID: 11400000, guid: 0bd5c994c330efe4299a93569adb21e4, type: 2}
-  test: {fileID: 11400000, guid: e7f6953fe215ebb4da92281e8f8b1767, type: 2}
   weaponChoose: {fileID: 6267869485896919334}
   bullet1: {fileID: 694607201790650757, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   isPlayerDie: 0
   indexMaterial: 0
-  countAttack: 0
   effectLevelUp: {fileID: 2855607587293181775}
+  weaponRenderer: {fileID: 3384719201197601876}
+  weaponMeshFilter: {fileID: 7674954315854741629}
+  bulletRenderer: {fileID: 3539473813388833265, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
+  bulletMeshFilter: {fileID: 2057222289979113620, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   pantsData: {fileID: 11400000, guid: 2ffe99699d096ca4380947e109d58708, type: 2}
   pantsOdPlayer: {fileID: 4970256791556471993}
   hatsData: {fileID: 11400000, guid: 917b19de7ef1cde478709b787f7c2e09, type: 2}
@@ -74760,26 +74752,26 @@ MonoBehaviour:
   - {fileID: 7276271152897549166}
   wingAnchor: {fileID: 1695902523}
   tailAnchor: {fileID: 1322750405}
-  fireRate: 0.5
-  weaponLoad: {fileID: 49050363}
+  weaponLoadOfMenu: {fileID: 49050363}
   menuLoad: {fileID: 762202242}
   speedRotation: 200
-  EnemyAlive: 0
+  zombieAlive: 25
   winner: {fileID: 670300146}
-  coinOfPlayer: 0
+  coinOfPlayerCity: 0
   isOffPlayer: 0
-  level: 0
+  levelOfPlayerCity: 0
   isProtectPlayer: 0
   circlePtotect: {fileID: 1594516456}
   timerProtectPlayer: 0
   countProtect: 0
   textCount: {fileID: 946530270}
-  textSpeed: {fileID: 307581290}
+  textOfCountSpeed: {fileID: 307581290}
   countSpeed: 0
   drawCircle: {fileID: 2308251672407823382}
   isSetCircle: 0
   textCircleRange: {fileID: 1940703741}
   sizeCircle: 0
+  number: 2
 --- !u!33 &7468911705691878519
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -85123,6 +85115,7 @@ SceneRoots:
   - {fileID: 1001748389}
   - {fileID: 705507995}
   - {fileID: 245092031}
+  - {fileID: 1437726880}
   - {fileID: 635040711}
   - {fileID: 5006512736418576965}
   - {fileID: 1225140696}

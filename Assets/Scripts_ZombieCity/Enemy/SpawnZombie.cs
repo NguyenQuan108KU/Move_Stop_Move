@@ -49,38 +49,52 @@ public class SpawnZombie : MonoBehaviour
     void SpawnEnemy()
     {
         Vector3 spawnPos = GetRandomNavmeshPosition(player.position, minDistance, maxDistance);
-        if (countEnemy == 24  || countEnemy == 28 || countEnemy == 27 || countEnemy == 26 || countEnemy == 22)
+
+        int spawnedCount = maxEnemies - countEnemy; // số enemy đã spawn
+
+        GameObject enemy = null;
+
+        if (spawnedCount < 12) // 12 con đầu
         {
-            GameObject enemy = Instantiate(enemyPrefabList[2], spawnPos, Quaternion.identity);
+            int indexEnemy = Random.Range(0, 2); // 0 hoặc 1
+            enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
         }
-        else if (countEnemy == 2 || countEnemy == 1 || countEnemy == 7)
+        else if (spawnedCount < 18) // 6 con tiếp theo (12 -> 17)
         {
-            GameObject enemy = Instantiate(enemyPrefabList[3], spawnPos, Quaternion.identity);
+            int indexEnemy = Random.Range(2, 4); // 2 hoặc 3
+            enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
         }
-        else
+        else if (spawnedCount < 20) // 2 con cuối (18 -> 19)
         {
-            int indexEnemy = Random.Range(0, 2);
-            GameObject enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
+            enemy = Instantiate(enemyPrefabList[4], spawnPos, Quaternion.identity);
+        }
+
+        if (enemy != null)
+        {
+            currentEnemies.Add(enemy); // nhớ add vào list quản lý
         }
     }
 
     Vector3 GetRandomNavmeshPosition(Vector3 center, float minDist, float maxDist)
     {
-        Vector3 randomPos;
-        NavMeshHit hit;
-        int attempts = 0;
+        Vector3 randomPos;      // Vị trí ngẫu nhiên trong sphere
+        NavMeshHit hit;         // Kết quả trả về của NavMesh.SamplePosition
+        int attempts = 0;       // Đếm số lần thử
 
-        do
-        {
+        // Lặp để tìm vị trí hợp lệ
+        do{
+            // Lấy 1 điểm ngẫu nhiên trong sphere bán kính maxDist, dịch so với center
             randomPos = Random.insideUnitSphere * maxDist + center;
             attempts++;
+            // Nếu thử quá 30 lần mà chưa có vị trí phù hợp thì dừng
             if (attempts > 30) break;
         } while (Vector3.Distance(center, randomPos) < minDist);
+        // Kiểm tra nếu điểm quá gần center (< minDist) thì random lại
 
-        if (NavMesh.SamplePosition(randomPos, out hit, maxDist, NavMesh.AllAreas))
-        {
-            return hit.position;
+        // Thử lấy vị trí gần nhất trên NavMesh quanh randomPos
+        if (NavMesh.SamplePosition(randomPos, out hit, maxDist, NavMesh.AllAreas)){
+            return hit.position;    // Trả về vị trí đã "snap" lên NavMesh
         }
-        return center;
+        return center;          // Nếu thất bại → trả về vị trí trung tâm
     }
 }

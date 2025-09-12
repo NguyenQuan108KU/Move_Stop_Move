@@ -107,7 +107,7 @@ MonoBehaviour:
   destroyTimer: 1.5
   owner: {fileID: 0}
   SetRoration: 0
-  isRotate: 0
+  isOffRotate: 0
   SetRotation: 0
   SetBoomerang: 0
   maxDistance: 4.5

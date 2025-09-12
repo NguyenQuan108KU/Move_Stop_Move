@@ -2163,18 +2163,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listColors: {fileID: 11400000, guid: 65048c7e16096e641a3929b279b705bf, type: 2}
+  anim: {fileID: 326954134686535871}
   lookRadius: 40
   rotationSpeed: 4
-  praticleSystem: {fileID: 4141308942985619210, guid: 30c4ef20527f5ef458f82f7eb1f7f9c0, type: 3}
+  praticleSystemEnemyDie: {fileID: 4141308942985619210, guid: 30c4ef20527f5ef458f82f7eb1f7f9c0, type: 3}
   colorEnemy: {fileID: 787488979813026704}
-  targetEnemy: {fileID: 8201541743297730376}
+  hatColor: {fileID: 0}
+  circleTargetZombie: {fileID: 8201541743297730376}
   isDead: 0
   isGetGift: 0
   isBoss: 0
   isBossLevel1: 0
   isBossLevel2: 0
-  countAttack: 0
-  hatColor: {fileID: 0}
+  isBossLevel3: 0
+  countAttackZombie: 0
 --- !u!195 &4518140839592842376
 NavMeshAgent:
   m_ObjectHideFlags: 0

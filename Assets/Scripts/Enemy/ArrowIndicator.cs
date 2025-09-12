@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class ArrowIndicator : MonoBehaviour
 {
-    public Camera mainCamera;             // Kéo Main Camera vào
-    public RectTransform canvasTransform; // Kéo Canvas vào
-    public GameObject arrowPrefab;        // Kéo Prefab Arrow vào
+    public Camera mainCamera;             // Kéo Main Camera 
+    public RectTransform canvasTransform; // Kéo Canvas 
+    public GameObject arrowPrefab;        // Kéo Prefab Arrow 
     public Enemy enemy;
     private GameObject arrowUI;
     public TextMeshProUGUI text;
@@ -88,7 +88,6 @@ public class ArrowIndicator : MonoBehaviour
             arrowUI.GetComponent<RectTransform>().position = edgePos + new Vector2(0, 30);
         }
     }
-
     void OnDestroy()
     {
         if (arrowUI != null)
