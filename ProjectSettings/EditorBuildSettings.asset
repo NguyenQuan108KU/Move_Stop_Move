@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Zombie_City.unity
     guid: c852b261b6c9b6e48b2592cc22381065
+  - enabled: 1
+    path: Assets/Scenes/Level2.unity
+    guid: 550a5d7d1a8ab2542b909a65e037231f
   m_configObjects: {}

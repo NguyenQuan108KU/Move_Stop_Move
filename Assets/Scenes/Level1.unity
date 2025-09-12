@@ -5281,7 +5281,7 @@ MonoBehaviour:
   uiManager: {fileID: 1225140695}
   sceneController: {fileID: 65898819}
   enemyTotal: 8
-  popupWin: {fileID: 109808153426316559, guid: 05304b687429b4341b9b4a5035f3d496, type: 3}
+  popupWin: {fileID: 109808153426316559, guid: dea612c01cdd26543943dec622583d83, type: 3}
   popupLose: {fileID: 7436597365497648609, guid: 9f56ab77370ae744287b25152f96a7c6, type: 3}
   isChecckWinLose: 0
 --- !u!1 &87766973

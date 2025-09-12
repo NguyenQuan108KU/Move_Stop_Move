@@ -174,7 +174,7 @@ public class Enemy : MonoBehaviour
         }
 
         attackTimer = attackCoolDown; // Reset thời gian cooldown tấn công
-        bulletObj.tag = "Untagged"; // Gán tag cho bullet của enemy
+        //bulletObj.tag = "Untagged"; // Gán tag cho bullet của enemy
         StartCoroutine(AttackEnd()); // Bắt đầu Coroutine kết thúc trạng thái tấn công(tránh trường hợp khi vừa ở trạng thái di chuyển vừa tấn công) 
     }
 

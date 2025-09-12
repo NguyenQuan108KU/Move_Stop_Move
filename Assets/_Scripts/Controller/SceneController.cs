@@ -16,6 +16,8 @@ public class SceneController : MonoBehaviour
             SceneManager.LoadScene(2);                          // Load scene 2 nếu đang ở scene 2
     }
 
+    public void NextScene() => SceneManager.LoadScene(3);
+
     // Quay về scene menu chính (index 0)
     public void BackSceneMenu() => SceneManager.LoadScene(0);
 

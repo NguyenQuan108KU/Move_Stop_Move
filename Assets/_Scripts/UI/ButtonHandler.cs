@@ -10,6 +10,7 @@ public class ButtonHandler : MonoBehaviour
     public Button popupBackMenu;
 
     public Button popupBackMenuCity;
+    public Button NextScene;
 
     [Header("--------------Prefabs--------------")]
     public GameObject popUpGiftPrefabs;
@@ -26,6 +27,9 @@ public class ButtonHandler : MonoBehaviour
 
         if(popupBackMenuCity != null)
             popupBackMenuCity.onClick.AddListener(BackMenuCity);
+
+        if (NextScene != null)
+            NextScene.onClick.AddListener(NextLevel);
     }
 
     // Hiển thị popup quà tặng khi bấm nút Winner
@@ -39,5 +43,6 @@ public class ButtonHandler : MonoBehaviour
     private void BackMenu() => GameController.instance.sceneController.BackSceneMenu();
 
     private void BackMenuCity() => ZombieCityController.instance.sceneController.BackSceneMenu();
+    private void NextLevel() => GameController.instance.sceneController.NextScene();
 
 }
