@@ -6879,37 +6879,6 @@ Transform:
   - {fileID: 321322792}
   m_Father: {fileID: 1592659054}
   m_LocalEulerAnglesHint: {x: -0.000077424724, y: -0.00016191896, z: -0.00016743696}
---- !u!1 &305800959
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 305800960}
-  m_Layer: 0
-  m_Name: '==========Sound========== '
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &305800960
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 305800959}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7999878, y: 1.9150085, z: 4.9984474}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &309478637
 GameObject:
   m_ObjectHideFlags: 0
@@ -13663,7 +13632,7 @@ GameObject:
   m_Component:
   - component: {fileID: 683820876}
   m_Layer: 0
-  m_Name: ShopWeapon
+  m_Name: UI_ShopWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15052,7 +15021,7 @@ GameObject:
   - component: {fileID: 777144841}
   - component: {fileID: 777144840}
   m_Layer: 5
-  m_Name: ShopSkin
+  m_Name: UI_ShopSkin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27520,18 +27489,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 952991111}
-        m_TargetAssemblyTypeName: ProtectManager, Assembly-CSharp
-        m_MethodName: ButtonClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!114 &1570870293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33237,18 +33194,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1549082137}
-        m_TargetAssemblyTypeName: ClothesManager, Assembly-CSharp
-        m_MethodName: ButtonClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!114 &1883455716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33469,18 +33414,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1178194204}
-        m_TargetAssemblyTypeName: PantsManager, Assembly-CSharp
-        m_MethodName: ButtonClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!114 &1885167372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33605,18 +33538,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1738127057}
         m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: PlaySound_ButtonClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 162209984}
-        m_TargetAssemblyTypeName: HairManager, Assembly-CSharp
-        m_MethodName: ButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -40466,15 +40387,14 @@ SceneRoots:
   - {fileID: 430124529}
   - {fileID: 1090394484}
   - {fileID: 209830013}
-  - {fileID: 662177743}
   - {fileID: 1803453696}
+  - {fileID: 662177743}
   - {fileID: 1627613889}
   - {fileID: 1363400169}
   - {fileID: 971570502}
   - {fileID: 683820876}
   - {fileID: 777144843}
-  - {fileID: 305800960}
-  - {fileID: 1738127056}
   - {fileID: 1281070314}
   - {fileID: 1423189651}
+  - {fileID: 1738127056}
   - {fileID: 1804249823}
