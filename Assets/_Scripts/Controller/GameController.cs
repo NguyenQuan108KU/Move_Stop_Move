@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
 
     public GameObject popupWin;
     public GameObject popupLose;
+    public GameObject joystick;
     public bool isChecckWinLose;
 
     private void Awake(){
@@ -38,6 +39,7 @@ public class GameController : MonoBehaviour
         if(enemyTotal <= 0 && !isChecckWinLose){
             isChecckWinLose = true;
             Instantiate(popupWin, transform.position, Quaternion.identity);
+            joystick.SetActive(false);
         }
         else if (playerController.isDead && !isChecckWinLose)
         {

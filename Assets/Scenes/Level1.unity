@@ -5283,6 +5283,7 @@ MonoBehaviour:
   enemyTotal: 8
   popupWin: {fileID: 109808153426316559, guid: dea612c01cdd26543943dec622583d83, type: 3}
   popupLose: {fileID: 7436597365497648609, guid: 9f56ab77370ae744287b25152f96a7c6, type: 3}
+  joystick: {fileID: 245092027}
   isChecckWinLose: 0
 --- !u!1 &87766973
 GameObject:

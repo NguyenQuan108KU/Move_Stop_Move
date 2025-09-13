@@ -7,7 +7,8 @@ public class Zombie : MonoBehaviour
 {
 
     [Header("--------------Enemy Properties--------------")]
-    [SerializeField] private List_Color listColors;     // Danh sách màu để random màu cho enemy
+    public Rigidbody rb;
+    public List_Color listColors;     // Danh sách màu để random màu cho enemy
     public Animator anim;                              // Animator điều khiển animation
     public float lookRadius = 10.0f;                    // Bán kính phát hiện target
     public float rotationSpeed = 5f;                    // Tốc độ xoay về phía target
@@ -15,9 +16,9 @@ public class Zombie : MonoBehaviour
     NavMeshAgent agent;                                 // Agent để enemy di chuyển tự động
 
     [Header("--------------Visual & Effects--------------")]
-    [SerializeField] private GameObject praticleSystemEnemyDie; // Hiệu ứng khi enemy chết
+    public GameObject praticleSystemEnemyDie; // Hiệu ứng khi enemy chết
     [Header("--------------Enemy Appearance--------------")]
-    [SerializeField] private GameObject colorEnemy;     // Đối tượng thay đổi màu (mesh enemy)
+    public GameObject colorEnemy;     // Đối tượng thay đổi màu (mesh enemy)
     public GameObject hatColor;                         // Đối tượng thay đổi màu của mũ
     public GameObject circleTargetZombie;               // Vòng tròn hiển thị khi bị chọn làm target
     [Header("--------------Enemy States--------------")]
@@ -139,7 +140,8 @@ public class Zombie : MonoBehaviour
 
         // Khi Enemy va chạm trực tiếp với Player
         if (collision.gameObject.CompareTag("Player")){
-            isDead = true;                  // Đánh dấu enemy đã chết
+            rb.isKinematic = true;
+            isDead = true;                  
             anim.SetBool("Move", false);    // Tắt animation di chuyển
         }
     }

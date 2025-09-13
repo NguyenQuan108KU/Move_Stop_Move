@@ -5283,6 +5283,7 @@ MonoBehaviour:
   enemyTotal: 8
   popupWin: {fileID: 109808153426316559, guid: 05304b687429b4341b9b4a5035f3d496, type: 3}
   popupLose: {fileID: 7436597365497648609, guid: 9f56ab77370ae744287b25152f96a7c6, type: 3}
+  joystick: {fileID: 245092027}
   isChecckWinLose: 0
 --- !u!1 &87766973
 GameObject:
@@ -5547,6 +5548,7 @@ MonoBehaviour:
   weaponChoose: {fileID: 910033303506345432}
   bullet1: {fileID: 694607201790650757, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   indexMaterial: 0
+  circleAttack: {fileID: 635503169}
   effectLevelUp: {fileID: 4900915}
   weaponRenderer: {fileID: 1702899454134909965}
   weaponMeshFilter: {fileID: 3478218508359829703}
@@ -9255,29 +9257,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa13f8fa201a8d4080d406764511248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textEnemyAlive: {fileID: 950375946}
   pointOfPlayerCity: {fileID: 0}
   pointOfPlayerDefault: {fileID: 1555629256}
-  namePlayer: {fileID: 1499400550}
   coinOfPlayer: {fileID: 0}
-  enemyAliveTotal: 12
+  coinOfPlayerDefault: {fileID: 0}
+  nameOfPlayer: {fileID: 87766973}
+  textEnemyAlive: {fileID: 950375946}
+  textEnemyAliveCity: {fileID: 0}
   loadCircle: {fileID: 0}
   loadGift: {fileID: 0}
   speedRotation: 100
-  number: {fileID: 0}
-  isDead: 0
-  coinOfPlayerDefault: {fileID: 0}
-  Winner: {fileID: 109808153426316559, guid: 05304b687429b4341b9b4a5035f3d496, type: 3}
-  up: 4
-  enemyCity: {fileID: 0}
-  GiftOpen: {fileID: 8305726416194589797, guid: 4fd60f1d2a099d548a42092eec73fb86, type: 3}
-  nameOfPlayer: {fileID: 87766973}
-  circleOfPlayer: {fileID: 635503167}
   readyCity: {fileID: 0}
-  numberOfReadyCity: 3
+  timeOfReadyCity: 3
+  number: {fileID: 0}
   menuReady: {fileID: 0}
-  spawn: []
+  activeSpanwEnemy: []
   isLoadMenu: 0
+  GiftOpen: {fileID: 8305726416194589797, guid: 4fd60f1d2a099d548a42092eec73fb86, type: 3}
+  up: 4
+  circleOfPlayer: {fileID: 635503167}
 --- !u!4 &1225140696
 Transform:
   m_ObjectHideFlags: 0

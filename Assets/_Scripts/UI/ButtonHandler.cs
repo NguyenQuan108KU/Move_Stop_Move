@@ -8,7 +8,6 @@ public class ButtonHandler : MonoBehaviour
     [Header("--------------Buttons--------------")]
     public Button popUpWinner; // Kéo Button của Prefab vào đây trong Inspector
     public Button popupBackMenu;
-
     public Button popupBackMenuCity;
     public Button NextScene;
 

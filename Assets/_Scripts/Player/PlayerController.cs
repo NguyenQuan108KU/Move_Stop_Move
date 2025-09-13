@@ -370,8 +370,7 @@ public class PlayerController : MonoBehaviour
             radiusAttackOfPlayer = 8f;                  // Tăng phạm vi tấn công
 
             // Cập nhật vòng tròn hiển thị bán kính tấn công
-            if(circleAttack != null)
-            {
+            if(circleAttack != null){
                 circleAttack.radius = 8f;                     //Tăng bán kính vòng to hơn
                 circleAttack.DrawCircleUnderFeet();           // Vẽ lại vòng tròn
             }
