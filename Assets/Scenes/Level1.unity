@@ -5547,6 +5547,7 @@ MonoBehaviour:
   weaponChoose: {fileID: 910033303506345432}
   bullet1: {fileID: 694607201790650757, guid: 8e685a7a928f3584b967f9581d66d693, type: 3}
   indexMaterial: 0
+  circleAttack: {fileID: 635503169}
   effectLevelUp: {fileID: 4900915}
   weaponRenderer: {fileID: 1702899454134909965}
   weaponMeshFilter: {fileID: 3478218508359829703}
@@ -9019,7 +9020,7 @@ MonoBehaviour:
   timeOfReadyCity: 3
   number: {fileID: 0}
   menuReady: {fileID: 0}
-  spawn: []
+  activeSpanwEnemy: []
   isLoadMenu: 0
   GiftOpen: {fileID: 8305726416194589797, guid: 4fd60f1d2a099d548a42092eec73fb86, type: 3}
   up: 4

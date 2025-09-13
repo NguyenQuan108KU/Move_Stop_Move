@@ -132,12 +132,11 @@ public class WeaponManager : MonoBehaviour
     {
         int index = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption, 0);
         Weapon weapon = weaponData.GetWeapon(selectedOption);
-        foreach (Transform child in weaponAnchor.transform)
-        {
+        foreach (Transform child in weaponAnchor.transform) {
             Destroy(child.gameObject);
         }
-        GameObject newWeapon = Instantiate(weapon.weaponPrefabs[indexWeapon], weaponAnchor.transform);
-
+        GameObject newWeapon;
+        newWeapon = Instantiate(weapon.weaponPrefabs[index], weaponAnchor.transform);
         // Gán vào weaponButtonColor để SetColorOfWeapon() dùng
         weaponCustom = newWeapon;
         LoadColorOfWeapon(selectedOption);

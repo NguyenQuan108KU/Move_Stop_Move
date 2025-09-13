@@ -45,7 +45,7 @@ public class Bullet : MonoBehaviour
     }
 
     public void SetOwner(GameObject ownerObj){
-        this.owner = ownerObj;
+        owner = ownerObj;
     }
 
     public void SetDirection(Vector3 dir){
@@ -97,10 +97,9 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision) {
 
-        if (collision.gameObject == owner) {
+        if (collision.gameObject == owner){
             // Nếu boomerang quay lại chạm owner thì huỷ
-            if (SetBoomerang && returning)
-            {
+            if (SetBoomerang && returning){
                 Destroy(gameObject);
             }
             return;

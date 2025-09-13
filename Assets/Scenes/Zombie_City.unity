@@ -5584,31 +5584,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa13f8fa201a8d4080d406764511248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textEnemyAlive: {fileID: 0}
   pointOfPlayerCity: {fileID: 5174548001874604613}
   pointOfPlayerDefault: {fileID: 0}
-  namePlayer: {fileID: 0}
   coinOfPlayer: {fileID: 5174548001874604613}
-  enemyAliveTotal: 30
+  coinOfPlayerDefault: {fileID: 0}
+  nameOfPlayer: {fileID: 0}
+  textEnemyAlive: {fileID: 0}
+  textEnemyAliveCity: {fileID: 0}
   loadCircle: {fileID: 0}
   loadGift: {fileID: 0}
   speedRotation: 200
-  number: {fileID: 0}
-  isDead: 0
-  coinOfPlayerDefault: {fileID: 0}
-  Winner: {fileID: 0}
-  up: 4
-  enemyCity: {fileID: 1261464324}
-  GiftOpen: {fileID: 0}
-  nameOfPlayer: {fileID: 0}
-  circleOfPlayer: {fileID: 0}
   readyCity: {fileID: 763842511}
-  numberOfReadyCity: 3
+  timeOfReadyCity: 3
+  number: {fileID: 0}
   menuReady: {fileID: 1949671463}
-  spawn:
+  activeSpanwEnemy:
   - {fileID: 440326427}
   - {fileID: 1838372980}
   isLoadMenu: 0
+  GiftOpen: {fileID: 0}
+  up: 4
+  circleOfPlayer: {fileID: 0}
 --- !u!4 &1225140696
 Transform:
   m_ObjectHideFlags: 0

@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     public Bullet bullet1;              // Viên đạn của người chơi
     private int indexWeapon;
     public int indexMaterial;
+    public DrawCircle circleAttack;     //Vòng tấn công của nhân vật 
     public GameObject effectLevelUp;
     public MeshRenderer weaponRenderer;
     public MeshFilter weaponMeshFilter;
@@ -334,10 +335,9 @@ public class PlayerController : MonoBehaviour
         if (isGetGift){   
             isGetGift = false;          // Reset trạng thái gift để có thể ăn lại quà 
             radiusAttackOfPlayer = 5f;  // Đặt bán kính tấn công của player về mặc định
-            DrawCircle circle = GetComponentInChildren<DrawCircle>();
-            if (circle != null){
-                circle.radius = 5f;             // Reset bán kính hiển thị trên DrawCircle
-                circle.DrawCircleUnderFeet();   // Vẽ lại vòng tròn dưới chân player
+            if (circleAttack != null){
+                circleAttack.radius = 5f;             // Reset bán kính hiển thị trên DrawCircle
+                circleAttack.DrawCircleUnderFeet();   // Vẽ lại vòng tròn dưới chân player
             }
             bullet1.transform.localScale = new Vector3(39, 39, 39);   // Reset kích thước viên đạn về mặc định
         }
@@ -358,7 +358,8 @@ public class PlayerController : MonoBehaviour
             //Instantiate(popupLose, transform.position, Quaternion.identity);   //Sinh Popup Lose 
             anim.SetBool("Death", true);                                       // Kích hoạt animation chết
             weaponOfPlayer.SetActive(false);                                          //Tắt vũ khí của player khi ném            
-            PlayerPrefs.SetInt("coinMoney", coinMoney);                        //Lưu tiền của playẻ
+            PlayerPrefs.SetInt("coinMoney", coinMoney);                        //Lưu tiền của player
+            Destroy(collision.gameObject);
         }
 
         //Kiểm tra va chạm khi ăn quà 
@@ -369,11 +370,10 @@ public class PlayerController : MonoBehaviour
             radiusAttackOfPlayer = 8f;                  // Tăng phạm vi tấn công
 
             // Cập nhật vòng tròn hiển thị bán kính tấn công
-            DrawCircle circle = GetComponentInChildren<DrawCircle>();
-            if(circle != null)
+            if(circleAttack != null)
             {
-                circle.radius = 8f;                     //Tăng bán kính vòng to hơn
-                circle.DrawCircleUnderFeet();           // Vẽ lại vòng tròn
+                circleAttack.radius = 8f;                     //Tăng bán kính vòng to hơn
+                circleAttack.DrawCircleUnderFeet();           // Vẽ lại vòng tròn
             }
         }
     }

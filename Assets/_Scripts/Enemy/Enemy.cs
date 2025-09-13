@@ -30,6 +30,7 @@ public class Enemy : MonoBehaviour
     public bool isEnemyGetGift = false;          // Cờ enemy có nhặt gift chưa
     public bool isEnemyAttacking = false;        // Cờ kiểm soát enemy đang tấn công
     public bool hasBeenEnemyHit = false;        // Cờ đã bị bắn trúng chưa
+    public bool isEnemyHit;
 
     [Header("------------------Movement Randomizer------------------")]
     private Vector3 randomDirection;
@@ -160,7 +161,7 @@ public class Enemy : MonoBehaviour
         bulletObj.tag = "Bullet2"; // Gán tag cho bullet của enemy
 
         Bullet bulletScript = bulletObj.GetComponent<Bullet>(); // Lấy component Bullet từ viên đạn
-        bulletScript.SetOwner(this.gameObject); // Thiết lập owner là enemy
+        bulletScript.SetOwner(gameObject); // Thiết lập owner là enemy
         bulletScript.SetTarget(target);     // Thiết lập target là player hoặc mục tiêu
 
         // Nếu enemy đang có trạng thái gift
@@ -174,7 +175,6 @@ public class Enemy : MonoBehaviour
         }
 
         attackTimer = attackCoolDown; // Reset thời gian cooldown tấn công
-        //bulletObj.tag = "Untagged"; // Gán tag cho bullet của enemy
         StartCoroutine(AttackEnd()); // Bắt đầu Coroutine kết thúc trạng thái tấn công(tránh trường hợp khi vừa ở trạng thái di chuyển vừa tấn công) 
     }
 
@@ -229,51 +229,74 @@ public class Enemy : MonoBehaviour
     }
     //Hàm tắt enemy (gọi ở event của animation)
     public void DestroyEnemy() => Destroy(gameObject);
+
+    //Hàm enemy khi bị tấn công 
+    public void OnHit(){
+        anim.SetBool("Death", true);                                // Kích hoạt animation chết
+        AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);  // Đánh dấu enemy đã chết
+        GameController.instance.uiManager.UpdateAliveEnemy();       // Cập nhật số lượng enemy còn sống
+        BloodParticle.SetActive(true);                              // Hiển thị particle máu
+    }
     private void OnCollisionEnter(Collision collision){
         // Nếu va chạm với bullet1 (của player)
-        if (collision.gameObject.CompareTag("Bullet1")){
-            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);
-
+        if (collision.gameObject.CompareTag("Bullet1") && !isEnemyDied){
             // Nếu player đang có gift, bỏ qua va chạm giữa bullet và enemy
-            if (GameController.instance.playerController.isGetGift){
+            if (GameController.instance.playerController.isGetGift) {
                 Collider enemyCollider = GetComponent<Collider>();
-                Collider bulletCollider = collision.collider; // collider của viên đạn
-
-                //if (enemyCollider != null && bulletCollider != null){
+                Collider bulletCollider = collision.collider;                   // collider của viên đạn
+                Debug.Log("Va cham bullet 1 dau tien khi anw qua");
+                if (enemyCollider != null && bulletCollider != null)
                     Physics.IgnoreCollision(enemyCollider, bulletCollider);     // Bỏ qua va chạm
-                //}
             }
+            OnHit();
+            GameController.instance.playerController.SetBulletPlayerDeufalt();
+            GameController.instance.playerController.pointOfPlayerDefault += 5;      // Player nhận điểm
+            GameController.instance.playerController.coinMoney += 50;               // Player nhận coin
+            GameController.instance.uiManager.UpdateCoin();                         //Cập nhật coin
+            GameController.instance.uiManager.UpdatePoint();
+            isEnemyDied = true;
         }
 
-        // Nếu va chạm với bullet1 hoặc bullet2 và enemy chưa bị hit
-        if ((collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2")) && !hasBeenEnemyHit){
-            hasBeenEnemyHit = true;                       // Đánh dấu enemy đã bị hit
+        //Khi va chạm với đạn của enemy bắn ra 
+        if (collision.gameObject.CompareTag("Bullet2") && !isEnemyDied){
             Bullet bulletScript = collision.gameObject.GetComponent<Bullet>();
             if (bulletScript == null) return;
 
-            // Nếu viên đạn thuộc về chính enemy này → bỏ qua
-            if (bulletScript.owner == this.gameObject)  return;
-            //EnemyManager.instance.enemy = this;
-            GameController.instance.enemy = this;// Đặt enemy hiện tại trong EnemyManager
+            //// Nếu viên đạn thuộc về chính enemy này → bỏ qua
+            if (bulletScript.owner == gameObject) return;
             Enemy enemyShooter = bulletScript.owner.GetComponent<Enemy>();          // Lấy enemy bắn viên đạn
             if (enemyShooter != null){
                 enemyShooter.point += 5; // Tăng điểm cho enemy bắn
                 enemyShooter.pointOfEnemy.text = enemyShooter.point.ToString(); // Cập nhật UI điểm
             }
-            else{
-                GameController.instance.playerController.SetBulletPlayerDeufalt();
-                GameController.instance.playerController.pointOfPlayerDefault += 5;               // Player nhận điểm
-                GameController.instance.playerController.coinMoney += 50;          // Player nhận coin
-                GameController.instance.uiManager.UpdateCoin();                 //Cập nhật coin
-                GameController.instance.uiManager.UpdatePoint();
-            }
-            anim.SetBool("Death", true);        // Kích hoạt animation chết
-            isEnemyDied = true;                 // Đánh dấu enemy đã chết
-            GameController.instance.uiManager.UpdateAliveEnemy();   // Cập nhật số lượng enemy còn sống
-            BloodParticle.SetActive(true);      // Hiển thị particle máu
-            gameObject.tag = "Untagged";        // Xóa tag của enemy
+            OnHit();
+            isEnemyDied = true;
         }
+        // Nếu va chạm với bullet1 hoặc bullet2 và enemy chưa bị hit
+        //if ((collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2"))){
+        //    Bullet bulletScript = collision.gameObject.GetComponent<Bullet>();
+        //    if (bulletScript == null) return;
 
+        //    //// Nếu viên đạn thuộc về chính enemy này → bỏ qua
+        //    if (bulletScript.owner == this.gameObject)  return;
+        //    GameController.instance.enemy = this;// Đặt enemy hiện tại trong EnemyManager
+        //    Enemy enemyShooter = bulletScript.owner.GetComponent<Enemy>();          // Lấy enemy bắn viên đạn
+        //    if (enemyShooter != null){
+        //        enemyShooter.point += 5; // Tăng điểm cho enemy bắn
+        //        enemyShooter.pointOfEnemy.text = enemyShooter.point.ToString(); // Cập nhật UI điểm
+        //    }
+        //    else{
+        //        GameController.instance.playerController.SetBulletPlayerDeufalt();
+        //        GameController.instance.playerController.pointOfPlayerDefault += 5;               // Player nhận điểm
+        //        GameController.instance.playerController.coinMoney += 50;          // Player nhận coin
+        //        GameController.instance.uiManager.UpdateCoin();                 //Cập nhật coin
+        //        GameController.instance.uiManager.UpdatePoint();
+        //    }
+        //    anim.SetBool("Death", true);        // Kích hoạt animation chết
+        //    isEnemyDied = true;                 // Đánh dấu enemy đã chết
+        //    GameController.instance.uiManager.UpdateAliveEnemy();   // Cập nhật số lượng enemy còn sống
+        //    BloodParticle.SetActive(true);      // Hiển thị particle máu
+        //}
         // Nếu va chạm với gift
         if (collision.gameObject.CompareTag("Gift")){
             isEnemyGetGift = true;
