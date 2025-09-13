@@ -236,6 +236,7 @@ public class Enemy : MonoBehaviour
 
             // Nếu player đang có gift, bỏ qua va chạm giữa bullet và enemy
             if (GameController.instance.playerController.isGetGift){
+                Debug.Log("Bo qua va cham ")
                 Collider enemyCollider = GetComponent<Collider>();
                 Collider bulletCollider = collision.collider; // collider của viên đạn
 
@@ -271,7 +272,7 @@ public class Enemy : MonoBehaviour
             isEnemyDied = true;                 // Đánh dấu enemy đã chết
             GameController.instance.uiManager.UpdateAliveEnemy();   // Cập nhật số lượng enemy còn sống
             BloodParticle.SetActive(true);      // Hiển thị particle máu
-            //gameObject.tag = "Untagged";        // Xóa tag của enemy
+            gameObject.tag = "Untagged";        // Xóa tag của enemy
         }
 
         // Nếu va chạm với gift

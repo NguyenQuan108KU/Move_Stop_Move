@@ -62,21 +62,6 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        //if (coin != null && GameManager.instance.playerController != null)
-        //    coin.text = GameManager.instance.playerController.coinMoney.ToString();
-        //if (enemyCity != null)
-        //    enemyCity.text = GameManager.instance.playerCityController.EnemyAlive.ToString();
-        //if (coinOfPlayer != null)
-        //    coinOfPlayer.text = GameManager.instance.playerCityController.coinOfPlayer.ToString();
-        //textEnemyAlive.text = enemyAliveTotal.ToString();
-        //if(GameManager.instance.playerController != null)
-        //{
-        //    pointOfPlayerCity.text = GameManager.instance.playerController.pointOfPlayerDefault.ToString();
-        //}
-        //if (GameManager.instance.playerCityController != null)
-        //{
-        //    pointOfPlayerCity.text = GameManager.instance.playerCityController.point.ToString();
-        //}
         if(loadGift != null)
             loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
         if((readyCity != null || menuReady != null) && isLoadMenu)
@@ -89,8 +74,6 @@ public class UIManager : MonoBehaviour
     {
         if (coinOfPlayerDefault != null && GameController.instance.playerController != null)
             coinOfPlayerDefault.text = GameController.instance.playerController.coinMoney.ToString();
-        //if (coinOfPlayer != null)
-        //    coinOfPlayer.text = ZombieCityController.instance.playerCityController.coinOfPlayerCity.ToString();
     }
     public void UpdatePoint()
     {
