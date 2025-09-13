@@ -236,7 +236,6 @@ public class Enemy : MonoBehaviour
 
             // Nếu player đang có gift, bỏ qua va chạm giữa bullet và enemy
             if (GameController.instance.playerController.isGetGift){
-                Debug.Log("Bo qua va cham ")
                 Collider enemyCollider = GetComponent<Collider>();
                 Collider bulletCollider = collision.collider; // collider của viên đạn
 
