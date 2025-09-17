@@ -1873,6 +1873,17 @@ MonoBehaviour:
   bulletPrefabs: {fileID: 348641515877151161, guid: a48ea611c30b97e4698d99d2affd1452, type: 3}
   firingTransform: {fileID: 6378755179001133314}
   target: {fileID: 0}
+  possibleColors:
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0.25458813, g: 1, b: 0, a: 0}
+  - {r: 0.13811731, g: 0, b: 1, a: 0}
+  - {r: 0.10375927, g: 0.93207544, b: 0.82317495, a: 0}
+  - {r: 0.110879295, g: 0.3283019, b: 0.17300007, a: 0}
+  - {r: 0.90943396, g: 0.6110818, b: 0.10810248, a: 0}
+  - {r: 0.028159427, g: 0.37210783, b: 0.4264151, a: 0}
+  - {r: 0.099857494, g: 0.9622642, b: 0.6745895, a: 0}
+  - {r: 0.6075471, g: 0.2983957, b: 0.063047275, a: 0}
+  - {r: 0.04150939, g: 0, b: 0, a: 0}
   detectionRange: 8
   attackRange: 0
   attackCoolDown: 6
@@ -1885,10 +1896,13 @@ MonoBehaviour:
   isEnemyDied: 0
   isEnemyGetGift: 0
   isEnemyAttacking: 0
-  EnemySpeed: 3
+  hasBeenEnemyHit: 0
+  isEnemyHit: 0
+  EnemySpeed: 4
   timeStartBullet: 0
   textEnemy: {fileID: 7994588033871830317}
   nameEnemy: {fileID: 7994588033871830317}
+  imagePoint: {fileID: 6613542857967342316}
   pointOfEnemy: {fileID: 584047824249063001}
   listName:
   - {fileID: 11400000, guid: 0b2681cd8e0084d4594ee918d98f64e7, type: 2}
@@ -1902,7 +1916,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 793b469ba2f0342408ccc7867852f960, type: 2}
   - {fileID: 11400000, guid: 14d7f88cea181bc43b96093256c85468, type: 2}
   point: 0
+  informationOfEnemy: {fileID: 6282457656021724554}
   GroundCheck: {fileID: 6746558756906028439}
+  floatingTextPrefab: {fileID: 6620629643112542043, guid: 5f0b04e44f96762489bb7cd766e0ce53, type: 3}
 --- !u!114 &1330244777685495638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1918,7 +1934,7 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   canvasTransform: {fileID: 0}
   arrowPrefab: {fileID: 6635158708798567490, guid: 6ed844ded8f490949ba869b59f9ff0c0, type: 3}
-  enemy: {fileID: 0}
+  enemy: {fileID: 7091091813915466600}
   text: {fileID: 0}
 --- !u!1 &4944856439070377637
 GameObject:
@@ -3180,6 +3196,18 @@ PrefabInstance:
     - target: {fileID: 2418182168831148018, guid: 19c4e3431ed0b9d4491d6704bde21461, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3287765654925733874, guid: 19c4e3431ed0b9d4491d6704bde21461, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4943396
+      objectReference: {fileID: 0}
+    - target: {fileID: 3287765654925733874, guid: 19c4e3431ed0b9d4491d6704bde21461, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4943396
+      objectReference: {fileID: 0}
+    - target: {fileID: 3287765654925733874, guid: 19c4e3431ed0b9d4491d6704bde21461, type: 3}
+      propertyPath: m_Color.r
+      value: 0.4943396
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

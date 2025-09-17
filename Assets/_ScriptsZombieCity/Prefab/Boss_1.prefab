@@ -1741,6 +1741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 753f4b857a4c941418238fe5ba3c6212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 173644031500489498}
   listColors: {fileID: 11400000, guid: 65048c7e16096e641a3929b279b705bf, type: 2}
   anim: {fileID: 3441210322736579583}
   lookRadius: 40

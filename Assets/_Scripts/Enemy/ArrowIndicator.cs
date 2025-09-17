@@ -27,13 +27,12 @@ public class ArrowIndicator : MonoBehaviour
 
     void Start()
     {
-        enemy = GetComponent<Enemy>();
         // Tạo mũi tên cho enemy này
         arrowUI = Instantiate(arrowPrefab, canvasTransform);
         images = arrowUI.GetComponentsInChildren<Image>();
-        images[0].color = enemy.render[0].material.color; // Image cha
-        images[1].color = enemy.render[0].material.color; // Image con (thứ 2)
         text = arrowUI.GetComponentInChildren<TextMeshProUGUI>();
+        images[0].color = enemy.render[0].material.color;
+        images[1].color = enemy.render[0].material.color;
         arrowUI.SetActive(false);
     }
 

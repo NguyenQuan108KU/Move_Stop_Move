@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraFollowCity : MonoBehaviour
 {
@@ -17,8 +18,11 @@ public class CameraFollowCity : MonoBehaviour
             playerTransform.position.y,
             playerTransform.position.z
         );
-
-        if (ZombieCityController.instance.playerCityController.isSetCircle)
+        Scene currentScene = SceneManager.GetActiveScene();     // Lấy scene hiện tại
+        int sceneIndex = currentScene.buildIndex;
+        if(sceneIndex != 5)
+        {
+            if (ZombieCityController.instance.playerCityController.isSetCircle)
         {
             mainCamera.fieldOfView = Mathf.SmoothDamp(
             mainCamera.fieldOfView,
@@ -28,7 +32,7 @@ public class CameraFollowCity : MonoBehaviour
             Mathf.Infinity,
             Time.unscaledDeltaTime
 );
-
+        }
         }
     }
 }

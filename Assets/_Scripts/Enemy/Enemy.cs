@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEditor.Progress;
 
 public class Enemy : MonoBehaviour
@@ -12,7 +13,10 @@ public class Enemy : MonoBehaviour
 
     public GameObject bulletPrefabs;          // Prefab đạn của enemy
     public Transform firingTransform;         // Vị trí bắn đạn
-    public Transform target;                                    // Mục tiêu hiện tại
+    public Transform target;                  // Mục tiêu hiện tại
+    public Color[] possibleColors;            // danh sách màu bạn set sẵn trên Inspector
+    private static List<Color> availableColors = new List<Color>();
+    public Color chosenColor { get; private set; }
 
     [Header("------------------Detection & Attack Range------------------")]
     public float detectionRange = 8f;         // Phạm vi phát hiện
@@ -40,29 +44,26 @@ public class Enemy : MonoBehaviour
     [Header("------------------UI Elements------------------")]
     public TextMeshProUGUI textEnemy;           // Text hiển thị trạng thái enemy
     public TextMeshProUGUI nameEnemy;           // Text hiển thị tên enemy
+    public Image imagePoint;
     public TextMeshProUGUI pointOfEnemy;        // Text hiển thị điểm của enemy
     public List<NameData> listName = new List<NameData>();      // Danh sách tên enemy
     public int point;   // Điểm số của enemy
+    public static int colorIndex = 0;
+    public GameObject informationOfEnemy;
 
     [Header("------------------Ground Check------------------")]
     public GameObject GroundCheck;          // Điểm kiểm tra mặt đất (dùng raycast)
     private float changeDirectionTime = 1.5f;
     private float timer = 0f;
+    [Header("------------------Floating Text------------------")]
+    public GameObject floatingTextPrefab; // kéo prefab vào trong Inspector
+
 
     private void Awake(){
         SetColorOfEnemy();
     }
 
     //Hàm set màu cho enemy
-    public void SetColorOfEnemy(){
-        // Duyệt tất cả renderer của enemy
-        foreach (var item in render){
-            item.material.color = Random.ColorHSV(); // Gán màu ngẫu nhiên cho từng material
-        }
-        // Lấy thuộc tính của particle system BloodParticle
-        var ps = BloodParticle.GetComponent<ParticleSystem>().main;
-        ps.startColor = render[0].material.color; // Đồng bộ màu particle với màu đầu tiên của enemy
-    }
 
     private void Start()
     {
@@ -90,6 +91,31 @@ public class Enemy : MonoBehaviour
         if (timeStartBullet > 0)
             timeStartBullet -= Time.deltaTime;
     }
+    public void SetColorOfEnemy()
+    {
+        if (possibleColors.Length == 0) return;
+
+        // Nếu danh sách trống, refill
+        if (availableColors.Count == 0)
+            availableColors = new List<Color>(possibleColors);
+
+        // Bốc random 1 màu trong danh sách
+        int index = Random.Range(0, availableColors.Count);
+        Color baseColor = availableColors[index];
+        chosenColor = new Color(baseColor.r, baseColor.g, baseColor.b, 1f); // ép alpha = 1
+        availableColors.RemoveAt(index); // loại bỏ để không bị trùng
+
+        // Gán màu
+        foreach (var item in render)
+            item.material.color = chosenColor;
+
+        nameEnemy.color = chosenColor;
+        imagePoint.color = chosenColor;
+
+        var ps = BloodParticle.GetComponent<ParticleSystem>().main;
+        ps.startColor = chosenColor;
+    }
+
 
     //Hàm Enemy di chuyển 
     public void EnemyMovement(){
@@ -232,14 +258,32 @@ public class Enemy : MonoBehaviour
 
     //Hàm enemy khi bị tấn công 
     public void OnHit(){
+        // Làm tối đi 50% so với màu gốc
+        Color darkened = chosenColor * 0.65f;
+        darkened.a = 1f; // giữ alpha = 1
+
+        foreach (var item in render)
+            item.material.color = darkened;
+        informationOfEnemy.SetActive(false);
         anim.SetBool("Death", true);                                // Kích hoạt animation chết
-        AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);  // Đánh dấu enemy đã chết
+        //AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);  // Đánh dấu enemy đã chết
         GameController.instance.uiManager.UpdateAliveEnemy();       // Cập nhật số lượng enemy còn sống
         BloodParticle.SetActive(true);                              // Hiển thị particle máu
     }
     private void OnCollisionEnter(Collision collision){
         // Nếu va chạm với bullet1 (của player)
         if (collision.gameObject.CompareTag("Bullet1") && !isEnemyDied){
+            if (floatingTextPrefab != null)
+            {
+                GameObject ft = Instantiate(
+                floatingTextPrefab,
+                GameController.instance.playerController.transform.position + Vector3.up * 2f,
+                Quaternion.identity,
+                GameController.instance.playerController.transform // parent chính là Player
+);
+                ft.GetComponent<FloatingText>().Setup("+1", Color.white);
+
+            }
             // Nếu player đang có gift, bỏ qua va chạm giữa bullet và enemy
             if (GameController.instance.playerController.isGetGift) {
                 Collider enemyCollider = GetComponent<Collider>();
@@ -250,7 +294,7 @@ public class Enemy : MonoBehaviour
             }
             OnHit();
             GameController.instance.playerController.SetBulletPlayerDeufalt();
-            GameController.instance.playerController.pointOfPlayerDefault += 5;      // Player nhận điểm
+            GameController.instance.playerController.pointOfPlayerDefault += 1;      // Player nhận điểm
             GameController.instance.playerController.coinMoney += 50;               // Player nhận coin
             GameController.instance.uiManager.UpdateCoin();                         //Cập nhật coin
             GameController.instance.uiManager.UpdatePoint();
@@ -272,31 +316,6 @@ public class Enemy : MonoBehaviour
             OnHit();
             isEnemyDied = true;
         }
-        // Nếu va chạm với bullet1 hoặc bullet2 và enemy chưa bị hit
-        //if ((collision.gameObject.CompareTag("Bullet1") || collision.gameObject.CompareTag("Bullet2"))){
-        //    Bullet bulletScript = collision.gameObject.GetComponent<Bullet>();
-        //    if (bulletScript == null) return;
-
-        //    //// Nếu viên đạn thuộc về chính enemy này → bỏ qua
-        //    if (bulletScript.owner == this.gameObject)  return;
-        //    GameController.instance.enemy = this;// Đặt enemy hiện tại trong EnemyManager
-        //    Enemy enemyShooter = bulletScript.owner.GetComponent<Enemy>();          // Lấy enemy bắn viên đạn
-        //    if (enemyShooter != null){
-        //        enemyShooter.point += 5; // Tăng điểm cho enemy bắn
-        //        enemyShooter.pointOfEnemy.text = enemyShooter.point.ToString(); // Cập nhật UI điểm
-        //    }
-        //    else{
-        //        GameController.instance.playerController.SetBulletPlayerDeufalt();
-        //        GameController.instance.playerController.pointOfPlayerDefault += 5;               // Player nhận điểm
-        //        GameController.instance.playerController.coinMoney += 50;          // Player nhận coin
-        //        GameController.instance.uiManager.UpdateCoin();                 //Cập nhật coin
-        //        GameController.instance.uiManager.UpdatePoint();
-        //    }
-        //    anim.SetBool("Death", true);        // Kích hoạt animation chết
-        //    isEnemyDied = true;                 // Đánh dấu enemy đã chết
-        //    GameController.instance.uiManager.UpdateAliveEnemy();   // Cập nhật số lượng enemy còn sống
-        //    BloodParticle.SetActive(true);      // Hiển thị particle máu
-        //}
         // Nếu va chạm với gift
         if (collision.gameObject.CompareTag("Gift")){
             isEnemyGetGift = true;
