@@ -54,17 +54,12 @@ public class SpawnZombie : MonoBehaviour
 
         GameObject enemy = null;
 
-        if (spawnedCount < 12) // 12 con đầu
+        if (spawnedCount <= 19) // 12 con đầu
         {
             int indexEnemy = Random.Range(0, 2); // 0 hoặc 1
             enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
         }
-        else if (spawnedCount < 18) // 6 con tiếp theo (12 -> 17)
-        {
-            int indexEnemy = Random.Range(2, 4); // 2 hoặc 3
-            enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
-        }
-        else if (spawnedCount < 20) // 2 con cuối (18 -> 19)
+        else if (spawnedCount == 20) // 2 con cuối (18 -> 19)
         {
             enemy = Instantiate(enemyPrefabList[4], spawnPos, Quaternion.identity);
         }

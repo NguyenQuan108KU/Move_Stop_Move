@@ -7,4 +7,6 @@ public class Hat
     public string index;
     public GameObject hatPrefab;
     public int coinOfHat;
+    public GameObject lockOfHat;
+    public GameObject equip;
 }

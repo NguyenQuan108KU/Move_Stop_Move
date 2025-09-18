@@ -26,6 +26,7 @@ public class WeaponManager : MonoBehaviour
     private int selectedOption = 0;  //lựa chọn của vũ khí hiện tại
 
     public MeshFilter Weapon;
+    public GameObject weaponOfPlayer;
 
     public GameObject button;
     public bool isTouch = false;
@@ -176,6 +177,12 @@ public class WeaponManager : MonoBehaviour
                 if (i == selectedOption)
                 {
                     Weapon.mesh = weaponData.weapon[i].meshWeapon;
+                    if(selectedOption == 4)
+                    {
+                        weaponOfPlayer.transform.position = new Vector3(1,1,1);
+                        weaponOfPlayer.transform.rotation = Quaternion.Euler(-196.209f, 174.289f, -63.98401f);
+                        weaponOfPlayer.transform.localScale = new Vector3(39f, 39f, 39f);
+                    }
                 }
             }
         }

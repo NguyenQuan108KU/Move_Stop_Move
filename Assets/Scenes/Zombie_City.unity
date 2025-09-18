@@ -430,7 +430,7 @@ MonoBehaviour:
   sceneController: {fileID: 65898819}
   popupWin: {fileID: 109808153426316559, guid: 367f0fa41e999b44aa25d0b980a54453, type: 3}
   popupLose: {fileID: 7436597365497648609, guid: 522504a8c1242c6489893402df64c6a0, type: 3}
-  zombieTotal: 26
+  zombieTotal: 25
   isCheckWinLose: 0
 --- !u!1 &67554859
 GameObject:
@@ -2141,8 +2141,8 @@ MonoBehaviour:
   player: {fileID: 2041055804730398945}
   maxEnemies: 20
   countEnemy: 20
-  minDistance: 10
-  maxDistance: 15
+  minDistance: 25
+  maxDistance: 30
   minSpawnInterval: 2
   maxSpawnInterval: 5
 --- !u!4 &440326429
@@ -5585,7 +5585,7 @@ MonoBehaviour:
   coinOfPlayerDefault: {fileID: 0}
   nameOfPlayer: {fileID: 0}
   textEnemyAlive: {fileID: 0}
-  textEnemyAliveCity: {fileID: 0}
+  textEnemyAliveCity: {fileID: 1261464324}
   loadCircle: {fileID: 0}
   loadGift: {fileID: 0}
   speedRotation: 200

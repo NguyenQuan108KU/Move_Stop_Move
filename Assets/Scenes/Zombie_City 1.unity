@@ -60877,6 +60877,8 @@ MonoBehaviour:
   x: -0.09
   y: 0.31
   z: 0
+  isCheckOne: 0
+  rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!33 &7289850939041331095
 MeshFilter:
   m_ObjectHideFlags: 0

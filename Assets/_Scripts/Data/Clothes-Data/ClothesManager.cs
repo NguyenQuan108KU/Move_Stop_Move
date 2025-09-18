@@ -38,13 +38,22 @@ public class ClothesManager : MonoBehaviour
     public SkinnedMeshRenderer pantsOfPlayer;
 
     public Material materialDefaultOfPlayer;
+
+    public GameObject optionClothes;
     public HairManager hairManager;
-    public ShieldManager protectManager;
+    public ShieldManager shieldManager;
     public PantsManager pantsManager;
-    public bool isResetClothes;
+    public bool isSetClothes;
+
+    public GameObject borderPrefab; // prefab khung viền (Image)
+    private GameObject currentBorder; // viền đang hiển thị\
+
+    public GameObject equippedPrefab;
+    private GameObject currentEquipped;
     private void Start()
     {
-        
+        EquippedClothes(list_Buttons[PlayerPrefs.GetInt("IndexChooseClothes")].transform);
+        StateOfButton(PlayerPrefs.GetInt("IndexChooseClothes"));
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
         for (int i = 0; i < list_Buttons.Length; i++)
         {
@@ -55,26 +64,65 @@ public class ClothesManager : MonoBehaviour
                 StateSkinOfPlayer(currentButtonIndex);
                 StateOfButton(currentButtonIndex);
                 RefreshActionButton();
+                OnButtonClicked(list_Buttons[index].transform);
             });
         }
     }
+    private void OnButtonClicked(Transform buttonTransform)
+    {
+        // Xoá viền cũ nếu có
+        if (currentBorder != null)
+        {
+            Destroy(currentBorder);
+        }
+
+        // Sinh viền mới làm con của button
+        currentBorder = Instantiate(borderPrefab, buttonTransform);
+    }
+    public void EquippedClothes(Transform buttonTransform)
+    {
+        if (currentEquipped != null)
+        {
+            Destroy(currentEquipped);
+        }
+
+        // Sinh viền mới làm con của button
+        if(isSetClothes)
+            currentEquipped = Instantiate(equippedPrefab, buttonTransform);
+    }
     public void ButtonClick()
     {
+        hairManager.isSetHat = false;
+        shieldManager.isSetShield = false;
+        pantsManager.isSetPant = false;
+        isSetClothes = true;
         if (textOfButtonSelect.text == "SELECT")
         {
-            isResetClothes = true;
-            ResetItemOfPlayer();
-            hairManager.isSetHat = false;
-            protectManager.isSetShield = false;
-            pantsManager.isSetPant = false;
+            //isResetClothes = true;
+            //ResetItemOfPlayer();
+            //hairManager.isSetHat = false;
+            //shieldManager.isSetShield = false;
+            //pantsManager.isSetPant = false;
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
             string skinName = skinDatabases.skin[currentButtonIndex].index;
             DataManager.Ins.gameSave.idSkin = skinName;
             DataManager.Ins.SaveGame();
             SetActionButton("Unequip", Color.white);
+            PlayerPrefs.SetInt("IndexChooseClothes", currentButtonIndex);
+            //Reset quần
+            pantsManager.ResetDataOfPant();
+            pantsManager.RefreshActionButton();
+            //Reset khiên
+            shieldManager.ResetDataOdShield();
+            shieldManager.RefreshActionButton();
+            //Reset mũ của nhân vật
+            hairManager.ResetDataOfHat();
+            hairManager.RefreshActionButton();
         }
         else if (textOfButtonSelect.text == "Unequip")
         {
-            isResetClothes = false;
+            isSetClothes = false;
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
             string skinName = skinDatabases.skin[skinDatabases.skin.Length - 1].index;
             DataManager.Ins.gameSave.idSkin = skinName;
             DataManager.Ins.SaveGame();
@@ -125,7 +173,6 @@ public class ClothesManager : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
-        Debug.Log(index);
         Instantiate(skinDatabases.skin[index].hatOfSkin, hatAnchorOfSkin.transform);
         Instantiate(skinDatabases.skin[index].shieldOfSkin, shieldAnchorOfSkin.transform);
         Instantiate(skinDatabases.skin[index].wingOfSkin, wingAnchorOfSkin.transform);
@@ -158,6 +205,24 @@ public class ClothesManager : MonoBehaviour
             }
         }
     }
+    public void ResetClothes()
+    {
+        foreach (Transform anchor in list_anchorsOfSkin)
+        {
+            foreach (Transform child in anchor)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        initialShadingOfPlayer.material = skinDatabases.skin[2].materialOfPlayer;
+        pantsOfPlayer.material = skinDatabases.skin[2].materialOfPlayer;
+    }
+    public void ResetDatOfClothes()
+    {
+        string skinName = skinDatabases.skin[skinDatabases.skin.Length - 1].index;
+        DataManager.Ins.gameSave.idSkin = skinName;
+        DataManager.Ins.SaveGame();
+    }
     private void SetActionButton(string text, Color color)
     {
         if (textOfButtonSelect != null)
@@ -166,7 +231,7 @@ public class ClothesManager : MonoBehaviour
         if (imageOfButtonSelect != null)
             imageOfButtonSelect.color = color;
     }
-    private void RefreshActionButton()
+    public void RefreshActionButton()
     {
         string selectedSkin = DataManager.Ins.gameSave.idSkin;
         if (string.IsNullOrEmpty(selectedSkin)) return;
@@ -182,16 +247,46 @@ public class ClothesManager : MonoBehaviour
         DataManager.Ins.gameSave.idPant = "Pants_7";
         DataManager.Ins.SaveGame();
     }
+    public void CheckSetSkin()
+    {
+        if (isSetClothes)
+            SetSkinOfPlayer();
+    }
+    public void DisplayOptionClothes()
+    {
+        isSetClothes = DataManager.Ins.gameSave.isSetClothes;
+        if (isSetClothes)
+        {
+            optionClothes.SetActive(true);
+            OnButtonClicked(list_Buttons[PlayerPrefs.GetInt("IndexChooseClothes")].transform);
+        }
+        else
+        {
+            optionClothes.SetActive(false);
+            OnButtonClicked(list_Buttons[0].transform);
+        }
+    }
+    public void DisplaySelectOption()
+    {
+        if (isSetClothes)
+        {
+            OnButtonClicked(list_Buttons[PlayerPrefs.GetInt("IndexChooseClothes")].transform);
+        }
+        else
+        {
+            OnButtonClicked(list_Buttons[0].transform);
+            StateSkinOfPlayer(0);
+            StateOfButton(0);
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
+        }
+    }
     private void OnDisable()
     {
-        if (hairManager.isSetHat || protectManager.isSetShield || pantsManager.isSetPant ||isResetClothes)
-            SetSkinOfPlayer();
-
-        if (!isResetClothes)
-        {
-            hairManager.SetHatOfPlayer();
-            protectManager.SetShieldOfPlayer();
-            pantsManager.SetPaintOfPlayer();
-        }
+        ResetClothes();
+        DataManager.Ins.gameSave.isSetHat = hairManager.isSetHat;
+        DataManager.Ins.gameSave.isSetClothes = isSetClothes;
+        DataManager.Ins.gameSave.isSetShield = shieldManager.isSetShield;
+        DataManager.Ins.gameSave.isSetPant = pantsManager.isSetPant;
+        DataManager.Ins.SaveGame();
     }
 }

@@ -16,7 +16,7 @@ public class ApplyFullSetOfPlayer : MonoBehaviour
             hatManager.isSetHat = false;
             shieldManager.isSetShield = false;
             pantManager.isSetPant = false;
-            skinManager.isResetClothes = true;
+            skinManager.isSetClothes = true;
             skinManager.SetSkinOfPlayer();
         }
         else

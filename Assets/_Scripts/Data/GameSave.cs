@@ -20,6 +20,10 @@ public class GameSave
     public string idShield;
     public string idSkin;
     public string idWeapon;
+    public bool isSetShield;
+    public bool isSetPant;
+    public bool isSetHat;
+    public bool isSetClothes;
     public List<string> objectsBought;  // danh sách các đồ vật đã mua
     public float soundVolume;
     public float musicVolume;

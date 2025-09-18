@@ -30,10 +30,22 @@ public class HairManager : MonoBehaviour
     public GameObject selectPaint;
 
     public bool isSetHat;
-
+    public GameObject optionHat;
     public ClothesManager clothesManager;
+    public ShieldManager shieldManager;
+    public PantsManager pantsManager;
+    public GameObject lockOfHat;
+
+    public GameObject borderPrefab; // prefab khung viền (Image)
+    private GameObject currentBorder; // viền đang hiển thị
+
+    public GameObject equippedPrefab;
+    private GameObject currentEquipped;
+
     private void Start()
     {
+        EquippedClothes(list_Buttons[PlayerPrefs.GetInt("IndexChooseHat")].transform);
+        StateOfButton(PlayerPrefs.GetInt("IndexChooseHat"));
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
         for (int i = 0; i < list_Buttons.Length; i++)
         {
@@ -44,64 +56,61 @@ public class HairManager : MonoBehaviour
                 StateHatOfPlayer(currentButtonIndex);
                 StateOfButton(currentButtonIndex);
                 RefreshActionButton();
+                OnButtonClicked(list_Buttons[index].transform);
             });
         }
     }
-    //private void Update()
-    //{
-    //    indexButton = PlayerPrefs.GetInt("SlectHat", -1);
-    //    if (currentButtonIndex == indexButton)
-    //    {
-    //        textOfButtonSelect.text = "Unequip";
-    //        imageOfButtonSelect.color = new Color(1f, 1f, 1f);
-    //    }
-    //    else
-    //    {
-    //        textOfButtonSelect.text = "SELECT";
-    //        imageOfButtonSelect.color = new Color(1f, 221f / 255f, 0f);
-    //    }
-    //}
+    private void OnButtonClicked(Transform buttonTransform)
+    {
+        // Xoá viền cũ nếu có
+        if (currentBorder != null)
+        {
+            Destroy(currentBorder);
+        }
 
-    //public void SetHairs(int x)
-    //{
-    //    if(clothesManager != null)
-    //    {
-    //        clothesManager.ResetClothes();
-    //    }
-    //    for(int i = 0; i < hairList.Count(); i++)
-    //    {
-    //        if(x == i)
-    //        {
-    //            hairList[i].SetActive(true);
-    //        }
-    //        else
-    //        {
-    //            hairList[i].SetActive(false);
-    //        }
-    //    }
-    //}
-    //public int LoadHats()
-    //{
-    //    int x = PlayerPrefs.GetInt("IndexHat");
-    //    return x;
-    //}
+        // Sinh viền mới làm con của button
+        currentBorder = Instantiate(borderPrefab, buttonTransform);
+    }
+    public void EquippedClothes(Transform buttonTransform)
+    {
+        if (currentEquipped != null)
+        {
+            Destroy(currentEquipped);
+        }
+
+        // Sinh viền mới làm con của button
+        if (isSetHat)
+            currentEquipped = Instantiate(equippedPrefab, buttonTransform);
+    }
     public void ButtonClick()
     {
         if (textOfButtonSelect.text == "SELECT")
         {
-            if (clothesManager.isResetClothes)
-                ResetSkinOfPlayer();
-            clothesManager.isResetClothes = false;
             isSetHat = true;
+            clothesManager.isSetClothes = false;
+            pantsManager.isSetPant = false;
+            shieldManager.isSetShield = false;
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
+            PlayerPrefs.SetInt("IndexChooseHat", currentButtonIndex);
             string hatName = hatsDatabases.hats[currentButtonIndex].index;
             DataManager.Ins.gameSave.idHat = hatName;
             DataManager.Ins.SaveGame();
             SetActionButton("Unequip", Color.white);
+            //Reset quần
+            pantsManager.ResetDataOfPant();
+            pantsManager.RefreshActionButton();
+            //Reset khiên
+            shieldManager.ResetDataOdShield();
+            shieldManager.RefreshActionButton();
+            //Reset clothes
+            clothesManager.ResetDatOfClothes();
+            clothesManager.RefreshActionButton();
         }
         else if (textOfButtonSelect.text == "Unequip")
         {
-            clothesManager.isResetClothes = true;
+            //clothesManager.isResetClothes = true;
             isSetHat = false;
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
             string hatName = hatsDatabases.hats[hatsDatabases.hats.Length - 1].index;
             DataManager.Ins.gameSave.idHat = hatName;
             DataManager.Ins.SaveGame();
@@ -145,8 +154,8 @@ public class HairManager : MonoBehaviour
     }
     public void StateHatOfPlayer(int index)
     {
-        if (clothesManager.isResetClothes)
-            clothesManager.StateSkinOfPlayer(clothesManager.skinDatabases.skin.Length - 1);
+        //if (clothesManager.isResetClothes)
+        //    clothesManager.StateSkinOfPlayer(clothesManager.skinDatabases.skin.Length - 1);
         foreach (Transform child in hatAnchor.transform)
         {
             Destroy(child.gameObject);
@@ -174,26 +183,19 @@ public class HairManager : MonoBehaviour
             }
         }
     }
-
-    //public void SetHairPlayer()
-    //{
-    //    int index = PlayerPrefs.GetInt("SlectHat", -1);
-    //    if(index == -1)
-    //    {
-    //        hairList[6].SetActive(true);
-    //    }
-    //    for (int i = 0; i < hairList.Count(); i++)
-    //    {
-    //        if (index == i)
-    //        {
-    //            hairList[i].SetActive(true);
-    //        }
-    //        else
-    //        {
-    //            hairList[i].SetActive(false);
-    //        }
-    //    }
-    //}
+    public void ResetHat()
+    {
+        foreach (Transform child in hatAnchor.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+    public void ResetDataOfHat()
+    {
+        string hatName = hatsDatabases.hats[hatsDatabases.hats.Length - 1].index;
+        DataManager.Ins.gameSave.idHat = hatName;
+        DataManager.Ins.SaveGame();
+    }
     private void SetActionButton(string text, Color color)
     {
         if (textOfButtonSelect != null)
@@ -202,7 +204,7 @@ public class HairManager : MonoBehaviour
         if (imageOfButtonSelect != null)
             imageOfButtonSelect.color = color;
     }
-    private void RefreshActionButton()
+    public void RefreshActionButton()
     {
         string selectedHat = DataManager.Ins.gameSave.idHat;
         if (string.IsNullOrEmpty(selectedHat)) return;
@@ -216,11 +218,47 @@ public class HairManager : MonoBehaviour
         DataManager.Ins.SaveGame();
         clothesManager.SetSkinOfPlayer();
     }
+    public void CheckSetHat()
+    {
+        if (isSetHat)
+            SetHatOfPlayer();
+    }
+    public void DisplayOptionHat()
+    {
+        Debug.Log(DataManager.Ins.gameSave.isSetHat);
+        isSetHat = DataManager.Ins.gameSave.isSetHat;
+        if (isSetHat)
+        {
+            optionHat.SetActive(true);
+            OnButtonClicked(list_Buttons[PlayerPrefs.GetInt("IndexChooseHat")].transform);
+        }
+        else
+        {
+            optionHat.SetActive(false);
+            OnButtonClicked(list_Buttons[0].transform);
+        }
+    }
+    public void DisplaySelectOption()
+    {
+        if (isSetHat)
+        {
+            OnButtonClicked(list_Buttons[PlayerPrefs.GetInt("IndexChooseHat")].transform);
+        }
+        else
+        {
+            OnButtonClicked(list_Buttons[0].transform);
+            StateHatOfPlayer(0);
+            StateOfButton(0);
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
+        }
+    }
     private void OnDisable()
     {
-        if (!clothesManager.isResetClothes)
-            SetHatOfPlayer();
-        else if(isSetHat || clothesManager.isResetClothes)
-            clothesManager.SetSkinOfPlayer();
+        ResetHat();
+        DataManager.Ins.gameSave.isSetHat = isSetHat;
+        DataManager.Ins.gameSave.isSetClothes = clothesManager.isSetClothes;
+        DataManager.Ins.gameSave.isSetShield = shieldManager.isSetShield;
+        DataManager.Ins.gameSave.isSetPant = pantsManager.isSetPant;
+        DataManager.Ins.SaveGame();
     }
 }
