@@ -84,7 +84,7 @@ public class ArrowIndicator : MonoBehaviour
                 edgePos.x += (edgePos.y - screenCenter.y) / slope;
             }
 
-            arrowUI.GetComponent<RectTransform>().position = edgePos + new Vector2(0, 30);
+            arrowUI.GetComponent<RectTransform>().position = edgePos + new Vector2(0, 0);
         }
     }
     void OnDestroy()

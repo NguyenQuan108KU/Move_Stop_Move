@@ -16,7 +16,6 @@ public class MapTransition : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             StartCoroutine(DoTransition());
-            GameController.instance.playerController.pointOfPlayerDefault = 0;
         }
     }
 
@@ -32,6 +31,8 @@ public class MapTransition : MonoBehaviour
         enemy.SetActive(true);
         spawnEnemy.SetActive(true);
 
+        GameController.instance.playerController.pointOfPlayerDefault = 0;
+        GameController.instance.uiManager.UpdatePoint();
         // Sáng màn hình
         yield return StartCoroutine(ScreenFader.instance.FadeIn(1f));
     }

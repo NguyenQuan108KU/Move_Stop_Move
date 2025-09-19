@@ -267,7 +267,7 @@ public class Enemy : MonoBehaviour
             item.material.color = darkened;
         informationOfEnemy.SetActive(false);
         anim.SetBool("Death", true);                                // Kích hoạt animation chết
-        //AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);  // Đánh dấu enemy đã chết
+        AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);  // Đánh dấu enemy đã chết
         GameController.instance.uiManager.UpdateAliveEnemy();       // Cập nhật số lượng enemy còn sống
         BloodParticle.SetActive(true);                              // Hiển thị particle máu
     }
@@ -283,15 +283,14 @@ public class Enemy : MonoBehaviour
                 GameController.instance.playerController.transform // parent chính là Player
 );
                 ft.GetComponent<FloatingText>().Setup("+1", Color.white);
-
             }
             // Nếu player đang có gift, bỏ qua va chạm giữa bullet và enemy
-            if (GameController.instance.playerController.isGetGift) {
-                Collider enemyCollider = GetComponent<Collider>();
-                Collider bulletCollider = collision.collider;                   // collider của viên đạn
-                if (enemyCollider != null && bulletCollider != null)
-                    Physics.IgnoreCollision(enemyCollider, bulletCollider);     // Bỏ qua va chạm
-            }
+            //if (GameController.instance.playerController.isGetGift) {
+                //Collider enemyCollider = GetComponent<Collider>();
+                //Collider bulletCollider = collision.collider;                   // collider của viên đạn
+                //if (enemyCollider != null && bulletCollider != null)
+                //    Physics.IgnoreCollision(enemyCollider, bulletCollider);     // Bỏ qua va chạm
+            //}
             OnHit();
             GameController.instance.playerController.SetBulletPlayerDeufalt();
             GameController.instance.playerController.pointOfPlayerDefault += 1;      // Player nhận điểm

@@ -289,7 +289,7 @@ public class PlayerController : MonoBehaviour
         directionOfPlayer = Vector3.zero;                           // Reset hướng di chuyển của player (hoặc hướng bắn) về Vector3.zero
         bulletScript.SetOwner(gameObject);                          // Thiết lập owner của viên đạn là chính player (tránh tự chết do viên đạn của mình)
         bulletScript.SetTarget(targetEnemy);                        // Thiết lập target của viên đạn là enemy hiện tại
-        //AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Attack);
+        AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Attack);
 
         // Nếu player đang có gift (ăn được quà)
         if (isGetGift){
@@ -320,8 +320,8 @@ public class PlayerController : MonoBehaviour
     public void UpLevel(){
 
         // Kiểm tra điều kiện để nâng cấp
-        if (pointOfPlayerDefault >= 20 && !hasPlayedLevelUp){
-            //AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Level_Up);
+        if (pointOfPlayerDefault >= 3 && !hasPlayedLevelUp){
+            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Level_Up);
             hasPlayedLevelUp = true;                                    // Đánh dấu đã phát Level Up để không phát lại nhiều lần
             effectLevelUp.SetActive(true);      
             transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);       // Tăng kích thước player
@@ -357,7 +357,7 @@ public class PlayerController : MonoBehaviour
         //Kiểm tra va chạm với Bullet của enemy
         if (collision.gameObject.CompareTag("Bullet2")){
             isDead = true;
-            //AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Lose);
+            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Lose);
             //Instantiate(popupLose, transform.position, Quaternion.identity);   //Sinh Popup Lose 
             anim.SetBool("Death", true);                                       // Kích hoạt animation chết
             weaponOfPlayer.SetActive(false);                                          //Tắt vũ khí của player khi ném            
@@ -367,7 +367,7 @@ public class PlayerController : MonoBehaviour
 
         //Kiểm tra va chạm khi ăn quà 
         if (collision.gameObject.CompareTag("Gift")){
-            //AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Get_Gift);
+            AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Get_Gift);
             isGetGift = true;                           // Đánh dấu trạng thái nhận gift
             Destroy(collision.gameObject);              // Hủy gift khỏi scene
             radiusAttackOfPlayer = 8f;                  // Tăng phạm vi tấn công

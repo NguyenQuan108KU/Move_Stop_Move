@@ -31,6 +31,9 @@ public class Zombie : MonoBehaviour
     public bool isBossLevel2;      // Boss cấp 2            
     public bool isBossLevel3;      // Boss cấp 3
     public int countAttackZombie;  // Số lần chịu đòn trước khi chết (boss)
+
+    public GameObject floatingTextPrefab; // kéo prefab vào trong Inspector
+    public int poinOdBoss;   //Điểm khi giết chết enemy
     void Start(){
         target = ZombieCityController.instance.playerCityController.transform;
         agent = GetComponent<NavMeshAgent>();
@@ -40,9 +43,19 @@ public class Zombie : MonoBehaviour
         SetColorEnemy();
         SetColorHair();
         if (isBossLevel1)
+        {
             countAttackZombie = 2;
+        }
         else if(isBossLevel2 || isBossLevel3)
+        {
             countAttackZombie = 4;
+            poinOdBoss = 5;
+        }
+        else
+        {
+            poinOdBoss = 1;
+        }
+        
     }
 
     void Update(){
@@ -90,6 +103,15 @@ public class Zombie : MonoBehaviour
         colorEnemy.GetComponent<SkinnedMeshRenderer>().material = listColors.colors[indexColor].material;           // Gán material tương ứng cho SkinnedMeshRenderer của Enemy
     }
 
+    public void UpdatePointOfPlayer()
+    {
+        GameObject ft = Instantiate(
+                floatingTextPrefab,
+                ZombieCityController.instance.playerCityController.transform.position + Vector3.up * 2f,
+                Quaternion.identity,
+                ZombieCityController.instance.playerCityController.transform);
+        ft.GetComponent<FloatingText>().Setup("+" + poinOdBoss, Color.white);
+    }
     // Đặt màu ngẫu nhiên cho nón/tóc của Enemy.
     public void SetColorHair(){
         if (hatColor != null){
@@ -100,6 +122,7 @@ public class Zombie : MonoBehaviour
     private void OnCollisionEnter(Collision collision){
         // Khi Enemy va chạm với đạn của Player (Bullet1)
         if (collision.gameObject.CompareTag("Bullet1")){
+         
             // Nếu Enemy là Boss
             if (isBoss){
                 // Nếu là Boss level 3 → cơ chế thu nhỏ dần khi trúng đạn
@@ -109,10 +132,11 @@ public class Zombie : MonoBehaviour
                     transform.localScale = newScale;
                     // Nếu boss đã nhỏ hơn kích thước tối thiểu → chết
                     if (transform.localScale.x < 1f || transform.localScale.y < 1f || transform.localScale.z < 1f){
+                        UpdatePointOfPlayer();
                         AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);
                         ZombieCityController.instance.uiManager.UpdatePoinPlayerCity();
                         ZombieCityController.instance.uiManager.UpdateAliveZombie();
-                        ZombieCityController.instance.playerCityController.pointOfPlayerCity += 5;
+                        ZombieCityController.instance.playerCityController.pointOfPlayerCity += poinOdBoss;
                         EnemyDie();
                     }
                 }
@@ -121,7 +145,7 @@ public class Zombie : MonoBehaviour
                     // Nếu đã hết máu/đòn chịu được → chết
                     if (countAttackZombie <= 0){
                         AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);
-                        ZombieCityController.instance.playerCityController.pointOfPlayerCity += 5;
+                        ZombieCityController.instance.playerCityController.pointOfPlayerCity += poinOdBoss;
                         ZombieCityController.instance.uiManager.UpdatePoinPlayerCity();
                         ZombieCityController.instance.uiManager.UpdateAliveZombie();
                         EnemyDie();
@@ -130,8 +154,9 @@ public class Zombie : MonoBehaviour
             }
             else{
                 // Enemy thường → chết ngay khi trúng đạn
+                UpdatePointOfPlayer();
                 AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Die);
-                ZombieCityController.instance.playerCityController.pointOfPlayerCity += 5;
+                ZombieCityController.instance.playerCityController.pointOfPlayerCity += poinOdBoss;
                 ZombieCityController.instance.uiManager.UpdatePoinPlayerCity();
                 ZombieCityController.instance.uiManager.UpdateAliveZombie();
                 EnemyDie();
@@ -158,7 +183,11 @@ public class Zombie : MonoBehaviour
 
         // Giảm số lượng zombie đang sống trong game
         //ZombieCityController.instance.playerCityController.zombieAlive -= 1;
-        ZombieCityController.instance.zombieTotal -= 1;
+        if (!isDead)
+        {
+            ZombieCityController.instance.zombieTotal -= 1;
+            isDead = true;
+        }
 
         // Tăng số coin của player khi hạ enemy
         ZombieCityController.instance.playerCityController.coinOfPlayerCity += 1;

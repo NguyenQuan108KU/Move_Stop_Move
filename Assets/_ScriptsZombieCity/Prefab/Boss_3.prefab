@@ -426,6 +426,7 @@ MonoBehaviour:
   isBossLevel2: 0
   isBossLevel3: 1
   countAttackZombie: 0
+  floatingTextPrefab: {fileID: 6620629643112542043, guid: 5f0b04e44f96762489bb7cd766e0ce53, type: 3}
 --- !u!195 &2367125657054231319
 NavMeshAgent:
   m_ObjectHideFlags: 0

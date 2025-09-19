@@ -259,6 +259,7 @@ public class ClothesManager : MonoBehaviour
         {
             optionClothes.SetActive(true);
             OnButtonClicked(list_Buttons[PlayerPrefs.GetInt("IndexChooseClothes")].transform);
+            RefreshActionButton();
         }
         else
         {
@@ -271,6 +272,7 @@ public class ClothesManager : MonoBehaviour
         if (isSetClothes)
         {
             OnButtonClicked(list_Buttons[PlayerPrefs.GetInt("IndexChooseClothes")].transform);
+            RefreshActionButton();
         }
         else
         {
@@ -278,6 +280,7 @@ public class ClothesManager : MonoBehaviour
             StateSkinOfPlayer(0);
             StateOfButton(0);
             EquippedClothes(list_Buttons[currentButtonIndex].transform);
+            RefreshActionButton();
         }
     }
     private void OnDisable()

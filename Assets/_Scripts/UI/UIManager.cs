@@ -40,7 +40,8 @@ public class UIManager : MonoBehaviour
         //if(loadGift != null)
         //    loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
         //Load vào game Zombie city
-        if((readyCity != null || menuReady != null) && isLoadMenu) {
+        UpdateAliveZombie();
+        if ((readyCity != null || menuReady != null) && isLoadMenu) {
             LoadCity();
         }
         //UpdateAliveZombie();

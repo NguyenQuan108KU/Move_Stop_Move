@@ -9,7 +9,7 @@ public class SpawnZombie : MonoBehaviour
     public List<GameObject> enemyPrefabList;
     public GameObject enemyPrefab;
     public Transform player;
-    public int maxEnemies = 20; // Số lượng enemy tối đa
+    public int maxEnemies = 13; // Số lượng enemy tối đa
     public int countEnemy = 30;
 
     [Header("Spawn Radius")]
@@ -20,6 +20,9 @@ public class SpawnZombie : MonoBehaviour
     public float minSpawnInterval = 2f;
     public float maxSpawnInterval = 4f;
 
+    public int spawnedTotal = 0;  // tổng số enemy đã spawn
+
+
     private List<GameObject> currentEnemies = new List<GameObject>();
 
     void Start()
@@ -29,7 +32,7 @@ public class SpawnZombie : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
-        while (countEnemy > 0)
+        while (spawnedTotal < 13)
         {
             // dọn rác enemy đã chết
             currentEnemies.RemoveAll(e => e == null);
@@ -49,26 +52,25 @@ public class SpawnZombie : MonoBehaviour
     void SpawnEnemy()
     {
         Vector3 spawnPos = GetRandomNavmeshPosition(player.position, minDistance, maxDistance);
-
-        int spawnedCount = maxEnemies - countEnemy; // số enemy đã spawn
-
         GameObject enemy = null;
 
-        if (spawnedCount <= 19) // 12 con đầu
+        if (spawnedTotal < 12)  // 19 con đầu
         {
             int indexEnemy = Random.Range(0, 2); // 0 hoặc 1
             enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, Quaternion.identity);
         }
-        else if (spawnedCount == 20) // 2 con cuối (18 -> 19)
+        else if (spawnedTotal == 12) // con thứ 20
         {
             enemy = Instantiate(enemyPrefabList[4], spawnPos, Quaternion.identity);
         }
 
         if (enemy != null)
         {
-            currentEnemies.Add(enemy); // nhớ add vào list quản lý
+            currentEnemies.Add(enemy);
+            spawnedTotal++;   // tăng số đã spawn lên
         }
     }
+
 
     Vector3 GetRandomNavmeshPosition(Vector3 center, float minDist, float maxDist)
     {

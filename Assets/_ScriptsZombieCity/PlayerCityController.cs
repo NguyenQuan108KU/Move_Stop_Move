@@ -402,7 +402,7 @@ public class PlayerCityController : MonoBehaviour
             // Level 1 → bắn 2 viên song song
             else if (levelOfPlayerCity == 1)
             {
-                ShootDualParallel(0.3f); // khoảng cách giữa 2 viên = 0.3
+                ShootDualParallel(0.6f); // khoảng cách giữa 2 viên = 0.3
             }
         }
         // Nếu functionBullet = 0 → bắn 2 viên, 1 viên thẳng và 1 viên lệch góc
@@ -588,7 +588,7 @@ public class PlayerCityController : MonoBehaviour
     public void UpLevel()
     {
         // Nếu coin của người chơi đúng bằng 15 thì cho phép lên level
-        if (pointOfPlayerCity == 15)
+        if (pointOfPlayerCity == 8)
         {
             // Kiểm tra biến textOfAnimLevelUp có tồn tại (điều kiện này bị viết 2 lần giống nhau)
             if (textOfAnimLevelUp != null || textOfAnimLevelUp != null)
@@ -610,7 +610,7 @@ public class PlayerCityController : MonoBehaviour
             ZombieCityController.instance.zombieTotal = 0; // Đảm bảo giá trị không xuống âm
             //winner.SetActive(true); // Hiển thị popUp thông báo người chơi chiến thắng
 
-            StartCoroutine(StopGameAfterDelay(1.5f));
+            //StartCoroutine(StopGameAfterDelay(1.5f));
         }
     }
     private IEnumerator StopGameAfterDelay(float delay)

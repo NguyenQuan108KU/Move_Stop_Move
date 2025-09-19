@@ -230,11 +230,16 @@ public class HairManager : MonoBehaviour
         {
             optionHat.SetActive(true);
             OnButtonClicked(list_Buttons[PlayerPrefs.GetInt("IndexChooseHat")].transform);
+            RefreshActionButton();
         }
         else
         {
             optionHat.SetActive(false);
             OnButtonClicked(list_Buttons[0].transform);
+        }
+        if (!isSetHat && !pantsManager.isSetPant && !shieldManager.isSetShield && !clothesManager.isSetClothes)
+        {
+            optionHat.SetActive(true);
         }
     }
     public void DisplaySelectOption()

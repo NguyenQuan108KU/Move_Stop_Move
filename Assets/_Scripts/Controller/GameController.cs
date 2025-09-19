@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -33,7 +34,8 @@ public class GameController : MonoBehaviour
         if (playerController.isDead) return;
         playerController.PlayerMove();
         playerController.AttackTrigle();
-        playerController.UpLevel();
+        if(SceneManager.GetActiveScene().buildIndex != 4)
+            playerController.UpLevel();
     }
     private void CheckWinOrLose(){
         if(enemyTotal <= 0 && !isChecckWinLose){
