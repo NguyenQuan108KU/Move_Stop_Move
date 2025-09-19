@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
 
@@ -16,6 +17,7 @@ public class Enemy : MonoBehaviour
     public Transform target;                  // Mục tiêu hiện tại
     public Color[] possibleColors;            // danh sách màu bạn set sẵn trên Inspector
     private static List<Color> availableColors = new List<Color>();
+    public Color pinkColor;
     public Color chosenColor { get; private set; }
 
     [Header("------------------Detection & Attack Range------------------")]
@@ -261,7 +263,6 @@ public class Enemy : MonoBehaviour
         // Làm tối đi 50% so với màu gốc
         Color darkened = chosenColor * 0.65f;
         darkened.a = 1f; // giữ alpha = 1
-
         foreach (var item in render)
             item.material.color = darkened;
         informationOfEnemy.SetActive(false);
@@ -288,7 +289,6 @@ public class Enemy : MonoBehaviour
             if (GameController.instance.playerController.isGetGift) {
                 Collider enemyCollider = GetComponent<Collider>();
                 Collider bulletCollider = collision.collider;                   // collider của viên đạn
-                Debug.Log("Va cham bullet 1 dau tien khi anw qua");
                 if (enemyCollider != null && bulletCollider != null)
                     Physics.IgnoreCollision(enemyCollider, bulletCollider);     // Bỏ qua va chạm
             }

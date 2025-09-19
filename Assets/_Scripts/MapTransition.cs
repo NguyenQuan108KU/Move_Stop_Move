@@ -16,6 +16,7 @@ public class MapTransition : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             StartCoroutine(DoTransition());
+            GameController.instance.playerController.pointOfPlayerDefault = 0;
         }
     }
 

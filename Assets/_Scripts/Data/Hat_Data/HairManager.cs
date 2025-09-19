@@ -225,7 +225,6 @@ public class HairManager : MonoBehaviour
     }
     public void DisplayOptionHat()
     {
-        Debug.Log(DataManager.Ins.gameSave.isSetHat);
         isSetHat = DataManager.Ins.gameSave.isSetHat;
         if (isSetHat)
         {

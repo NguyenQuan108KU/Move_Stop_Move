@@ -20,7 +20,26 @@ public class WeaponFollow : MonoBehaviour
     {
         if (mesh.mesh.name == "Plane Instance")
         {
-            transform.position = new Vector3(HandPlayer.transform.position.x + x, HandPlayer.transform.position.y + y, HandPlayer.transform.position.z + z);
-        }  
+            Scene currentScene = SceneManager.GetActiveScene();
+            int sceneIndex = currentScene.buildIndex;
+            if (sceneIndex == 0)
+            {
+                transform.position = new Vector3(HandPlayer.transform.position.x + x, HandPlayer.transform.position.y + y, HandPlayer.transform.position.z + z);
+
+                transform.rotation = Quaternion.Euler(
+            transform.eulerAngles.x,
+            -106.5f,
+            transform.eulerAngles.z);
+            }
+            else
+            {
+                transform.position = new Vector3(HandPlayer.transform.position.x + x, HandPlayer.transform.position.y + y, HandPlayer.transform.position.z + z);
+            }
+        }
+        else
+        {
+            transform.position = new Vector3(HandPlayer.transform.position.x, HandPlayer.transform.position.y, HandPlayer.transform.position.z);
+        }
     }
+
 }

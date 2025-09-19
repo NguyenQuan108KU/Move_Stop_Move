@@ -69,10 +69,17 @@ public class WeaponManager : MonoBehaviour
     public GameObject weaponPrefabs;
     public Transform weaponAnchor;
 
+    public GameObject bommerang;
+    public GameObject anchorWeapon;
+
+    [Header("---------------------Weapon Ouline Select----------------------")]
+    public GameObject weaponOutline;
+    private GameObject currentOutline;
+
     private void Start()
     {
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
-        UpdateWeapon(selectedOption);
+        //UpdateWeapon(selectedOption);
         for (int i = 0; i < buttons.Length; i++)
         {
             int index = i;
@@ -92,6 +99,7 @@ public class WeaponManager : MonoBehaviour
                     LoadColorOfWeapon(selectedOption);
 
                 image.sprite = weapon.weaponImage[indexWeapon];
+                OnButtonClickedWeapon(buttons[index].transform);
             });
         }
         for(int i = 0; i < buttonOfMaterial.Length; i++)
@@ -118,6 +126,8 @@ public class WeaponManager : MonoBehaviour
         }
         UpdateWeapon(selectedOption);
         ChangeWeaponButtonColor();
+        DisplayMenuSelectColor(selectedOption);
+        DestroyOutline(buttons[PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption)].transform);
     }
     public void BackOption()
     {
@@ -128,11 +138,14 @@ public class WeaponManager : MonoBehaviour
         }
         UpdateWeapon(selectedOption);
         ChangeWeaponButtonColor();
+        DisplayMenuSelectColor(selectedOption);
+        DestroyOutline(buttons[PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption)].transform);
     }
-    public void UpdateWeapon(int selectedOption)
+    public void UpdateWeapon(int selectedOptions)
     {
-        int index = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption, 0);
-        Weapon weapon = weaponData.GetWeapon(selectedOption);
+        int index = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOptions);
+        Debug.Log(index);
+        Weapon weapon = weaponData.GetWeapon(selectedOptions);
         foreach (Transform child in weaponAnchor.transform) {
             Destroy(child.gameObject);
         }
@@ -140,7 +153,7 @@ public class WeaponManager : MonoBehaviour
         newWeapon = Instantiate(weapon.weaponPrefabs[index], weaponAnchor.transform);
         // Gán vào weaponButtonColor để SetColorOfWeapon() dùng
         weaponCustom = newWeapon;
-        LoadColorOfWeapon(selectedOption);
+        LoadColorOfWeapon(selectedOptions);
 
         nameText.text = weapon.weaponName;
         isLock.text = weapon.isLock;
@@ -160,6 +173,55 @@ public class WeaponManager : MonoBehaviour
         {
             MenuSelect.SetActive(false);
         }
+        DisplayMenuSelectColor(selectedOptions);
+    }
+    public void OptionWeaponWhenStartGame()
+    {
+        int currentOption = PlayerPrefs.GetInt("SelectOption");
+        selectedOption = currentOption;
+        Weapon weapon = weaponData.GetWeapon(currentOption);
+        UpdateWeapon(currentOption);
+        ChangeWeaponButtonColor();
+        int indexMaterialOfWeapon = PlayerPrefs.GetInt("MaterialOfWeapon" + currentOption);
+        foreach (Transform child in weaponAnchor.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        GameObject newWeapon = Instantiate(weapon.weaponPrefabs[indexMaterialOfWeapon], weaponAnchor.transform);
+        weaponCustom = newWeapon;
+        if(indexMaterialOfWeapon == 0)
+            LoadColorOfWeapon(currentOption);
+        DisplayMenuSelectColor(selectedOption);
+        OnButtonClickedWeapon(buttons[indexMaterialOfWeapon].transform);
+    }
+    public void DisplayMenuSelectColor(int selectOptionOfWeapon)
+    {
+        Weapon weapon = weaponData.GetWeapon(selectOptionOfWeapon);
+        if (weapon.isBought && (PlayerPrefs.GetInt("MaterialOfWeapon" + selectOptionOfWeapon) == 0))
+        {
+            listColor.SetActive(true);
+        }
+        else
+        {
+            listColor.SetActive(false);
+        }
+    }
+    private void OnButtonClickedWeapon(Transform buttonTransform)
+    {
+        // Xoá viền cũ nếu có
+        if (currentOutline != null)
+        {
+            Destroy(currentOutline);
+        }
+        // Sinh viền mới làm con của button
+        currentOutline = Instantiate(weaponOutline, buttonTransform);
+    }
+    public void DestroyOutline(Transform buttonTransform)
+    {
+        if (currentOutline != null)
+        {
+            Destroy(currentOutline);
+        }
     }
     public void BuyWeapon()
     {
@@ -176,12 +238,15 @@ public class WeaponManager : MonoBehaviour
             {
                 if (i == selectedOption)
                 {
-                    Weapon.mesh = weaponData.weapon[i].meshWeapon;
                     if(selectedOption == 4)
                     {
-                        weaponOfPlayer.transform.position = new Vector3(1,1,1);
-                        weaponOfPlayer.transform.rotation = Quaternion.Euler(-196.209f, 174.289f, -63.98401f);
-                        weaponOfPlayer.transform.localScale = new Vector3(39f, 39f, 39f);
+                        Weapon.mesh = null;
+                        Instantiate(bommerang, anchorWeapon.transform);
+                    }
+                    else
+                    {
+
+                        Weapon.mesh = weaponData.weapon[i].meshWeapon;
                     }
                 }
             }
@@ -322,35 +387,6 @@ public class WeaponManager : MonoBehaviour
             textureImage.SetActive(false);
         }
     }
-    //public void ChangeMeshWeapon()
-    //{
-    //    weaponCustom.GetComponent<MeshFilter>().mesh = listRawImage[selectedOption];
-    //    if (selectedOption == 1)
-    //    {
-    //        rawImageRect.localPosition = new Vector3(26, -88, -0.001806259f);
-    //        rawImageRect.sizeDelta = new Vector2(360, 500);
-    //        //-0.001806259
-    //    }
-    //    if (selectedOption == 2)
-    //    {
-    //        rawImageRect.localPosition = new Vector3(34, -72, -0.001806259f);
-    //        //rawImageRect.sizeDelta = new Vector2(1100, 500);
-    //        //-0.001806259
-    //    }
-    //    //-0.001806259
-    //    if (selectedOption == 4)
-    //    {
-    //        rawImageRect.localPosition = new Vector3(-11, -79, -0.001806259f);
-    //        rawImageRect.sizeDelta = new Vector2(360, 400);
-
-    //    }
-    //    if (selectedOption == 5)
-    //    {
-    //        rawImageRect.localPosition = new Vector3(33.28f, -72.7f, -0.001806259f);
-    //        rawImageRect.sizeDelta = new Vector2(1200, 600);
-
-    //    }
-    //}
     public void SetColorOfWeapon(int indexColor)
     {
         MeshRenderer renderer = weaponButtonColor.GetComponent<MeshRenderer>();

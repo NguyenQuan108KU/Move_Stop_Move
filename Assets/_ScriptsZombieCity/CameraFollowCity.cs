@@ -20,7 +20,7 @@ public class CameraFollowCity : MonoBehaviour
         );
         Scene currentScene = SceneManager.GetActiveScene();     // Lấy scene hiện tại
         int sceneIndex = currentScene.buildIndex;
-        if(sceneIndex != 5)
+        if(sceneIndex != 4)
         {
             if (ZombieCityController.instance.playerCityController.isSetCircle)
         {

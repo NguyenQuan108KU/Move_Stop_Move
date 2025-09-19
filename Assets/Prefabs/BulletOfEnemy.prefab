@@ -52,7 +52,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 348641515877151161}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -107,6 +107,10 @@ MonoBehaviour:
   destroyTimer: 1.5
   owner: {fileID: 0}
   SetRoration: 0
+  isOffRotate: 0
+  SetRotation: 0
+  SetBoomerang: 0
+  maxDistance: 3
 --- !u!54 &1194726180561282274
 Rigidbody:
   m_ObjectHideFlags: 0
