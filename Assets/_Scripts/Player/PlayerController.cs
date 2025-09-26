@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -222,21 +221,37 @@ public class PlayerController : MonoBehaviour
     }
 
     //Hàm di chuyển nhân vật
-    public void PlayerMove(){
-        // Lấy giá trị đầu vào từ joystick để xác định hướng di chuyển
-        directionOfPlayer.x = joystick.Horizontal;   // Trục X
-        directionOfPlayer.z = joystick.Vertical;     // Trục Z
-        directionOfPlayer.y = 0;                     // Không thay đổi chiều cao (Y = 0)
-        transform.Translate(directionOfPlayer * moveSpeedOfPlayer * Time.deltaTime, Space.World);   // Di chuyển nhân vật theo hướng đã lấy được
-        anim.SetFloat("Speed", directionOfPlayer.sqrMagnitude);    // Gửi giá trị để điều khiển animation
-        
-        // Nếu nhân vật thực sự có di chuyển (vector khác 0)
-        if (directionOfPlayer.sqrMagnitude > 0.01f){    
-            Quaternion toRotation = Quaternion.LookRotation(directionOfPlayer, Vector3.up);                 // Tạo hướng xoay dựa trên vector di chuyển
-            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);    // Xoay nhân vật mượt về hướng di chuyển
+    public void PlayerMove()
+    {
+        // Lấy giá trị đầu vào từ joystick
+        directionOfPlayer.x = joystick.Horizontal;
+        directionOfPlayer.z = joystick.Vertical;
+        directionOfPlayer.y = 0;
+
+        // Nếu joystick có nhập hướng
+        if (directionOfPlayer.sqrMagnitude > 0.01f)
+        {
+            // Chuẩn hoá vector để hướng luôn có độ dài = 1
+            weaponOfPlayer.SetActive(true);
+            Vector3 moveDir = directionOfPlayer.normalized;
+
+            // Di chuyển với vận tốc đồng đều
+            transform.Translate(moveDir * moveSpeedOfPlayer * Time.deltaTime, Space.World);
+
+            // Animation speed = 1 (luôn chạy, không phụ thuộc joystick)
+            anim.SetFloat("Speed", 1f);
+
+            // Xoay nhân vật mượt
+            Quaternion toRotation = Quaternion.LookRotation(moveDir, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
+            anim.SetBool("Attack", false);
+        }
+        else
+        {
+            // Không di chuyển → anim về 0
+            anim.SetFloat("Speed", 0f);
         }
     }
-
     // Hàm phát hiện enemy trong phạm vi tấn công
     public void AttackTrigle(){
         Collider[] colliders = Physics.OverlapSphere(transform.position, radiusAttackOfPlayer);     // Lấy tất cả các Collider xung quanh player trong bán kính radiusAttackOfPlayer
@@ -262,6 +277,7 @@ public class PlayerController : MonoBehaviour
             // Nếu player không di chuyển
             if (directionOfPlayer.sqrMagnitude < 0.001f){
                 targetEnemy = enemyCurrent.transform;
+                //weaponOfPlayer.SetActive(true);
                 anim.SetBool("Attack", true);
                 Vector3 directionEnemy = targetEnemy.position - transform.position;    // Tính toán hướng quay về target enemy
                 directionEnemy.y = 0;      // Giữ chiều cao không đổi
@@ -284,6 +300,7 @@ public class PlayerController : MonoBehaviour
 
     //Hàm bắn Enemy. Hàm này gọi trong event của animation
     public void Shooting(){
+        weaponOfPlayer.SetActive(false);
         GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);   // Tạo một viên đạn mới từ prefab tại vị trí firingTransform
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();     // Lấy component Bullet từ viên đạn vừa tạo
         directionOfPlayer = Vector3.zero;                           // Reset hướng di chuyển của player (hoặc hướng bắn) về Vector3.zero
@@ -351,7 +368,11 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, radiusAttackOfPlayer);
     }
-    public void SetOffAttack() => anim.SetBool("Attack", false);
+    public void SetOffAttack()
+    {
+        anim.SetBool("Attack", false);
+        weaponOfPlayer.SetActive(true);
+    }
     public void DestroyPlayer() => gameObject.SetActive(false);
     private void OnCollisionEnter(Collision collision){
         //Kiểm tra va chạm với Bullet của enemy

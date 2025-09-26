@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class Enemy : MonoBehaviour
 {
@@ -61,7 +60,8 @@ public class Enemy : MonoBehaviour
     public GameObject floatingTextPrefab; // kéo prefab vào trong Inspector
 
 
-    private void Awake(){
+    private void Awake()
+    {
         SetColorOfEnemy();
     }
 
@@ -76,7 +76,7 @@ public class Enemy : MonoBehaviour
         bulletPrefabs.transform.localScale = new Vector3(39, 39, 39);
     }
 
-    private void Update()
+    public void EnemyUpdate()
     {
         attackTimer -= Time.deltaTime;
         if (GameController.instance.playerController.isDead)
@@ -185,7 +185,7 @@ public class Enemy : MonoBehaviour
     //Hàm enemy bắn đạn 
     public void Shooting(){
         // Tạo viên đạn mới từ prefab tại vị trí firingTransform
-        GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);
+        GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, firingTransform.rotation);
         bulletObj.tag = "Bullet2"; // Gán tag cho bullet của enemy
 
         Bullet bulletScript = bulletObj.GetComponent<Bullet>(); // Lấy component Bullet từ viên đạn
@@ -194,10 +194,12 @@ public class Enemy : MonoBehaviour
 
         // Nếu enemy đang có trạng thái gift
         if (isEnemyGetGift){
+            bulletScript.isOffRotate = true;
             StartCoroutine(ScaleBullet(bulletObj, 39f, 100f, 1.0f)); // Scale viên đạn từ 39 lên 100 trong 1 giây
             detectionRange = 12f; // Tăng phạm vi phát hiện
         }
         else{
+            bulletScript.isOffRotate = false;
             bulletObj.transform.localScale = new Vector3(39, 39, 39); // Scale bình thường
             detectionRange = 8f; // Phạm vi phát hiện mặc định
         }
@@ -261,6 +263,7 @@ public class Enemy : MonoBehaviour
     //Hàm enemy khi bị tấn công 
     public void OnHit(){
         // Làm tối đi 50% so với màu gốc
+        GameController.instance.enemies.Remove(this);
         Color darkened = chosenColor * 0.65f;
         darkened.a = 1f; // giữ alpha = 1
         foreach (var item in render)
@@ -285,11 +288,12 @@ public class Enemy : MonoBehaviour
                 ft.GetComponent<FloatingText>().Setup("+1", Color.white);
             }
             // Nếu player đang có gift, bỏ qua va chạm giữa bullet và enemy
-            //if (GameController.instance.playerController.isGetGift) {
-                //Collider enemyCollider = GetComponent<Collider>();
-                //Collider bulletCollider = collision.collider;                   // collider của viên đạn
-                //if (enemyCollider != null && bulletCollider != null)
-                //    Physics.IgnoreCollision(enemyCollider, bulletCollider);     // Bỏ qua va chạm
+            //if (GameController.instance.playerController.isGetGift)
+            //{
+            //    Collider enemyCollider = GetComponent<Collider>();
+            //    Collider bulletCollider = collision.collider;                   // collider của viên đạn
+            //    if (enemyCollider != null && bulletCollider != null)
+            //        Physics.IgnoreCollision(enemyCollider, bulletCollider);     // Bỏ qua va chạm
             //}
             OnHit();
             GameController.instance.playerController.SetBulletPlayerDeufalt();
@@ -319,7 +323,7 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Gift")){
             isEnemyGetGift = true;
             Destroy(collision.gameObject);
-            //detectionRange = 12f;
+            detectionRange = 12f;
             //bulletPrefabs.transform.localScale = new Vector3(100, 100, 100);
         }
     }

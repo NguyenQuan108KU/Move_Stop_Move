@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Unity.VisualScripting;
@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
     public GameObject popupLose;
     public GameObject joystick;
     public bool isChecckWinLose;
+    public List<Enemy> enemies = new List<Enemy>();     // quản lý nhiều enemy
 
     private void Awake(){
         if (instance != null)
@@ -36,6 +37,12 @@ public class GameController : MonoBehaviour
         playerController.AttackTrigle();
         if(SceneManager.GetActiveScene().buildIndex != 4)
             playerController.UpLevel();
+
+        // Update tất cả Enemy
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].EnemyUpdate();
+        }
     }
     private void CheckWinOrLose(){
         if(enemyTotal <= 0 && !isChecckWinLose){

@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerCityController : MonoBehaviour
 {
     [Header("------------------Player Components------------------")]
+    public Rigidbody rb;
     public Animator anim;                   // Animator của nhân vật
     public Animator animTextOfLevelUp;      // Joystick chữ khi lên cấp
     public GameObject textOfAnimLevelUp;    // Chữ khi lên cấp
@@ -291,45 +292,47 @@ public class PlayerCityController : MonoBehaviour
     //Hàm di chuyển nhân vật
     public void PlayerMove()
     {
-        // Nếu đang trong trạng thái tấn công
         if (isAttack)
         {
-            attackTimer += Time.deltaTime;              // Tăng bộ đếm thời gian tấn công theo thời gian thực
+            attackTimer += Time.deltaTime;
 
-            // Nếu thời gian tấn công đã vượt quá attackDuration
             if (attackTimer >= attackDuration)
             {
-                isAttack = false;                       // Kết thúc trạng thái tấn công
-                anim.SetBool("Attack", false);          // Tắt animation tấn công
-                weaponOfPlayerCity.SetActive(true);     // Hiện lại vũ khí sau khi tấn công
-                target = null;                          // Reset mục tiêu
+                isAttack = false;
+                anim.SetBool("Attack", false);
+                weaponOfPlayerCity.SetActive(true);
+                target = null;
                 attackTimer = 0f;
             }
             else
             {
-                anim.SetFloat("Speed", 0);               // Trong khi tấn công thì nhân vật đứng yên (speed = 0)
+                anim.SetFloat("Speed", 0);
             }
         }
         else
         {
-            // Lấy giá trị đầu vào từ joystick để xác định hướng di chuyển
             directionOfPlayerCity.x = joystick.Horizontal;
             directionOfPlayerCity.z = joystick.Vertical;
             directionOfPlayerCity.y = 0;
-            transform.Translate(directionOfPlayerCity * moveSpeedOfPlayerCity * Time.deltaTime, Space.World);   // Di chuyển nhân vật theo hướng đã lấy được
-            anim.SetFloat("Speed", directionOfPlayerCity.sqrMagnitude);     // Gửi giá trị để điều khiển animation
 
-            // Nếu nhân vật thực sự có di chuyển (vector khác 0)
+            Vector3 moveDir = directionOfPlayerCity.normalized * moveSpeedOfPlayerCity * Time.deltaTime;
+
+            // ✅ Dùng MovePosition thay vì Translate
+            rb.MovePosition(rb.position + moveDir);
+
+            anim.SetFloat("Speed", directionOfPlayerCity.sqrMagnitude);
+
             if (directionOfPlayerCity.sqrMagnitude > 0.01f)
             {
                 Quaternion toRotation = Quaternion.LookRotation(directionOfPlayerCity, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
+                anim.SetBool("Attack", false);
             }
         }
     }
 
-    // Hàm phát hiện enemy trong phạm vi tấn công
-    public void AttackTrigle()
+        // Hàm phát hiện enemy trong phạm vi tấn công
+        public void AttackTrigle()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, radiusAttackOfPlayerCity);        // Tìm tất cả Collider trong bán kính attack của player
         Zombie firstEnemyDetected = null;      // Biến lưu enemy đầu tiên phát hiện

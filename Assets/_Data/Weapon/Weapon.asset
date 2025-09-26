@@ -21,6 +21,7 @@ MonoBehaviour:
     - {fileID: 8851604348056092488, guid: 9551e651ab267384bb59240af5602e0b, type: 3}
     - {fileID: 8851604348056092488, guid: 5eba73daba1ed904b8232424074b8eb1, type: 3}
     - {fileID: 8851604348056092488, guid: c92f7769884ca734c9250ed1926ea77a, type: 3}
+    weaponOfPlayer: {fileID: 1125302235325512758, guid: 931cef110f8d0f141923e5334b520f9d, type: 3}
     weaponName: Hammer
     weaponImage:
     - {fileID: 0}
@@ -39,6 +40,7 @@ MonoBehaviour:
   - index: Weapon_1
     weaponPrefabs:
     - {fileID: 6358860364772535444, guid: 7cc48d8ed5d9dc44694b43f6bd782001, type: 3}
+    weaponOfPlayer: {fileID: 0}
     weaponName: Candy
     weaponImage:
     - {fileID: 21300000, guid: ea1caec6a91f5e14b8c2f6e8a274a099, type: 3}
@@ -57,6 +59,7 @@ MonoBehaviour:
     - {fileID: 4594828768263470782, guid: ea76f87072e3cc846ba9aafb5daf9a16, type: 3}
     - {fileID: 4594828768263470782, guid: eec43da837623844f92f0e30f41813a3, type: 3}
     - {fileID: 4594828768263470782, guid: 34d14443fc14c8349ab64bd8ef6f44d7, type: 3}
+    weaponOfPlayer: {fileID: 9100914016366931606, guid: ec89cb1b4b78d6741b7cb692b7770922, type: 3}
     weaponName: Arrow
     weaponImage:
     - {fileID: 0}
@@ -75,6 +78,7 @@ MonoBehaviour:
   - index: Weapon_3
     weaponPrefabs:
     - {fileID: 5346216770361563965, guid: 9e529fdd11759014bbe67df0dacecc26, type: 3}
+    weaponOfPlayer: {fileID: 0}
     weaponName: Axe
     weaponImage:
     - {fileID: 21300000, guid: fa6cc6f9f8905c24d8c45a091e8ce615, type: 3}
@@ -93,6 +97,7 @@ MonoBehaviour:
     - {fileID: 834039078286461731, guid: 5c31651f72b9b4446968d4c13f9e3d77, type: 3}
     - {fileID: 834039078286461731, guid: 3863f79af70a0fc498a077a7fe92916a, type: 3}
     - {fileID: 834039078286461731, guid: 964e84cc8ceb61f4e8ca266cf5003b49, type: 3}
+    weaponOfPlayer: {fileID: 2081694178688184959, guid: c30bc0a522740db4e8ce2715885e7303, type: 3}
     weaponName: Knife
     weaponImage:
     - {fileID: 0}

@@ -14,6 +14,7 @@ public class ZombieCityController : MonoBehaviour
     public GameObject popupLose;
     public int zombieTotal;        //Tổng số enemy
     public bool isCheckWinLose;   //Check xem cos win lose không
+    public List<Zombie> zombies = new List<Zombie>();
     private void Awake(){
         if (instance != null)
             Destroy(instance.gameObject);
@@ -27,7 +28,6 @@ public class ZombieCityController : MonoBehaviour
         CheckWinOrLoseCity();
         // Nếu player đã chết thì ngừng update
         if (playerCityController.isDead) return;
-        playerCityController.PlayerMove();
         playerCityController.AttackTrigle();
         //Tăng level player
         playerCityController.UpLevel();
@@ -50,6 +50,16 @@ public class ZombieCityController : MonoBehaviour
         // ================== Xử lý Vũ khí xoay khi load game ==================
         if (playerCityController.weaponLoadOfMenu != null)
             playerCityController.WeaponRotateWhenStartGame();
+
+        for (int i = 0; i < zombies.Count; i++)
+        {
+            zombies[i].ZombieUpdate();
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (playerCityController.isDead) return;
+        playerCityController.PlayerMove();
     }
     private void CheckWinOrLoseCity(){
         if (ZombieCityController.instance.playerCityController.isDead && !isCheckWinLose){

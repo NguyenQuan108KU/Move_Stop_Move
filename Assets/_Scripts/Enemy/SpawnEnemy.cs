@@ -16,7 +16,7 @@ public class SpawnEnemy : MonoBehaviour
     private float _timeUnitSpawn;
 
     [Header("------------------Runtime Enemy List------------------")]
-    private List<GameObject> _enemyList = new List<GameObject>(); // danh sách quản lý enemy
+    private List<Enemy> _enemyList = new List<Enemy>(); // danh sách quản lý enemy
     private void Awake(){
         SetTimeUnit();      // Khởi tạo thời gian spawn ngẫu nhiên ban đầu
     }
@@ -27,7 +27,9 @@ public class SpawnEnemy : MonoBehaviour
         if (_timeUnitSpawn < 0 && _enemyList.Count < maxEnemyCount){
             Vector3 spawnPos = transform.position +
                                new Vector3(Random.Range(-40, 40), 0, Random.Range(-25, 40));     // Random vị trí spawn quanh vị trí gốc của SpawnEnemy
-            GameObject enemy = Instantiate(_enemyPrefabs, spawnPos, Quaternion.identity);        // Tạo enemy mới và thêm vào danh sách quản lý
+            //GameObject enemy = Instantiate(_enemyPrefabs, spawnPos, Quaternion.identity);        // Tạo enemy mới và thêm vào danh sách quản lý
+            Enemy enemy = Instantiate(_enemyPrefabs, spawnPos, Quaternion.identity).GetComponent<Enemy>();
+            GameController.instance.enemies.Add(enemy);
             _enemyList.Add(enemy);
             SetTimeUnit();      // Reset lại thời gian chờ cho lần spawn tiếp theo
         }

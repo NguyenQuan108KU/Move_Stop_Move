@@ -60,6 +60,6 @@ public class CameraFollow : MonoBehaviour
                 targetFOV = 70f; // FOV bình thường
             }
         }
-        mainCamera.fieldOfView = Mathf.SmoothDamp(mainCamera.fieldOfView, targetFOV, ref fovVelocity, 0.6f);            // SmoothDamp FOV → chuyển đổi mượt giữa FOV hiện tại và target
+        mainCamera.fieldOfView = Mathf.SmoothDamp(mainCamera.fieldOfView, targetFOV, ref fovVelocity, 0.3f);            // SmoothDamp FOV → chuyển đổi mượt giữa FOV hiện tại và target
     }
 }

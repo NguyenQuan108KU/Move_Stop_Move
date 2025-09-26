@@ -67906,15 +67906,15 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.45714286
-    functionName: SetOffAttack
+  - time: 0.14285715
+    functionName: SetBulletPlayerDeufalt
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.47142857
-    functionName: SetBulletPlayerDeufalt
+  - time: 0.45714286
+    functionName: SetOffAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

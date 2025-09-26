@@ -33,16 +33,20 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject, destroyTimer); // dùng destroyTimer thay vì fix 1f
     }
 
-    public void SetTarget(Transform _target){
-        if (_target != null){
-            // Chỉ lấy hướng 1 lần rồi lưu lại
+    public void SetTarget(Transform _target)
+    {
+        if (_target != null)
+        {
+            // lấy hướng chính xác theo firingTransform thay vì chỉ tính từ vị trí
             shootDirection = (_target.position - transform.position).normalized;
         }
-        else{
-            // Nếu target null, cho đạn bay thẳng về phía trước
-            shootDirection = transform.forward;
+        else
+        {
+            shootDirection = transform.forward; // fallback
         }
+        rb.velocity = shootDirection * bulletSpeed; // set velocity ngay khi spawn
     }
+
 
     public void SetOwner(GameObject ownerObj){
         owner = ownerObj;
@@ -94,7 +98,11 @@ public class Bullet : MonoBehaviour
             transform.rotation = Quaternion.Euler(90, 0, Time.time * speedRotation);
         }
     }
-
+    private IEnumerator SwitchToTrigger()
+    {
+        yield return null; // chờ 1 frame để Unity update
+        GetComponent<CapsuleCollider>().isTrigger = true;
+    }
     private void OnCollisionEnter(Collision collision) {
 
         if (collision.gameObject == owner){
@@ -108,9 +116,11 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy")){
             if (GameController.instance.playerController.isGetGift)
             {
-                gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+                Debug.Log("Destroy");
+                StartCoroutine(SwitchToTrigger());
                 return;
             }
+            Debug.Log("UnDestroy");
             Destroy(gameObject);
         }
 

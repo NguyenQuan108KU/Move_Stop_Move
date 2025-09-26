@@ -58,7 +58,7 @@ public class Zombie : MonoBehaviour
         
     }
 
-    void Update(){
+    public void ZombieUpdate(){
         float distance = Vector3.Distance(transform.position, target.position);
         if (ZombieCityController.instance.playerCityController.isOffPlayer || isDead){
             agent.ResetPath();                  // Xóa đường đi của NavMeshAgent

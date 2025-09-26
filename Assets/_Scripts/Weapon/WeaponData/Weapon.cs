@@ -7,6 +7,7 @@ public class Weapon
 {
     public string index;
     public List<GameObject> weaponPrefabs;
+    public GameObject weaponOfPlayer;
     public string weaponName;
     public List<Sprite> weaponImage;
     public string coin;
