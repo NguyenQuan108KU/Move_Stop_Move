@@ -2122,7 +2122,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.25767824, y: 0.5063365, z: 0.6844538}
-  m_Center: {x: 0.004397571, y: 0.24683282, z: 0.08905592}
+  m_Center: {x: 0.004397571, y: 0.3, z: 0.08905592}
 --- !u!54 &4800684140576098254
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2179,6 +2179,7 @@ MonoBehaviour:
   isBossLevel3: 0
   countAttackZombie: 0
   floatingTextPrefab: {fileID: 6620629643112542043, guid: 5f0b04e44f96762489bb7cd766e0ce53, type: 3}
+  poinOdBoss: 0
 --- !u!195 &4518140839592842376
 NavMeshAgent:
   m_ObjectHideFlags: 0

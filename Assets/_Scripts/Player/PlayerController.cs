@@ -317,8 +317,15 @@ public class PlayerController : MonoBehaviour
             bulletObj.transform.localScale = new Vector3(39, 39, 39);  // Nếu không có gift, đặt scale viên đạn cố định
             bulletScript.isOffRotate = false;                          // Tắt để viên đạn xoay như bình thường
         }
+        if(isGetGift)
+            StartCoroutine(AutoSetDefaultBullet(1f));
     }
-
+    private IEnumerator AutoSetDefaultBullet(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        // gọi reset từ player
+        SetBulletPlayerDeufalt();
+    }
     //Hàm thay đổi kích thước bullet mượt mà theo thời gian.
     private IEnumerator ScaleBullet(GameObject bullet, float startScale, float endScale, float duration){
         float time = 0f;

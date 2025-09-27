@@ -171,6 +171,7 @@ public class Zombie : MonoBehaviour
         }
     }
     public void EnemyDie() {
+        ZombieCityController.instance.zombies.Remove(this);
         // Tạo hiệu ứng particle khi enemy chết
         GameObject effect = Instantiate(praticleSystemEnemyDie);
         effect.transform.rotation = Quaternion.identity; // đặt rotation mặc định

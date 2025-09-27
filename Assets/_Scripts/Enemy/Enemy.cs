@@ -216,7 +216,8 @@ public class Enemy : MonoBehaviour
         while (elapsedTime < duration){
             elapsedTime += Time.deltaTime; // Cộng dồn thời gian trôi qua
             float scale = Mathf.Lerp(startScale, endScale, elapsedTime / duration);          //Tămg scale từ startScale → endScale
-            bullet.transform.localScale = new Vector3(scale, scale, scale); // Áp dụng scale đồng đều cho 3 trục
+            if (bullet != null)
+                bullet.transform.localScale = new Vector3(scale, scale, scale); // Áp dụng scale đồng đều cho 3 trục
             yield return null; 
         }
         bullet.transform.localScale = new Vector3(endScale, endScale, endScale); // Đảm bảo scale cuối chính xác

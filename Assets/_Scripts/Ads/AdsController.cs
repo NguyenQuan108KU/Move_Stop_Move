@@ -15,9 +15,6 @@ public class AdsController : MonoBehaviour
     private string rewardedAdUnitId    = "27d9b6b0a66055c4"; // iOS Rewarded
     private string bannerAdUnitId      = "94a79256a48fa6a8"; // iOS Banner
 #endif
-    private string interstitialAdUnitId = "08a4c2ee787148e7"; // Android Interstitial
-    private string rewardedAdUnitId = "cfce02e40fcc205d"; // Android Rewarded
-    private string bannerAdUnitId = "867edadc74688fae"; // Android Banner
 
     private void Awake()
     {

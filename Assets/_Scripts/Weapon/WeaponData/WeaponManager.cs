@@ -30,8 +30,6 @@ public class WeaponManager : MonoBehaviour
 
     public GameObject button;
     public bool isTouch = false;
-    //public Sprite gift;
-    //public Sprite gift_lock;
 
     public int indexGift;
 
@@ -42,7 +40,6 @@ public class WeaponManager : MonoBehaviour
 
     public GameObject[] buttons;
     public int indexWeapon;  //Vị trí của weapon
-    public RectTransform rawImageRect;
 
 
     //--------------Custom----------------
@@ -69,7 +66,6 @@ public class WeaponManager : MonoBehaviour
     public GameObject weaponPrefabs;
     public Transform weaponAnchor;
 
-    public GameObject bommerang;
     public GameObject anchorWeapon;
 
     [Header("---------------------Weapon Ouline Select----------------------")]
@@ -433,7 +429,7 @@ public class WeaponManager : MonoBehaviour
         {
             imageWeaponss.SetActive(true);
             //listColor.SetActive(false);
-            textureImage.SetActive(false);
+            //textureImage.SetActive(false);
         }
     }
     public void SetColorOfWeapon(int indexColor)
@@ -562,14 +558,14 @@ public class WeaponManager : MonoBehaviour
         weaponButtonColor.GetComponent<MeshFilter>().mesh = listRawImage[selectedOption];
         if (selectedOption == 0)
         {
-            rawImageRectOfButton.localPosition = new Vector3(-10.1f, -2.7f, -29.24f);
+            rawImageRectOfButton.localPosition = new Vector3(-9.4f, -0.8f, -29.24f);
             rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 11.9f, 72f);
             rawImageRectOfButton.sizeDelta = new Vector2(150, 150);
             waeponButton.transform.localScale = new Vector3(3500, 3500, 3500);
         }
         if (selectedOption == 2)
         {
-            rawImageRectOfButton.localPosition = new Vector3(3.1f, -3.3f, -29.24f);
+            rawImageRectOfButton.localPosition = new Vector3(9.3f, -0.3f, -29.24f);
             rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 11.9f, 72f);
             waeponButton.transform.localScale = new Vector3(9000, 3500, 3500);
         }
@@ -578,7 +574,7 @@ public class WeaponManager : MonoBehaviour
             rawImageRectOfButton.localPosition = new Vector3(-9f, 1f, -29.24f);
             waeponButton.transform.localScale = new Vector3(2750, 2750, 2750);
             rawImageRectOfButton.sizeDelta = new Vector2(150, 150f);
-            rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 11.9f, -12f);
+            rawImageRectOfButton.localRotation = Quaternion.Euler(1.434f, 11.815f, -18.826f);
         }
 
         if (selectedOption == 5)

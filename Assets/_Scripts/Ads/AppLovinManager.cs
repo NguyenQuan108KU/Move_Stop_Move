@@ -14,7 +14,7 @@ public class AppLovinManager : MonoBehaviour
 
             // Sau khi SDK init xong thì load quảng cáo
             AdsController.Instance.InitializeAds();
-            //AdsController.Instance.ShowBanner();
+            AdsController.Instance.ShowBanner();
         };
 
         MaxSdk.InitializeSdk();

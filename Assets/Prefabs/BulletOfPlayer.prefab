@@ -101,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  capsualColider: {fileID: 8284754304695498836}
   bulletSpeed: 12
   speedRotation: 1000
   shootDirection: {x: 0, y: 0, z: 0}

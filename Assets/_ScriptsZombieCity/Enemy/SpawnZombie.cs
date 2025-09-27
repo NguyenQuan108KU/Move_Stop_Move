@@ -46,7 +46,7 @@ public class SpawnZombie : MonoBehaviour
     void SpawnEnemy()
     {
         Vector3 spawnPos = GetRandomNavmeshPosition(player.position, minDistance, maxDistance);
-        GameObject enemy = null;
+        Zombie enemy = null;
 
         // Tính hướng nhìn về player
         Quaternion lookRotation = Quaternion.LookRotation(player.position - spawnPos);
@@ -54,11 +54,13 @@ public class SpawnZombie : MonoBehaviour
         if (spawnedTotal < totalEnemiesToSpawn - 1)  // 14 con đầu
         {
             int indexEnemy = Random.Range(0, 2); // random enemy thường
-            enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, lookRotation);
+            enemy = Instantiate(enemyPrefabList[indexEnemy], spawnPos, lookRotation).GetComponent<Zombie>();
+            ZombieCityController.instance.zombies.Add(enemy);
         }
         else if (spawnedTotal == totalEnemiesToSpawn - 1) // Con cuối cùng (Boss)
         {
-            enemy = Instantiate(enemyPrefabList[4], spawnPos, lookRotation);
+            enemy = Instantiate(enemyPrefabList[4], spawnPos, lookRotation).GetComponent<Zombie>();
+            ZombieCityController.instance.zombies.Add(enemy);
         }
 
         if (enemy != null)

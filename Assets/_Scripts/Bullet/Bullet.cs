@@ -5,6 +5,7 @@ public class Bullet : MonoBehaviour
 {
     private Rigidbody rb;
     public Transform target;
+    public CapsuleCollider capsualColider;
     //public WeaponData weaponData;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float speedRotation;
@@ -30,7 +31,7 @@ public class Bullet : MonoBehaviour
 
     private void Start(){
         startPos = transform.position; // lưu vị trí ban đầu
-        Destroy(gameObject, destroyTimer); // dùng destroyTimer thay vì fix 1f
+        StartCoroutine(AutoDestroyAfterDelay(1f)); // gọi coroutine thay vì Destroy trực tiếp
     }
 
     public void SetTarget(Transform _target)
@@ -46,8 +47,6 @@ public class Bullet : MonoBehaviour
         }
         rb.velocity = shootDirection * bulletSpeed; // set velocity ngay khi spawn
     }
-
-
     public void SetOwner(GameObject ownerObj){
         owner = ownerObj;
     }
@@ -98,10 +97,10 @@ public class Bullet : MonoBehaviour
             transform.rotation = Quaternion.Euler(90, 0, Time.time * speedRotation);
         }
     }
-    private IEnumerator SwitchToTrigger()
+    private IEnumerator AutoDestroyAfterDelay(float delay)
     {
-        yield return null; // chờ 1 frame để Unity update
-        GetComponent<CapsuleCollider>().isTrigger = true;
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
     }
     private void OnCollisionEnter(Collision collision) {
 
@@ -114,14 +113,17 @@ public class Bullet : MonoBehaviour
         }
 
         if (collision.gameObject.CompareTag("Enemy")){
+            Debug.Log("isGetGift = " + GameController.instance.playerController.isGetGift);
             if (GameController.instance.playerController.isGetGift)
             {
                 Debug.Log("Destroy");
-                StartCoroutine(SwitchToTrigger());
-                return;
+                capsualColider.isTrigger = true;
             }
+            else
+            {
             Debug.Log("UnDestroy");
             Destroy(gameObject);
+            }
         }
 
         if (collision.gameObject.CompareTag("EnemyController")) {

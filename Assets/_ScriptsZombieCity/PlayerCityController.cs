@@ -119,6 +119,7 @@ public class PlayerCityController : MonoBehaviour
             SetHatOfPlayer();
         }
         SetWeaponOfPlayer();
+        LoadFunction();
     }
     //void Update(){
     //    // Nếu player đã chết thì ngừng update
@@ -628,14 +629,15 @@ public class PlayerCityController : MonoBehaviour
         countProtect += 1;
         textCount.text = countProtect.ToString();
         isProtectPlayer = true;
+        PlayerPrefs.SetInt("ProtectPlayer", countProtect);
     }
-
     //Tăng tốc độ player
     public void FunctionUpVelocity()
     {
         countSpeed += 10;
         textOfCountSpeed.text = countSpeed.ToString();
         moveSpeedOfPlayerCity = moveSpeedOfPlayerCity + (moveSpeedOfPlayerCity * 0.2f);
+        PlayerPrefs.SetInt("UpVelocity", countSpeed);
     }
 
     // Tăng phạm vi tấn công 
@@ -646,8 +648,27 @@ public class PlayerCityController : MonoBehaviour
         radiusAttackOfPlayerCity = 6.0f;
         isSetCircle = true;
         textCircleRange.text = sizeCircle.ToString();
+        PlayerPrefs.SetInt("RangeAttack", sizeCircle);
     }
-
+    public void LoadFunction()
+    {
+        //Load vòng tròn bảo vệ
+        countProtect = PlayerPrefs.GetInt("ProtectPlayer");
+        textCount.text = countProtect.ToString();
+        if (countProtect != 0)
+            isProtectPlayer = true;
+        //Load tốc độ player
+        countSpeed = PlayerPrefs.GetInt("UpVelocity");
+        textOfCountSpeed.text = countSpeed.ToString();
+        moveSpeedOfPlayerCity = moveSpeedOfPlayerCity + (moveSpeedOfPlayerCity * 0.2f);
+        //Load phạm vi tấn công
+        sizeCircle = PlayerPrefs.GetInt("RangeAttack", sizeCircle);
+        drawCircle.radius = 6.0f;
+        radiusAttackOfPlayerCity = 6.0f;
+        textCircleRange.text = sizeCircle.ToString();
+        if(countProtect != 0)
+            isSetCircle = true;
+    }
     // Quay vũ khí khi vào game
     public void WeaponRotateWhenStartGame()
     {
