@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ApplyFullSetOfPlayer : MonoBehaviour
@@ -9,9 +10,12 @@ public class ApplyFullSetOfPlayer : MonoBehaviour
     public PantsManager pantManager;
     public ClothesManager skinManager;
     public WeaponManager weaponManager;
+    public TextMeshProUGUI textOfPlayer;
+    public int coinOfPlayer;
     private void Start()
     {
-        if(DataManager.Ins.gameSave.idSkin != "Skin_2")
+        SetCoinPlayer();
+        if (DataManager.Ins.gameSave.idSkin != "Skin_2")
         {
             hatManager.isSetHat = false;
             shieldManager.isSetShield = false;
@@ -26,5 +30,11 @@ public class ApplyFullSetOfPlayer : MonoBehaviour
             hatManager.SetHatOfPlayer();
         }
         weaponManager.LoadColorOfWeapon(PlayerPrefs.GetInt("SelectOption"));
+        weaponManager.SetWeaponStartGame();
+    }
+    public void SetCoinPlayer()
+    {
+        coinOfPlayer = DataManager.Ins.gameSave.coin;
+        textOfPlayer.text = coinOfPlayer.ToString();
     }
 }

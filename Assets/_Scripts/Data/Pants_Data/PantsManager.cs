@@ -34,26 +34,49 @@ public class PantsManager : MonoBehaviour
 
     public GameObject equippedPrefab;
     private GameObject currentEquipped;
-
+    public GameObject lockOfHat;
+    public TextMeshProUGUI coinOfPant;
+    public TextMeshProUGUI textOfPlayer;
+    public ApplyFullSetOfPlayer playerInfo;
     public bool isSetPant;
     [Header("-------------------Player Data-------------------")]
     public int coinOfPlayer;                //Tiền của người chơi 
     private void Start(){
         EquippedClothes(list_Buttons[PlayerPrefs.GetInt("IndexChoosePant")].transform);
         StateOfButton(PlayerPrefs.GetInt("IndexChoosePant"));
-        coinOfPlayer = DataManager.Ins.gameSave.coin;       //Lấy tiền từ dữ liệu 
+        coinOfPlayer = DataManager.Ins.gameSave.coin;
+        textOfPlayer.text = coinOfPlayer.ToString();
         //Duyệt qua từng nút
         for (int i = 0; i < list_Buttons.Length; i++)
         {
             int index = i;
             list_Buttons[index].onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
             {
+                coinOfPant.text = pantsDatabases.pants[index].coinOfPant.ToString();
                 currentButtonIndex = index;                //Lưu lại index của từng nút button khi click 
                 StatePaintOfPlayer(currentButtonIndex);      //Set trạng thái quần cho nhân vật khi click (set khi ấn vào các nút button quần)
                 StateOfButton(currentButtonIndex);         //Trạng thái (mua/chưa mua) cho button
                 RefreshActionButton();
                 OnButtonClicked(list_Buttons[index].transform);
             }));
+        }
+    }
+    public void SetLock()
+    {
+        for (int i = 0; i < list_Buttons.Length; i++)
+        {
+            string pantName = pantsDatabases.pants[i].index;
+            Transform buttonTransform = list_Buttons[i].transform;
+            Transform oldLock = buttonTransform.Find("LockIcon");
+            if (oldLock != null)
+            {
+                Destroy(oldLock.gameObject);
+            }
+            if (!DataManager.Ins.gameSave.objectsBought.Contains(pantName))
+            {
+                GameObject newLock = Instantiate(lockOfHat, buttonTransform);
+                newLock.name = "LockIcon"; // đặt tên để dễ tìm & xóa
+            }
         }
     }
     private void OnButtonClicked(Transform buttonTransform)
@@ -66,6 +89,7 @@ public class PantsManager : MonoBehaviour
         // Sinh viền mới làm con của button
         currentBorder = Instantiate(borderPrefab, buttonTransform);
     }
+
 
     public void EquippedClothes(Transform buttonTransform)
     {
@@ -125,16 +149,33 @@ public class PantsManager : MonoBehaviour
         if(coinOfPlayer >= coinOfPant)
         {
             coinOfPlayer -= coinOfPant;
-            PlayerPrefs.SetInt("coinMoney", coinOfPlayer);
+            DataManager.Ins.gameSave.coin = coinOfPlayer;
+            DataManager.Ins.SaveGame();
+            textOfPlayer.text = coinOfPlayer.ToString();
+            playerInfo.SetCoinPlayer();
             if (!DataManager.Ins.gameSave.objectsBought.Contains(pantName))
             {
                 DataManager.Ins.gameSave.objectsBought.Add(pantName);
             }
             DataManager.Ins.SaveGame();
+            SetLock();
             buyByAds.SetActive(false);
             buyByCoin.SetActive(false);
             selectPaint.SetActive(true);
         }
+    }
+    public void BuyPantByAds()
+    {
+        string pantName = pantsDatabases.pants[currentButtonIndex].index;
+        if (!DataManager.Ins.gameSave.objectsBought.Contains(pantName))
+        {
+            DataManager.Ins.gameSave.objectsBought.Add(pantName);
+        }
+        DataManager.Ins.SaveGame();
+        SetLock();
+        buyByAds.SetActive(false);
+        buyByCoin.SetActive(false);
+        selectPaint.SetActive(true);
     }
 
     //Set trạng thái của button nếu đã mua quần thì sẽ chỉ hiển thị nút để select nếu chưa mua thì hiển thị 2 nút mua (mua bằng tiền hoặc xem quảng cáo)
@@ -221,6 +262,7 @@ public class PantsManager : MonoBehaviour
     }
     public void DisplayOptionPant()
     {
+        SetLock();
         isSetPant = DataManager.Ins.gameSave.isSetPant;
         if (isSetPant)
         {

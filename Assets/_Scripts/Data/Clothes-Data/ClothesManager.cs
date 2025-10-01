@@ -50,22 +50,47 @@ public class ClothesManager : MonoBehaviour
 
     public GameObject equippedPrefab;
     private GameObject currentEquipped;
+    public GameObject lockOfHat;
+    public TextMeshProUGUI coinOfSkin;
+    public TextMeshProUGUI textOfPlayer;
+    public ApplyFullSetOfPlayer playerInfo;
+
     private void Start()
     {
         EquippedClothes(list_Buttons[PlayerPrefs.GetInt("IndexChooseClothes")].transform);
         StateOfButton(PlayerPrefs.GetInt("IndexChooseClothes"));
-        coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
+        coinOfPlayer = DataManager.Ins.gameSave.coin;
+        textOfPlayer.text = coinOfPlayer.ToString();
         for (int i = 0; i < list_Buttons.Length; i++)
         {
             int index = i;
             list_Buttons[index].GetComponent<Button>().onClick.AddListener(() =>
             {
+                coinOfSkin.text = skinDatabases.skin[index].coinOfSkin.ToString();
                 currentButtonIndex = index;
                 StateSkinOfPlayer(currentButtonIndex);
                 StateOfButton(currentButtonIndex);
                 RefreshActionButton();
                 OnButtonClicked(list_Buttons[index].transform);
             });
+        }
+    }
+    public void SetLock()
+    {
+        for (int i = 0; i < list_Buttons.Length; i++)
+        {
+            string skinName = skinDatabases.skin[i].index;
+            Transform buttonTransform = list_Buttons[i].transform;
+            Transform oldLock = buttonTransform.Find("LockIcon");
+            if (oldLock != null)
+            {
+                Destroy(oldLock.gameObject);
+            }
+            if (!DataManager.Ins.gameSave.objectsBought.Contains(skinName))
+            {
+                GameObject newLock = Instantiate(lockOfHat, buttonTransform);
+                newLock.name = "LockIcon"; // đặt tên để dễ tìm & xóa
+            }
         }
     }
     private void OnButtonClicked(Transform buttonTransform)
@@ -137,16 +162,33 @@ public class ClothesManager : MonoBehaviour
         if (coinOfPlayer >= coinOfHat)
         {
             coinOfPlayer -= coinOfHat;
-            PlayerPrefs.SetInt("coinMoney", coinOfPlayer);
+            DataManager.Ins.gameSave.coin = coinOfPlayer;
+            DataManager.Ins.SaveGame();
+            textOfPlayer.text = coinOfPlayer.ToString();
+            playerInfo.SetCoinPlayer();
             if (!DataManager.Ins.gameSave.objectsBought.Contains(skinName))
             {
                 DataManager.Ins.gameSave.objectsBought.Add(skinName);
             }
+            SetLock();
             DataManager.Ins.SaveGame();
             buyByAds.SetActive(false);
             buyByCoin.SetActive(false);
             selectPaint.SetActive(true);
         }
+    }
+    public void BuyClothesByAds()
+    {
+        string skinName = skinDatabases.skin[currentButtonIndex].index;
+        if (!DataManager.Ins.gameSave.objectsBought.Contains(skinName))
+        {
+            DataManager.Ins.gameSave.objectsBought.Add(skinName);
+        }
+        SetLock();
+        DataManager.Ins.SaveGame();
+        buyByAds.SetActive(false);
+        buyByCoin.SetActive(false);
+        selectPaint.SetActive(true);
     }
     public void StateOfButton(int index)
     {
@@ -254,6 +296,7 @@ public class ClothesManager : MonoBehaviour
     }
     public void DisplayOptionClothes()
     {
+        SetLock();
         isSetClothes = DataManager.Ins.gameSave.isSetClothes;
         if (isSetClothes)
         {

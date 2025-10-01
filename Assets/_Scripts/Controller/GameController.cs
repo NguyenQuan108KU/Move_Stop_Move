@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
             instance = this;
     }
     private void Start(){
+        AdsController.Instance.ShowInterstitial();
         playerController.Init();
     }
     private void Update() {

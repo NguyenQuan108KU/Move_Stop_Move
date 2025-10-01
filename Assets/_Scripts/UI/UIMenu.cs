@@ -24,7 +24,6 @@ public class UIMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        coinOfPlayerText.text = score.ToString();
         scoreMenu.text = score.ToString();
     }
 }

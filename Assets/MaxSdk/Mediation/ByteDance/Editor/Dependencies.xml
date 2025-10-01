@@ -8,6 +8,6 @@
         </androidPackage>
     </androidPackages>
     <iosPods>
-        <iosPod name="AppLovinMediationByteDanceAdapter" version="7.6.0.5.0" />
+        <iosPod name="AppLovinMediationByteDanceAdapter" version="7.6.0.6.0" />
     </iosPods>
 </dependencies>

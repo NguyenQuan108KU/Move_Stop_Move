@@ -1,0 +1,28 @@
+{
+  "buildFiles": [
+    "E:\\Move_Stop_Move-master\\Library\\Bee\\Android\\Prj\\Mono2x\\Gradle\\unityLibrary\\src\\main\\cpp\\CMakeLists.txt",
+    "E:\\Move_Stop_Move-master\\Library\\Bee\\Android\\Prj\\Mono2x\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.0.58f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\SDK\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "E:\\Move_Stop_Move-master\\.utmp\\RelWithDebInfo\\5q6az213\\armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Program Files\\Unity\\Hub\\Editor\\6000.0.58f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\SDK\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "E:\\Move_Stop_Move-master\\.utmp\\RelWithDebInfo\\5q6az213\\armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "swappywrapper::@7e25bd1f32ce224db4e9": {
+      "artifactName": "swappywrapper",
+      "abi": "armeabi-v7a",
+      "output": "E:\\Move_Stop_Move-master\\Library\\Bee\\Android\\Prj\\Mono2x\\Gradle\\unityLibrary\\build\\intermediates\\cxx\\RelWithDebInfo\\5q6az213\\obj\\armeabi-v7a\\libswappywrapper.so",
+      "runtimeFiles": []
+    }
+  }
+}

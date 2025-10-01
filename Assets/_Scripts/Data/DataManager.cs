@@ -15,7 +15,6 @@ public class DataManager : MonoBehaviour
         Init();
         LoadData();
     }
-
     void OnApplicationPause(bool pause)
     {
         if (pause == true)

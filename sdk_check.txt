@@ -1,0 +1,7 @@
+Assets\Plugins\Android\AndroidManifest.xml:9:        android:targetSdkVersion="33"
+Assets\Plugins\Android\FirebaseApp.androidlib\AndroidManifest.xml:10:        android:targetSdkVersion="35"
+Library\Bee\Android\Prj\Mono2x\Gradle\launcher\build\intermediates\merged_manifest\release\AndroidManifest.xml:10:        android:targetSdkVersion="35" />
+Library\Bee\Android\Prj\Mono2x\Gradle\launcher\build\intermediates\merged_manifests\release\AndroidManifest.xml:10:        android:targetSdkVersion="35" />
+Library\Bee\Android\Prj\Mono2x\Gradle\launcher\build\intermediates\packaged_manifests\release\AndroidManifest.xml:10:        android:targetSdkVersion="35" />
+Library\Bee\Android\Prj\Mono2x\Gradle\unityLibrary\FirebaseApp.androidlib\AndroidManifest.xml:10:        android:targetSdkVersion="35"
+Library\Bee\Android\Prj\Mono2x\Gradle\unityLibrary\src\main\AndroidManifest.xml:28:  <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="33" tools:overrideLibrary="com.bytedance.sdk.openadsdk,com.appsflyer,com.google.firebase,com.google.android.gms" />

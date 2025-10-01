@@ -19,14 +19,14 @@ MonoBehaviour:
     hatOfSkin: {fileID: 1058863301665930347, guid: 8098278917afcae4f81d62d3ac19e06c, type: 3}
     wingOfSkin: {fileID: 6424705011471079262, guid: 3de2977820c85504789e51a4e454e6e5, type: 3}
     tailOfSkin: {fileID: 6866461502800713663, guid: 12ece4c1d5343fd408fd22e7a6b0a957, type: 3}
-    coinOfSkin: 0
+    coinOfSkin: 200
   - index: Skin_1
     materialOfPlayer: {fileID: 2100000, guid: 7dd9f024d93b487428c92fd24f064dea, type: 2}
     shieldOfSkin: {fileID: 1880410114275716194, guid: f444192f66cdc724cb2b8c227724a8c7, type: 3}
     hatOfSkin: {fileID: 9168045333485960538, guid: eb137fdcb65f88f4dbeb9f11f2aa29da, type: 3}
     wingOfSkin: {fileID: 6675778354231890987, guid: 8f8cb95f92dc3a445af443b10ebd8449, type: 3}
     tailOfSkin: {fileID: 7981662611222844123, guid: a8bc3cbce4d35f64ca9ef21eae016657, type: 3}
-    coinOfSkin: 0
+    coinOfSkin: 250
   - index: Skin_2
     materialOfPlayer: {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
     shieldOfSkin: {fileID: 2340230732749417142, guid: 2bcff3b76be5e65439e9daf215796df8, type: 3}

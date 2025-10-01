@@ -37,10 +37,16 @@ public class ShieldManager : MonoBehaviour
 
     public GameObject equippedPrefab;
     private GameObject currentEquipped;
+    public GameObject lockOfHat;
+
+    public TextMeshProUGUI textOfPlayer;
+    public ApplyFullSetOfPlayer playerInfo;
     private void Start()
     {
         EquippedClothes(list_Buttons[PlayerPrefs.GetInt("IndexChooseShield")].transform);
         StateOfButton(PlayerPrefs.GetInt("IndexChooseShield"));
+        coinOfPlayer = DataManager.Ins.gameSave.coin;
+        textOfPlayer.text = coinOfPlayer.ToString();
         //SetShieldOfPlayer();
         coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
         for (int i = 0; i < list_Buttons.Length; i++)
@@ -48,12 +54,31 @@ public class ShieldManager : MonoBehaviour
             int index = i;
             list_Buttons[index].onClick.AddListener(() =>
             {
+                coinOfShield.text = shieldsDatabases.shields[index].coinOfshield.ToString();
                 currentButtonIndex = index;
                 StateShieldOfPlayer(currentButtonIndex);
                 StateOfButton(currentButtonIndex);
                 RefreshActionButton();
                 OnButtonClicked(list_Buttons[index].transform);
             });
+        }
+    }
+    public void SetLock()
+    {
+        for (int i = 0; i < list_Buttons.Length; i++)
+        {
+            string shieldName = shieldsDatabases.shields[i].index;
+            Transform buttonTransform = list_Buttons[i].transform;
+            Transform oldLock = buttonTransform.Find("LockIcon");
+            if (oldLock != null)
+            {
+                Destroy(oldLock.gameObject);
+            }
+            if (!DataManager.Ins.gameSave.objectsBought.Contains(shieldName))
+            {
+                GameObject newLock = Instantiate(lockOfHat, buttonTransform);
+                newLock.name = "LockIcon"; // đặt tên để dễ tìm & xóa
+            }
         }
     }
     private void OnButtonClicked(Transform buttonTransform)
@@ -123,16 +148,33 @@ public class ShieldManager : MonoBehaviour
         if (coinOfPlayer >= coinOfShield)
         {
             coinOfPlayer -= coinOfShield;
-            PlayerPrefs.SetInt("coinMoney", coinOfPlayer);
+            DataManager.Ins.gameSave.coin = coinOfPlayer;
+            DataManager.Ins.SaveGame();
+            textOfPlayer.text = coinOfPlayer.ToString();
+            playerInfo.SetCoinPlayer();
             if (!DataManager.Ins.gameSave.objectsBought.Contains(shieldName))
             {
                 DataManager.Ins.gameSave.objectsBought.Add(shieldName);
             }
+            SetLock();
             DataManager.Ins.SaveGame();
             buyByAds.SetActive(false);
             buyByCoin.SetActive(false);
             selectShield.SetActive(true);
         }
+    }
+    public void BuyProtectByAds()
+    {
+        string shieldName = shieldsDatabases.shields[currentButtonIndex].index;
+        if (!DataManager.Ins.gameSave.objectsBought.Contains(shieldName))
+        {
+            DataManager.Ins.gameSave.objectsBought.Add(shieldName);
+        }
+        SetLock();
+        DataManager.Ins.SaveGame();
+        buyByAds.SetActive(false);
+        buyByCoin.SetActive(false);
+        selectShield.SetActive(true);
     }
     public void StateOfButton(int index)
     {
@@ -239,6 +281,7 @@ public class ShieldManager : MonoBehaviour
     }
     public void DisplayOptionShield()
     {
+        SetLock();
         isSetShield = DataManager.Ins.gameSave.isSetShield;
         if (isSetShield)
         {

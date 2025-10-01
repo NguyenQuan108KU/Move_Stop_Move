@@ -1,0 +1,8 @@
+Assets\Plugins\Android\baseProjectTemplate.gradle:12:    // Nên set targetSdkVersion >= minSdkVersion, thường theo Unity/Google Play mới nhất
+Assets\Plugins\Android\baseProjectTemplate.gradle:13:    targetSdkVersion = 34
+Assets\Plugins\Android\mainTemplate.gradle:74:        targetSdkVersion 35   // ⚡ ép cứng target API Level
+Library\Bee\Android\Prj\Mono2x\Gradle\build.gradle:12:    // Nên set targetSdkVersion >= minSdkVersion, thường theo Unity/Google Play mới nhất
+Library\Bee\Android\Prj\Mono2x\Gradle\build.gradle:13:    targetSdkVersion = 34
+Library\Bee\Android\Prj\Mono2x\Gradle\launcher\build.gradle:21:        targetSdkVersion 35
+Library\Bee\Android\Prj\Mono2x\Gradle\unityLibrary\build.gradle:77:        targetSdkVersion 35   // ⚡ ép cứng target API Level
+Library\Bee\Android\Prj\Mono2x\Gradle\unityLibrary\FirebaseApp.androidlib\build.gradle:24:        targetSdkVersion 9

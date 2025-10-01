@@ -61564,7 +61564,7 @@ MonoBehaviour:
   firingTransform: {fileID: 5355527596550981297}
   moveSpeedOfPlayerCity: 8
   radiusAttackOfPlayerCity: 5
-  weaponOfPlayerCity: {fileID: 0}
+  weaponOfPlayerCity: {fileID: 6267869485896919334}
   attackDuration: 1
   pointOfPlayerCity: 0
   isDead: 0

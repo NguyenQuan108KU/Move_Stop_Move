@@ -74,7 +74,7 @@ public class WeaponManager : MonoBehaviour
 
     private void Start()
     {
-        coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
+        coinOfPlayer = DataManager.Ins.gameSave.coin;
         //UpdateWeapon(selectedOption);
         for (int i = 0; i < buttons.Length; i++)
         {
@@ -146,17 +146,7 @@ public class WeaponManager : MonoBehaviour
         }
         UpdateWeapon(selectedOption);
         ChangeWeaponButtonColor();
-        //DisplayMenuSelectColor(selectedOption);
         DestroyOutline(buttons[PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption)].transform);
-        //if (selectedOption == PlayerPrefs.GetInt("SelectOption"))
-        //{
-        //    foreach (Transform child in weaponAnchor.transform)
-        //    {
-        //        Destroy(child.gameObject);
-        //    }
-        //    GameObject newWeapon = Instantiate(weapon.weaponPrefabs[indexMaterialOfWeapon], weaponAnchor.transform);
-        //    OnButtonClickedWeapon(buttons[PlayerPrefs.GetInt("MaterialOfWeapon" + PlayerPrefs.GetInt("SelectOption"))].transform);
-        //}
         if (selectedOption == PlayerPrefs.GetInt("SelectOption"))
             OptionWeaponWhenStartGame();
     }
@@ -164,6 +154,11 @@ public class WeaponManager : MonoBehaviour
     {
         int index = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOptions);
         Weapon weapon = weaponData.GetWeapon(selectedOptions);
+        if (!weapon.isBought)
+        {
+            listColor.SetActive(false);
+            Instantiate(weapon.weaponPrefabs[0], weaponAnchor.transform);
+        }
         foreach (Transform child in weaponAnchor.transform) {
             Destroy(child.gameObject);
         }
@@ -212,24 +207,52 @@ public class WeaponManager : MonoBehaviour
         }
         //DisplayMenuSelectColor(selectedOptions);
     }
+    public void SetWeaponStartGame()
+    {
+        Debug.Log(DataManager.Ins.gameSave.idWeapon);
+        if(DataManager.Ins.gameSave.idWeapon == "")
+        {
+            Debug.Log("Start Game");
+            DataManager.Ins.gameSave.idWeapon = "Weapon_0";
+            DataManager.Ins.SaveGame();
+            foreach (Transform child in anchorWeapon.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            GameObject newWeapon = Instantiate(weaponData.weapon[0].weaponOfPlayer, anchorWeapon.transform);
+            Weapon = newWeapon.GetComponent<MeshFilter>();
+            UpdateWeapon(0);
+            ChangeWeaponButtonColor();
+            foreach (Transform child in weaponAnchor.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            OnButtonClickedWeapon(buttons[0].transform);
+            button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
+            coin.text = "Equipped";
+        }
+    }
     public void OptionWeaponWhenStartGame()
     {
-        int currentOption = PlayerPrefs.GetInt("SelectOption");
-        int indexMaterialOfWeapon = PlayerPrefs.GetInt("IndexMaterialOfWeapon" + currentOption);
-        selectedOption = currentOption;
-        Weapon weapon = weaponData.GetWeapon(currentOption);
-        UpdateWeapon(currentOption);
-        ChangeWeaponButtonColor();
-        foreach (Transform child in weaponAnchor.transform)
+        if(DataManager.Ins.gameSave.idWeapon != "")
         {
-            Destroy(child.gameObject);
+            int currentOption = PlayerPrefs.GetInt("SelectOption");
+            int indexMaterialOfWeapon = PlayerPrefs.GetInt("IndexMaterialOfWeapon" + currentOption);
+            selectedOption = currentOption;
+            Weapon weapon = weaponData.GetWeapon(currentOption);
+            UpdateWeapon(currentOption);
+            ChangeWeaponButtonColor();
+            foreach (Transform child in weaponAnchor.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            GameObject newWeapon = Instantiate(weapon.weaponPrefabs[indexMaterialOfWeapon], weaponAnchor.transform);
+            weaponCustom = newWeapon;
+            if (indexMaterialOfWeapon == 0)
+                LoadColorOfWeapon(currentOption);
+            //DisplayMenuSelectColor(selectedOption);
+            OnButtonClickedWeapon(buttons[indexMaterialOfWeapon].transform);
         }
-        GameObject newWeapon = Instantiate(weapon.weaponPrefabs[indexMaterialOfWeapon], weaponAnchor.transform);
-        weaponCustom = newWeapon;
-        if(indexMaterialOfWeapon == 0)
-            LoadColorOfWeapon(currentOption);
-        //DisplayMenuSelectColor(selectedOption);
-        OnButtonClickedWeapon(buttons[indexMaterialOfWeapon].transform);
     }
     public void DisplayMenuSelectColor(int selectOptionOfWeapon)
     {
@@ -289,11 +312,18 @@ public class WeaponManager : MonoBehaviour
         {
             if (int.Parse(weapon.coin) <= coinOfPlayer){
                 SaveWeapon();
-                    DataManager.Ins.gameSave.idWeapon = weaponData.GetWeapon(selectedOption).index;
-                    string weaponIndex = weapon.index;
-                    coinOfPlayer -= int.Parse(weapon.coin);
-                    PlayerPrefs.SetInt("coinMoney", coinOfPlayer);
-                    button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
+                DataManager.Ins.gameSave.idWeapon = weaponData.GetWeapon(selectedOption).index;
+                string weaponIndex = weapon.index;
+                coinOfPlayer -= int.Parse(weapon.coin);
+                DataManager.Ins.gameSave.coin = coinOfPlayer;
+                DataManager.Ins.SaveGame();
+                MenuSelect.SetActive(true);
+                for (int i = 0; i < buttons.Length; i++)
+                {
+                    Image img = buttons[i].transform.GetChild(0).GetComponent<Image>();
+                    img.sprite = weapon.weaponImage[i];
+                }
+                button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
                     weapon.isBought = true;
                     coin.text = "Equipped";
                     if (!DataManager.Ins.gameSave.objectsBought.Contains(weaponIndex))
@@ -310,7 +340,7 @@ public class WeaponManager : MonoBehaviour
                             Destroy(child.gameObject);
                         }
                         PlayerPrefs.SetInt("IndexMaterialOfWeapon" + selectedOption, indexWeapon);
-                        GameObject newWeapon = Instantiate(weaponData.weapon[i].weaponOfPlayer, anchorWeapon.transform);
+                        GameObject newWeapon = Instantiate(weaponData.weapon[1].weaponOfPlayer, anchorWeapon.transform);
                         Weapon = newWeapon.GetComponent<MeshFilter>();
                     }
                     }

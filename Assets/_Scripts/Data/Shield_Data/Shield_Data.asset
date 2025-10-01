@@ -15,10 +15,10 @@ MonoBehaviour:
   shields:
   - index: Shiled_0
     shieldPrefab: {fileID: 8385939219274936142, guid: 3b62e867cfe681f44afdb6b1ab41ec46, type: 3}
-    coinOfshield: 0
+    coinOfshield: 100
   - index: Shiled_1
     shieldPrefab: {fileID: 8041103899951061354, guid: 4b85565c8e9709b428e536cca77de6d8, type: 3}
-    coinOfshield: 0
+    coinOfshield: 150
   - index: Shiled_2
     shieldPrefab: {fileID: 2916743434814949952, guid: 4368bea728194e3448dfda33e055671d, type: 3}
     coinOfshield: 0

@@ -325,6 +325,7 @@ public class PlayerCityController : MonoBehaviour
 
             if (directionOfPlayerCity.sqrMagnitude > 0.01f)
             {
+                weaponOfPlayerCity.SetActive(true);
                 Quaternion toRotation = Quaternion.LookRotation(directionOfPlayerCity, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
                 anim.SetBool("Attack", false);
@@ -391,6 +392,7 @@ public class PlayerCityController : MonoBehaviour
 
     public void Shooting()
     {
+        weaponOfPlayerCity.SetActive(false);
         AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Attack);
         // Lấy chế độ bắn từ PlayerPrefs (Function lưu trong bộ nhớ)
         indexFunctionBullet = PlayerPrefs.GetInt("Function");
@@ -677,7 +679,11 @@ public class PlayerCityController : MonoBehaviour
         if (number < 0)
             menuLoad.SetActive(false);
     }
-    public void SetOffAttack() => anim.SetBool("Attack", false);
+    public void SetOffAttack()
+    {
+        weaponOfPlayerCity.SetActive(true);
+        anim.SetBool("Attack", false);
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

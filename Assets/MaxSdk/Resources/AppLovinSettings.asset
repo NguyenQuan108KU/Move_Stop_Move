@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc0ba1b5ef6b4a6b9dd53d7eadfea16, type: 3}
   m_Name: AppLovinSettings
   m_EditorClassIdentifier: 
-  qualityServiceEnabled: 0
+  qualityServiceEnabled: 1
   sdkKey: lzy1D43gpRPW9tUi5NWKHgdzaEOHtF7TwA6i9VTFBwSD_dPNImwq28W9Gc2dAx9esZW4uiX14oOUbg-RlCtXlT
   customGradleVersionUrl: 
   customGradleToolsVersion: 

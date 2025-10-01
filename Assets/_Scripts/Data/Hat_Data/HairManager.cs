@@ -41,23 +41,50 @@ public class HairManager : MonoBehaviour
 
     public GameObject equippedPrefab;
     private GameObject currentEquipped;
+    public TextMeshProUGUI coinOfHat;
+    public TextMeshProUGUI textOfPlayer;
+    public ApplyFullSetOfPlayer playerInfo;
 
     private void Start()
     {
+        if (!isSetHat && !pantsManager.isSetPant && !shieldManager.isSetShield && !clothesManager.isSetClothes)
+        {
+            optionHat.SetActive(true);
+        }
         EquippedClothes(list_Buttons[PlayerPrefs.GetInt("IndexChooseHat")].transform);
         StateOfButton(PlayerPrefs.GetInt("IndexChooseHat"));
-        coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
+        coinOfPlayer = DataManager.Ins.gameSave.coin;
+        textOfPlayer.text = coinOfPlayer.ToString();
         for (int i = 0; i < list_Buttons.Length; i++)
         {
             int index = i;
             list_Buttons[index].onClick.AddListener(() =>
             {
+                coinOfHat.text = hatsDatabases.hats[index].coinOfHat.ToString();
                 currentButtonIndex = index;
                 StateHatOfPlayer(currentButtonIndex);
                 StateOfButton(currentButtonIndex);
                 RefreshActionButton();
                 OnButtonClicked(list_Buttons[index].transform);
             });
+        }
+    }
+    public void SetLock()
+    {
+        for (int i = 0; i < list_Buttons.Length; i++)
+        {
+            string hatName = hatsDatabases.hats[i].index;
+            Transform buttonTransform = list_Buttons[i].transform;
+            Transform oldLock = buttonTransform.Find("LockIcon");
+            if (oldLock != null)
+            {
+                Destroy(oldLock.gameObject);
+            }
+            if (!DataManager.Ins.gameSave.objectsBought.Contains(hatName))
+            {
+                GameObject newLock = Instantiate(lockOfHat, buttonTransform);
+                newLock.name = "LockIcon"; // đặt tên để dễ tìm & xóa
+            }
         }
     }
     private void OnButtonClicked(Transform buttonTransform)
@@ -120,21 +147,39 @@ public class HairManager : MonoBehaviour
     }
     public void BuyHair()
     {
+        
         string hatName = hatsDatabases.hats[currentButtonIndex].index;
         int coinOfHat = hatsDatabases.hats[currentButtonIndex].coinOfHat;
         if (coinOfPlayer >= coinOfHat)
         {
             coinOfPlayer -= coinOfHat;
-            PlayerPrefs.SetInt("coinMoney", coinOfPlayer);
+            DataManager.Ins.gameSave.coin = coinOfPlayer;
+            DataManager.Ins.SaveGame();
+            textOfPlayer.text = coinOfPlayer.ToString();
+            playerInfo.SetCoinPlayer();
             if (!DataManager.Ins.gameSave.objectsBought.Contains(hatName))
             {
                 DataManager.Ins.gameSave.objectsBought.Add(hatName);
             }
+            SetLock();
             DataManager.Ins.SaveGame();
             buyByAds.SetActive(false);
             buyByCoin.SetActive(false);
             selectPaint.SetActive(true);
         }
+    }
+    public void BuyHairByAds()
+    {
+        string hatName = hatsDatabases.hats[currentButtonIndex].index;
+        if (!DataManager.Ins.gameSave.objectsBought.Contains(hatName))
+        {
+            DataManager.Ins.gameSave.objectsBought.Add(hatName);
+        }
+        SetLock();
+        DataManager.Ins.SaveGame();
+        buyByAds.SetActive(false);
+        buyByCoin.SetActive(false);
+        selectPaint.SetActive(true);
     }
     public void StateOfButton(int index)
     {
@@ -225,6 +270,7 @@ public class HairManager : MonoBehaviour
     }
     public void DisplayOptionHat()
     {
+        SetLock();
         isSetHat = DataManager.Ins.gameSave.isSetHat;
         if (isSetHat)
         {

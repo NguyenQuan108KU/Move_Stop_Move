@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   devKey: xEuExYWKk7iRUbpNFkpFsW
-  appID: com.pub.um.quick.game100.monsters
+  appID: 6744522051
   UWPAppID: 
   macOSAppID: 
-  isDebug: 1
-  getConversionData: 1
+  isDebug: 0
+  getConversionData: 0

@@ -160,7 +160,7 @@ public class Enemy : MonoBehaviour
                 // Nếu attackTimer <= 0 → có thể tấn công
                 if (attackTimer <= 0){
                     target = hit.transform;            // Cập nhật target
-                    rb.velocity = Vector3.zero;        // Dừng enemy
+                    rb.linearVelocity = Vector3.zero;        // Dừng enemy
                     rb.angularVelocity = Vector3.zero; // Dừng quay
                     anim.SetBool("Attack", true);      // Kích hoạt animation tấn công
                     isEnemyAttacking = true;                // Đánh dấu trạng thái tấn công
