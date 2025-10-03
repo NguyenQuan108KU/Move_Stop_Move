@@ -33,11 +33,7 @@ public class GameController : MonoBehaviour
     }
     private void Update() {
         CheckWinOrLose();
-        if (playerController.isDead) return;
-        playerController.PlayerMove();
-        playerController.AttackTrigle();
-        if(SceneManager.GetActiveScene().buildIndex != 4)
-            playerController.UpLevel();
+        playerController.UpdatePlayer();
 
         // Update tất cả Enemy
         for (int i = 0; i < enemies.Count; i++)
@@ -50,11 +46,13 @@ public class GameController : MonoBehaviour
             isChecckWinLose = true;
             Instantiate(popupWin, transform.position, Quaternion.identity);
             joystick.SetActive(false);
+            
         }
         else if (playerController.isDead && !isChecckWinLose)
         {
             Instantiate(popupLose, transform.position, Quaternion.identity);
             isChecckWinLose = true;
+            joystick.SetActive(false);
         }
     }
 }

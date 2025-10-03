@@ -21,7 +21,14 @@ MonoBehaviour:
     - {fileID: 8851604348056092488, guid: 9551e651ab267384bb59240af5602e0b, type: 3}
     - {fileID: 8851604348056092488, guid: 5eba73daba1ed904b8232424074b8eb1, type: 3}
     - {fileID: 8851604348056092488, guid: c92f7769884ca734c9250ed1926ea77a, type: 3}
+    listOptionCustom:
+    - {fileID: 6382312655498268023, guid: 44c14967b1b999844997efd27b576b6c, type: 3}
+    - {fileID: 253765207434240427, guid: c0049bc4cf9f1c84596d66bb343a0075, type: 3}
+    circleOption:
+    - {fileID: 2314568559667006789, guid: ac4c6e24a05e74f40b1b3439eae12d0e, type: 3}
+    - {fileID: 6803968786286836145, guid: ce652aed39d0c554b88f7c4d0a3d431f, type: 3}
     weaponOfPlayer: {fileID: 1125302235325512758, guid: 931cef110f8d0f141923e5334b520f9d, type: 3}
+    weaponCustomer: {fileID: 5591629107823582144, guid: 2406068869b929549a58ac94465d9c49, type: 3}
     weaponName: Hammer
     weaponImage:
     - {fileID: 0}
@@ -39,27 +46,22 @@ MonoBehaviour:
     isBomerang: 0
   - index: Weapon_1
     weaponPrefabs:
-    - {fileID: 6358860364772535444, guid: 7cc48d8ed5d9dc44694b43f6bd782001, type: 3}
-    weaponOfPlayer: {fileID: 0}
-    weaponName: Candy
-    weaponImage:
-    - {fileID: 21300000, guid: ea1caec6a91f5e14b8c2f6e8a274a099, type: 3}
-    coin: 200
-    isLock: Unlock
-    damageWeapon: +10 damage
-    meshWeapon: {fileID: 2459579263309379254, guid: b9d25e22206860449b9d0249b1d4df71, type: 3}
-    isBought: 0
-    isRotate: 0
-    isBomerang: 0
-  - index: Weapon_2
-    weaponPrefabs:
     - {fileID: 1214562307843304435, guid: 6aa6d2868c8f7d84eb1005b87417c8d7, type: 3}
     - {fileID: 4594828768263470782, guid: 55672497d2c5e714eb6872e0d669e5dc, type: 3}
     - {fileID: 4594828768263470782, guid: e80c13fa599b2e24f802f435d33798f8, type: 3}
     - {fileID: 4594828768263470782, guid: ea76f87072e3cc846ba9aafb5daf9a16, type: 3}
     - {fileID: 4594828768263470782, guid: eec43da837623844f92f0e30f41813a3, type: 3}
     - {fileID: 4594828768263470782, guid: 34d14443fc14c8349ab64bd8ef6f44d7, type: 3}
+    listOptionCustom:
+    - {fileID: 3612958339273193065, guid: 69176a6e64c9a36478738b991caa72d0, type: 3}
+    - {fileID: 3799949951979665481, guid: e70e9fcc8d5bea649a763c7fab42e757, type: 3}
+    - {fileID: 5527371829918067371, guid: 7304d21c3146acf428540519a6308001, type: 3}
+    circleOption:
+    - {fileID: 671003716119327537, guid: 9c2b0d236967c85499e7e09557b6e6c7, type: 3}
+    - {fileID: 5875729426283252027, guid: cbe943ba07c93e940a2aad068061087f, type: 3}
+    - {fileID: 862391816399819622, guid: 31a3fc393a4069a46aaa8ee49fea0f08, type: 3}
     weaponOfPlayer: {fileID: 9100914016366931606, guid: ec89cb1b4b78d6741b7cb692b7770922, type: 3}
+    weaponCustomer: {fileID: 8845165789363406173, guid: 133f57f9c3b616c43bbf8841894dea19, type: 3}
     weaponName: Arrow
     weaponImage:
     - {fileID: 0}
@@ -72,24 +74,10 @@ MonoBehaviour:
     isLock: Unlock
     damageWeapon: +20 damage
     meshWeapon: {fileID: 1913988541965732932, guid: ceffb78c74021304889ac584f173d156, type: 3}
-    isBought: 1
+    isBought: 0
     isRotate: 1
     isBomerang: 0
-  - index: Weapon_3
-    weaponPrefabs:
-    - {fileID: 5346216770361563965, guid: 9e529fdd11759014bbe67df0dacecc26, type: 3}
-    weaponOfPlayer: {fileID: 0}
-    weaponName: Axe
-    weaponImage:
-    - {fileID: 21300000, guid: fa6cc6f9f8905c24d8c45a091e8ce615, type: 3}
-    coin: 500
-    isLock: Unlock
-    damageWeapon: +50 damage
-    meshWeapon: {fileID: -1065404696862110030, guid: 1b74d2770d5b5894984bd1a4f676134b, type: 3}
-    isBought: 0
-    isRotate: 0
-    isBomerang: 0
-  - index: Weapon_4
+  - index: Weapon_2
     weaponPrefabs:
     - {fileID: 4569843627902263505, guid: b0c4553a9b8aa1e41bf5ca39c73d26f4, type: 3}
     - {fileID: 834039078286461731, guid: 3dfb52dc3bf6c584cb479a0ba9c3e708, type: 3}
@@ -97,7 +85,12 @@ MonoBehaviour:
     - {fileID: 834039078286461731, guid: 5c31651f72b9b4446968d4c13f9e3d77, type: 3}
     - {fileID: 834039078286461731, guid: 3863f79af70a0fc498a077a7fe92916a, type: 3}
     - {fileID: 834039078286461731, guid: 964e84cc8ceb61f4e8ca266cf5003b49, type: 3}
+    listOptionCustom:
+    - {fileID: 7936229136815897267, guid: 40f4c4a2d4277d24699477a315a60388, type: 3}
+    circleOption:
+    - {fileID: 6352606402894542421, guid: f5cd11508fed9764f9b36e3775c4533d, type: 3}
     weaponOfPlayer: {fileID: 2081694178688184959, guid: c30bc0a522740db4e8ce2715885e7303, type: 3}
+    weaponCustomer: {fileID: 3341757089587136907, guid: 3bc706b27b8e3ee4a93835b4e941614c, type: 3}
     weaponName: Knife
     weaponImage:
     - {fileID: 0}
@@ -110,7 +103,7 @@ MonoBehaviour:
     isLock: Unlock
     damageWeapon: +100 damage
     meshWeapon: {fileID: -462981019419857548, guid: 4f39082c9ad972f4cb2b9ea27eb3c689, type: 3}
-    isBought: 1
+    isBought: 0
     isRotate: 0
     isBomerang: 1
   listOfMaterials:
@@ -118,48 +111,27 @@ MonoBehaviour:
     - materials:
       - {fileID: 0}
       - {fileID: 0}
-      - {fileID: 0}
+      - {fileID: 2100000, guid: 67fd161d2a87fda44a8e1ffa9faf2939, type: 2}
     - materials:
       - {fileID: -6478536213147159724, guid: 0cdafb12b394e1b4e88f00cef4a9a1e0, type: 3}
       - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
-      - {fileID: 0}
+      - {fileID: 2100000, guid: 76583247603a351449592b1be5cca0e4, type: 2}
     - materials:
       - {fileID: 2100000, guid: 2e18707ce91d4cc4784a1983977a9b48, type: 2}
       - {fileID: -6478536213147159724, guid: 0cdafb12b394e1b4e88f00cef4a9a1e0, type: 3}
-      - {fileID: 0}
+      - {fileID: 2100000, guid: 76583247603a351449592b1be5cca0e4, type: 2}
     - materials:
       - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
       - {fileID: 4874126678125670354, guid: 38d01da549946dd4eae84d257ff1a295, type: 3}
-      - {fileID: 0}
+      - {fileID: 2100000, guid: 76583247603a351449592b1be5cca0e4, type: 2}
     - materials:
       - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
       - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
-      - {fileID: 0}
+      - {fileID: 2100000, guid: 76583247603a351449592b1be5cca0e4, type: 2}
     - materials:
       - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
       - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
-      - {fileID: 0}
-  - materialOfHammer:
-    - materials:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-    - materials:
-      - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
-      - {fileID: 2100000, guid: 3254760ccc79f914cbf0279d3fbe8492, type: 2}
-      - {fileID: 2100000, guid: 0f1c3bf5cd309144a83ce906f981bb29, type: 2}
-    - materials:
-      - {fileID: 2100000, guid: f4b0a7cfb4e02114d8bec3309e409df6, type: 2}
-      - {fileID: 2100000, guid: afaf67fa37c18734faf8d3da551bfb7b, type: 2}
-      - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
-    - materials:
-      - {fileID: 2100000, guid: f3e1c855a5a42af439a029b1eb231c01, type: 2}
-      - {fileID: 2100000, guid: 9417a8e677d38824bb6db375d63ccd0c, type: 2}
-      - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
-    - materials:
-      - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
-      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
-      - {fileID: 2100000, guid: 9d18032826bc8874da5d19767ac1e99e, type: 2}
+      - {fileID: 2100000, guid: 76583247603a351449592b1be5cca0e4, type: 2}
   - materialOfHammer:
     - materials:
       - {fileID: 0}
@@ -192,6 +164,31 @@ MonoBehaviour:
       - {fileID: 0}
     - materials:
       - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
+      - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
+      - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
+    - materials:
+      - {fileID: 2100000, guid: 59e4faf24927edf4a82f463ad16f1c37, type: 2}
+      - {fileID: 2100000, guid: 59e4faf24927edf4a82f463ad16f1c37, type: 2}
+      - {fileID: 2100000, guid: 59e4faf24927edf4a82f463ad16f1c37, type: 2}
+    - materials:
+      - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
+      - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
+      - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
+    - materials:
+      - {fileID: 2100000, guid: 35bc13d5ca114ea4c8c8dce607f18835, type: 2}
+      - {fileID: 2100000, guid: 35bc13d5ca114ea4c8c8dce607f18835, type: 2}
+      - {fileID: 2100000, guid: 35bc13d5ca114ea4c8c8dce607f18835, type: 2}
+    - materials:
+      - {fileID: 2100000, guid: ad933ea13f5f18b429a78a11dd2376de, type: 2}
+      - {fileID: 2100000, guid: ad933ea13f5f18b429a78a11dd2376de, type: 2}
+      - {fileID: 2100000, guid: ad933ea13f5f18b429a78a11dd2376de, type: 2}
+  - materialOfHammer:
+    - materials:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+    - materials:
+      - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
       - {fileID: 2100000, guid: 3254760ccc79f914cbf0279d3fbe8492, type: 2}
       - {fileID: 2100000, guid: 0f1c3bf5cd309144a83ce906f981bb29, type: 2}
     - materials:
@@ -213,21 +210,17 @@ MonoBehaviour:
       - {fileID: 0}
     - materials:
       - {fileID: 2100000, guid: d7066658c3944af4e93ce8e3c80c34f8, type: 2}
-      - {fileID: 0}
-      - {fileID: 0}
+      - {fileID: 2100000, guid: 3254760ccc79f914cbf0279d3fbe8492, type: 2}
+      - {fileID: 2100000, guid: 0f1c3bf5cd309144a83ce906f981bb29, type: 2}
     - materials:
-      - {fileID: 2100000, guid: 59e4faf24927edf4a82f463ad16f1c37, type: 2}
-      - {fileID: 0}
-      - {fileID: 0}
+      - {fileID: 2100000, guid: f4b0a7cfb4e02114d8bec3309e409df6, type: 2}
+      - {fileID: 2100000, guid: afaf67fa37c18734faf8d3da551bfb7b, type: 2}
+      - {fileID: 2100000, guid: 54f10202064904c4db3a550b75180c42, type: 2}
     - materials:
+      - {fileID: 2100000, guid: f3e1c855a5a42af439a029b1eb231c01, type: 2}
+      - {fileID: 2100000, guid: 9417a8e677d38824bb6db375d63ccd0c, type: 2}
       - {fileID: 2100000, guid: 7b1c2022fc739674f8461da30866e51a, type: 2}
-      - {fileID: 0}
-      - {fileID: 0}
     - materials:
-      - {fileID: 2100000, guid: 35bc13d5ca114ea4c8c8dce607f18835, type: 2}
-      - {fileID: 0}
-      - {fileID: 0}
-    - materials:
-      - {fileID: 2100000, guid: ad933ea13f5f18b429a78a11dd2376de, type: 2}
-      - {fileID: 0}
-      - {fileID: 0}
+      - {fileID: 2100000, guid: 6fcc26152b51a1e44a7f378b787d7990, type: 2}
+      - {fileID: 2100000, guid: 78480deaa6c8eaa49b68ffeb3e02707b, type: 2}
+      - {fileID: 2100000, guid: 9d18032826bc8874da5d19767ac1e99e, type: 2}

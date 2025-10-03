@@ -162,10 +162,29 @@ public class HairManager : MonoBehaviour
                 DataManager.Ins.gameSave.objectsBought.Add(hatName);
             }
             SetLock();
+            DataManager.Ins.gameSave.idHat = hatName;
             DataManager.Ins.SaveGame();
+
             buyByAds.SetActive(false);
             buyByCoin.SetActive(false);
             selectPaint.SetActive(true);
+            isSetHat = true;
+            clothesManager.isSetClothes = false;
+            pantsManager.isSetPant = false;
+            shieldManager.isSetShield = false;
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
+            PlayerPrefs.SetInt("IndexChooseHat", currentButtonIndex);
+            SetActionButton("Unequip", Color.white);
+            //Reset quần
+            pantsManager.ResetDataOfPant();
+            pantsManager.RefreshActionButton();
+            //Reset khiên
+            shieldManager.ResetDataOdShield();
+            shieldManager.RefreshActionButton();
+            //Reset clothes
+            clothesManager.ResetDatOfClothes();
+            clothesManager.RefreshActionButton();
+
         }
     }
     public void BuyHairByAds()
@@ -286,6 +305,10 @@ public class HairManager : MonoBehaviour
         if (!isSetHat && !pantsManager.isSetPant && !shieldManager.isSetShield && !clothesManager.isSetClothes)
         {
             optionHat.SetActive(true);
+            OnButtonClicked(list_Buttons[0].transform);
+            StateHatOfPlayer(0);
+            StateOfButton(0);
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
         }
     }
     public void DisplaySelectOption()

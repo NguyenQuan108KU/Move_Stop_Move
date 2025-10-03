@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
 
     [Header("------------------Ground Check------------------")]
     public GameObject GroundCheck;          // Điểm kiểm tra mặt đất (dùng raycast)
-    private float changeDirectionTime = 1.5f;
+    private float changeDirectionTime = 1f;
     private float timer = 0f;
     [Header("------------------Floating Text------------------")]
     public GameObject floatingTextPrefab; // kéo prefab vào trong Inspector
@@ -74,6 +74,9 @@ public class Enemy : MonoBehaviour
         attackTimer = attackCoolDown;
         detectionRange = 8f;
         bulletPrefabs.transform.localScale = new Vector3(39, 39, 39);
+
+        randomDirection = Vector3.zero; // reset hướng ban đầu
+        anim.SetBool("Move", false);    // tắt animation di chuyển lúc start
     }
 
     public void EnemyUpdate()
@@ -81,8 +84,9 @@ public class Enemy : MonoBehaviour
         attackTimer -= Time.deltaTime;
         if (GameController.instance.playerController.isDead)
         {
-            anim.SetBool("Attack", false);
+            Debug.Log("Enemy chet");
             anim.SetBool("Move", false);
+            //anim.SetBool("Attack", false);
             return;
         }
         EnemyAttack();
@@ -137,7 +141,7 @@ public class Enemy : MonoBehaviour
         // Quay mặt theo hướng di chuyển nếu có hướng
         if (randomDirection != Vector3.zero){
             Quaternion toRotation = Quaternion.LookRotation(randomDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 5f * Time.deltaTime); // Quay mượt
+            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 6.5f * Time.deltaTime); // Quay mượt
         }
     }
 
@@ -288,14 +292,7 @@ public class Enemy : MonoBehaviour
 );
                 ft.GetComponent<FloatingText>().Setup("+1", Color.white);
             }
-            // Nếu player đang có gift, bỏ qua va chạm giữa bullet và enemy
-            //if (GameController.instance.playerController.isGetGift)
-            //{
-            //    Collider enemyCollider = GetComponent<Collider>();
-            //    Collider bulletCollider = collision.collider;                   // collider của viên đạn
-            //    if (enemyCollider != null && bulletCollider != null)
-            //        Physics.IgnoreCollision(enemyCollider, bulletCollider);     // Bỏ qua va chạm
-            //}
+            GameController.instance.playerController.ActiveWeapon();
             OnHit();
             GameController.instance.playerController.SetBulletPlayerDeufalt();
             GameController.instance.playerController.pointOfPlayerDefault += 1;      // Player nhận điểm

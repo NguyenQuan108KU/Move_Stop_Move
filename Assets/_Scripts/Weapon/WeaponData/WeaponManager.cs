@@ -58,8 +58,9 @@ public class WeaponManager : MonoBehaviour
 
     public RectTransform rawImageRectOfButton;
     public GameObject waeponButton;
+    public GameObject optionCustom;
 
-    public GameObject[] buttonOfMaterial;
+    public List<GameObject> buttonOfMaterial;
     private int indexButtonOfMaterial;
     public Material[] listMaterialOfColor;
 
@@ -71,11 +72,11 @@ public class WeaponManager : MonoBehaviour
     [Header("---------------------Weapon Ouline Select----------------------")]
     public GameObject weaponOutline;
     private GameObject currentOutline;
+    public GameObject circleOptionTransform;
 
     private void Start()
     {
         coinOfPlayer = DataManager.Ins.gameSave.coin;
-        //UpdateWeapon(selectedOption);
         for (int i = 0; i < buttons.Length; i++)
         {
             int index = i;
@@ -83,8 +84,8 @@ public class WeaponManager : MonoBehaviour
             {
                 indexWeapon = index;
                 PlayerPrefs.SetInt("MaterialOfWeapon" + selectedOption, indexWeapon);
+                PlayerPrefs.Save();
                 Weapon weapon = weaponData.GetWeapon(selectedOption);
-                //if(PlayerPrefs.GetInt("IndexMaterialOfWeapon" + selectedOption) == indexWeapon)
                 SetButtonMaterial(index);
                 foreach (Transform child in weaponAnchor.transform)
                 {
@@ -99,20 +100,20 @@ public class WeaponManager : MonoBehaviour
                 OnButtonClickedWeapon(buttons[index].transform);
             });
         }
-        for(int i = 0; i < buttonOfMaterial.Length; i++)
-        {
-            indexButtonOfMaterial = 1;
-            int x = i;
-            buttonOfMaterial[x].GetComponent<Button>().onClick.AddListener(() =>
-            {
-                indexButtonOfMaterial = buttonOfMaterial[x].layer;
-            });
-        }
+        //for (int i = 0; i < buttonOfMaterial.Count; i++)
+        //{
+        //    indexButtonOfMaterial = 1;
+        //    int x = i;
+        //    buttonOfMaterial[x].GetComponent<Button>().onClick.AddListener(() =>
+        //    {
+        //        indexButtonOfMaterial = buttonOfMaterial[x].layer;
+        //        Debug.Log(indexButtonOfMaterial);
+        //    });
+        //}
     }
     private void Update()
     {
         coinOfPlayerText.text = coinOfPlayer.ToString();
-        CheckMaterial();
     }
     public void NextOption()
     {
@@ -122,20 +123,12 @@ public class WeaponManager : MonoBehaviour
             selectedOption = 0;
         }
         UpdateWeapon(selectedOption);
-        ChangeWeaponButtonColor();
-        //DisplayMenuSelectColor(selectedOption);
+        ChangeWeaponButtonColor(selectedOption);
         DestroyOutline(buttons[PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption)].transform);
-        //if (selectedOption == PlayerPrefs.GetInt("SelectOption"))
-        //{
-        //    foreach (Transform child in weaponAnchor.transform)
-        //    {
-        //        Destroy(child.gameObject);
-        //    }
-        //    GameObject newWeapon = Instantiate(weapon.weaponPrefabs[indexMaterialOfWeapon], weaponAnchor.transform);
-        //    OnButtonClickedWeapon(buttons[PlayerPrefs.GetInt("MaterialOfWeapon" + PlayerPrefs.GetInt("SelectOption"))].transform);
-        //}
         if (selectedOption == PlayerPrefs.GetInt("SelectOption"))
             OptionWeaponWhenStartGame();
+        else
+            LoadColorOfWeaponButton(selectedOption);
     }
     public void BackOption()
     {
@@ -145,47 +138,47 @@ public class WeaponManager : MonoBehaviour
             selectedOption = weaponData.WeaponCount() - 1;
         }
         UpdateWeapon(selectedOption);
-        ChangeWeaponButtonColor();
+        ChangeWeaponButtonColor(selectedOption);
         DestroyOutline(buttons[PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption)].transform);
         if (selectedOption == PlayerPrefs.GetInt("SelectOption"))
             OptionWeaponWhenStartGame();
+        else
+            LoadColorOfWeaponButton(selectedOption);
     }
     public void UpdateWeapon(int selectedOptions)
     {
-        int index = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOptions);
+        int index = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOptions, 0);
         Weapon weapon = weaponData.GetWeapon(selectedOptions);
-        if (!weapon.isBought)
-        {
-            listColor.SetActive(false);
-            Instantiate(weapon.weaponPrefabs[0], weaponAnchor.transform);
-        }
+        
         foreach (Transform child in weaponAnchor.transform) {
             Destroy(child.gameObject);
         }
         GameObject newWeapon;
-        if(PlayerPrefs.GetInt("SelectOption") == selectedOption)
+        if(PlayerPrefs.GetInt("SelectOption", 0) == selectedOption && weapon.isBought)
         {
             newWeapon = Instantiate(weapon.weaponPrefabs[index], weaponAnchor.transform);
-            if ((PlayerPrefs.GetInt("IndexMaterialOfWeapon" + selectedOption) == 0))
+            if ((PlayerPrefs.GetInt("IndexMaterialOfWeapon" + selectedOption, 1) == 0))
+            {
+                LoadColorOfWeapon(selectedOption);
                 listColor.SetActive(true);
+            }
             else
+            {
                 listColor.SetActive(false);
+            }
         }
         else
         {
-            newWeapon = Instantiate(weapon.weaponPrefabs[0], weaponAnchor.transform);
-            if (weapon.isBought)
-            {
-                listColor.SetActive(true);
-            }
-            else
-            {
-                listColor.SetActive(false);
-            }
+            newWeapon = Instantiate(weapon.weaponPrefabs[1], weaponAnchor.transform);
+            listColor.SetActive(false);
+        }
+        if (!weapon.isBought)
+        {
+            listColor.SetActive(false);
         }
         // Gán vào weaponButtonColor để SetColorOfWeapon() dùng
         weaponCustom = newWeapon;
-        LoadColorOfWeapon(selectedOptions);
+        //LoadColorOfWeapon(selectedOptions);
 
         nameText.text = weapon.weaponName;
         isLock.text = weapon.isLock;
@@ -205,14 +198,11 @@ public class WeaponManager : MonoBehaviour
         {
             MenuSelect.SetActive(false);
         }
-        //DisplayMenuSelectColor(selectedOptions);
     }
     public void SetWeaponStartGame()
     {
-        Debug.Log(DataManager.Ins.gameSave.idWeapon);
         if(DataManager.Ins.gameSave.idWeapon == "")
         {
-            Debug.Log("Start Game");
             DataManager.Ins.gameSave.idWeapon = "Weapon_0";
             DataManager.Ins.SaveGame();
             foreach (Transform child in anchorWeapon.transform)
@@ -222,26 +212,28 @@ public class WeaponManager : MonoBehaviour
             GameObject newWeapon = Instantiate(weaponData.weapon[0].weaponOfPlayer, anchorWeapon.transform);
             Weapon = newWeapon.GetComponent<MeshFilter>();
             UpdateWeapon(0);
-            ChangeWeaponButtonColor();
+            ChangeWeaponButtonColor(selectedOption);
             foreach (Transform child in weaponAnchor.transform)
             {
                 Destroy(child.gameObject);
             }
-            OnButtonClickedWeapon(buttons[0].transform);
+            OnButtonClickedWeapon(buttons[1].transform);
             button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
             coin.text = "Equipped";
+            SetMaterial();
         }
     }
     public void OptionWeaponWhenStartGame()
     {
+        int currentOption = PlayerPrefs.GetInt("SelectOption", 0);
+        ChangeWeaponButtonColor(currentOption);
+        int indexMaterialOfWeapon = PlayerPrefs.GetInt("IndexMaterialOfWeapon" + currentOption, 1);
+        selectedOption = currentOption;
+        Weapon weapon = weaponData.GetWeapon(currentOption);
         if(DataManager.Ins.gameSave.idWeapon != "")
         {
-            int currentOption = PlayerPrefs.GetInt("SelectOption");
-            int indexMaterialOfWeapon = PlayerPrefs.GetInt("IndexMaterialOfWeapon" + currentOption);
-            selectedOption = currentOption;
-            Weapon weapon = weaponData.GetWeapon(currentOption);
             UpdateWeapon(currentOption);
-            ChangeWeaponButtonColor();
+            Debug.Log("Chay vao roi");
             foreach (Transform child in weaponAnchor.transform)
             {
                 Destroy(child.gameObject);
@@ -250,8 +242,10 @@ public class WeaponManager : MonoBehaviour
             weaponCustom = newWeapon;
             if (indexMaterialOfWeapon == 0)
                 LoadColorOfWeapon(currentOption);
-            //DisplayMenuSelectColor(selectedOption);
+            else
+                LoadColorOfWeaponButton(currentOption);
             OnButtonClickedWeapon(buttons[indexMaterialOfWeapon].transform);
+            SetButtonMaterial(indexMaterialOfWeapon);
         }
     }
     public void DisplayMenuSelectColor(int selectOptionOfWeapon)
@@ -303,6 +297,7 @@ public class WeaponManager : MonoBehaviour
                         Destroy(child.gameObject);
                     }
                     PlayerPrefs.SetInt("IndexMaterialOfWeapon" + selectedOption, indexWeapon);
+                    PlayerPrefs.Save();
                     GameObject newWeapon =  Instantiate(weaponData.weapon[i].weaponOfPlayer, anchorWeapon.transform);
                     Weapon = newWeapon.GetComponent<MeshFilter>();
                 }
@@ -339,8 +334,11 @@ public class WeaponManager : MonoBehaviour
                         {
                             Destroy(child.gameObject);
                         }
-                        PlayerPrefs.SetInt("IndexMaterialOfWeapon" + selectedOption, indexWeapon);
-                        GameObject newWeapon = Instantiate(weaponData.weapon[1].weaponOfPlayer, anchorWeapon.transform);
+                        SetButtonMaterial(1);
+                        PlayerPrefs.SetInt("IndexMaterialOfWeapon" + selectedOption, 1);
+                        PlayerPrefs.Save();
+                        OnButtonClickedWeapon(buttons[1].transform);
+                        GameObject newWeapon = Instantiate(weaponData.weapon[i].weaponOfPlayer, anchorWeapon.transform);
                         Weapon = newWeapon.GetComponent<MeshFilter>();
                     }
                     }
@@ -349,9 +347,7 @@ public class WeaponManager : MonoBehaviour
     }
     public void SetButtonWeapon()
     {
-        //int indexWeapon = PlayerPrefs.GetInt("IndexWeapon");
         Weapon weapon = weaponData.GetWeapon(selectedOption);
-        //if (indexWeapon == selectedOption)
         if(DataManager.Ins.gameSave.idWeapon == weapon.index)
         {
             button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
@@ -388,25 +384,29 @@ public class WeaponManager : MonoBehaviour
     }
     public void SetMaterial()
     {
-        int selectedOptions = PlayerPrefs.GetInt("SelectOption");
+        int selectedOptions = PlayerPrefs.GetInt("SelectOption", 0);
         Weapon weapon = weaponData.GetWeapon(selectedOptions);
         if (weapon.isBought)
         {
-            int indexSelectOption = PlayerPrefs.GetInt("SelectOption");
-            int indexMaterial = PlayerPrefs.GetInt("IndexMaterialOfWeapon" + indexSelectOption);
+            int indexSelectOption = PlayerPrefs.GetInt("SelectOption", 0);
+            int indexMaterial = PlayerPrefs.GetInt("IndexMaterialOfWeapon" + indexSelectOption, 1);
             MeshRenderer meshRenderer = Weapon.GetComponent<MeshRenderer>();
 
             Material[] mats = meshRenderer.materials;
             for (int j = 0; j < weaponData.listOfMaterials[indexSelectOption].materialOfHammer[indexMaterial].materials.Length; j++)
             {
                 mats[j] = weaponData.listOfMaterials[indexSelectOption].materialOfHammer[indexMaterial].materials[j];
+                if(j == 2 && selectedOption == 0)
+                {
+                    mats[2] = weaponData.listOfMaterials[indexSelectOption].materialOfHammer[indexMaterial].materials[1];
+                }
             }
             meshRenderer.materials = mats;
         }
     }
     public void SetButtonMaterial(int layer)
     {
-        int indexMaterial = PlayerPrefs.GetInt("StateOfButton" + selectedOption);
+        int indexMaterial = PlayerPrefs.GetInt("StateOfButton" + selectedOption, 1);
         if (indexMaterial == layer && DataManager.Ins.gameSave.idWeapon == weaponData.weapon[selectedOption].index){
             button.GetComponent<Image>().color = new Color(134f / 255f, 119f / 255f, 72f / 255f);
                 coin.text = "Equipped";
@@ -422,8 +422,9 @@ public class WeaponManager : MonoBehaviour
         Weapon weapon = weaponData.GetWeapon(selectedOption);
         if (weapon.isBought)
         {
-            int indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption);
+            int indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + selectedOption, 1);
             PlayerPrefs.SetInt("StateOfButton" + selectedOption, indexMaterial);
+            PlayerPrefs.Save();
         }
     }
     public void SaveWeapon()
@@ -438,11 +439,11 @@ public class WeaponManager : MonoBehaviour
         {
             material3.SetActive(false);
             material2.SetActive(true);
-        }else if(selectedOption == 2)
+        }else if(selectedOption == 1)
         {
             material2.SetActive(true);
             material3.SetActive(true);
-        }else if(selectedOption == 4)
+        }else if(selectedOption == 2)
         {
             material2.SetActive(false);
             material3.SetActive(false);
@@ -451,6 +452,7 @@ public class WeaponManager : MonoBehaviour
     public void SaveMenuCustom()
     {
         PlayerPrefs.SetInt("MenuCustom" + selectedOption, 1);
+        PlayerPrefs.Save();
     }
     public void UpdateMenuCustom()
     {
@@ -458,8 +460,6 @@ public class WeaponManager : MonoBehaviour
         if(index == 0)
         {
             imageWeaponss.SetActive(true);
-            //listColor.SetActive(false);
-            //textureImage.SetActive(false);
         }
     }
     public void SetColorOfWeapon(int indexColor)
@@ -469,9 +469,8 @@ public class WeaponManager : MonoBehaviour
 
         int targetCount = 1;
         if (selectedOption == 0) targetCount = 2;
-        else if (selectedOption == 2) targetCount = 3;
-        else if (selectedOption == 4) targetCount = 1;
-        else targetCount = 3;
+        else if (selectedOption == 1) targetCount = 3;
+        else if (selectedOption == 2) targetCount = 1;
 
         Material[] mats = Normalize(renderer.materials, targetCount);
         Material[] mats1 = Normalize(renderer1.materials, targetCount);
@@ -494,8 +493,10 @@ public class WeaponManager : MonoBehaviour
             mats[indexButtonOfMaterial - 1].color = newColor;
             mats1[indexButtonOfMaterial - 1].color = newColor;
 
-            if (indexButtonOfMaterial - 1 < buttonOfMaterial.Length)
+            if (indexButtonOfMaterial - 1 < buttonOfMaterial.Count)
+            {
                 buttonOfMaterial[indexButtonOfMaterial - 1].GetComponent<Image>().color = newColor;
+            }
 
             string key = "WeaponColor_" + selectedOption + "_" + indexButtonOfMaterial;
             PlayerPrefs.SetInt(key, indexColor);
@@ -504,6 +505,10 @@ public class WeaponManager : MonoBehaviour
 
         renderer.materials = mats;
         renderer1.materials = mats1;
+        for (int i = 0; i < mats.Length; i++)
+        {
+            weaponData.listOfMaterials[selectedOption].materialOfHammer[0].materials[i] = mats[i];
+        }
 
         for (int i = 0; i < mats1.Length; i++)
         {
@@ -520,9 +525,8 @@ public class WeaponManager : MonoBehaviour
 
         int targetCount = 1;
         if (selectedOption == 0) targetCount = 2;
-        else if (selectedOption == 2) targetCount = 3;
-        else if (selectedOption == 4) targetCount = 1;
-        else targetCount = 3;
+        else if (selectedOption == 1) targetCount = 3;
+        else if (selectedOption == 2) targetCount = 1;
 
         Material[] mats = Normalize(renderer.materials, targetCount);
         Material[] mats1 = Normalize(renderer1.materials, targetCount);
@@ -549,17 +553,62 @@ public class WeaponManager : MonoBehaviour
                 mats[slot - 1].color = loadedColor;
                 mats1[slot - 1].color = loadedColor;
 
-                if (slot - 1 < buttonOfMaterial.Length)
+                if (slot - 1 < buttonOfMaterial.Count)
                     buttonOfMaterial[slot - 1].GetComponent<Image>().color = loadedColor;
             }
         }
 
         renderer.materials = mats;
         renderer1.materials = mats1;
-
+        for (int i = 0; i < mats.Length; i++)
+        {
+            weaponData.listOfMaterials[selectedOption].materialOfHammer[0].materials[i] = mats[i];
+        }
         for (int i = 0; i < mats1.Length; i++)
         {
             weaponData.listOfMaterials[selectedOption].materialOfHammer[0].materials[i] = mats1[i];
+        }
+        SetMaterial();
+    }
+    public void LoadColorOfWeaponButton(int selectedOption)
+    {
+        MeshRenderer renderer = weaponButtonColor.GetComponent<MeshRenderer>();
+        int targetCount = 1;
+        if (selectedOption == 0) targetCount = 2;
+        else if (selectedOption == 1) targetCount = 3;
+        else if (selectedOption == 2) targetCount = 1;
+
+        Material[] mats = Normalize(renderer.materials, targetCount);
+
+        string[] colorString = new string[]
+        {
+        "0.043, 0, 1", "1, 0.741, 0", "1, 0, 0", "1, 0, 0.631",
+        "0, 0, 0", "0, 1, 0.894", "1, 0.518, 0", "0.671, 1, 0",
+        "0, 0.627, 1", "0.905, 0, 1"
+        };
+
+        for (int slot = 1; slot <= targetCount; slot++)
+        {
+            string key = "WeaponColor_" + selectedOption + "_" + slot;
+            if (PlayerPrefs.HasKey(key))
+            {
+                int indexColor = PlayerPrefs.GetInt(key);
+                float[] values = colorString[indexColor].Split(',').Select(s => float.Parse(s.Trim())).ToArray();
+                Color loadedColor = new Color(values[0], values[1], values[2], 1f);
+
+                mats[slot - 1] = new Material(mats[slot - 1]);
+
+                mats[slot - 1].color = loadedColor;
+
+                if (slot - 1 < buttonOfMaterial.Count)
+                    buttonOfMaterial[slot - 1].GetComponent<Image>().color = loadedColor;
+            }
+        }
+
+        renderer.materials = mats;
+        for (int i = 0; i < mats.Length; i++)
+        {
+            weaponData.listOfMaterials[selectedOption].materialOfHammer[0].materials[i] = mats[i];
         }
         SetMaterial();
     }
@@ -580,41 +629,89 @@ public class WeaponManager : MonoBehaviour
         }
         return mats;
     }
-    public void ChangeWeaponButtonColor()
+    public void ChangeWeaponButtonColor(int select)
     {
-
+        Debug.Log("Chay vao selectedOption" + selectedOption);
         if (weaponButtonColor == null) return; // tránh lỗi khi object đã bị hủy
 
-        weaponButtonColor.GetComponent<MeshFilter>().mesh = listRawImage[selectedOption];
-        if (selectedOption == 0)
+        Debug.Log("selectedOption" + selectedOption);
+        if (select == 0)
         {
-            rawImageRectOfButton.localPosition = new Vector3(-9.4f, -0.8f, -29.24f);
-            rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 11.9f, 72f);
-            rawImageRectOfButton.sizeDelta = new Vector2(150, 150);
-            waeponButton.transform.localScale = new Vector3(3500, 3500, 3500);
+            Debug.Log("Quan");
+            foreach (Transform child in optionCustom.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            buttonOfMaterial.Clear();
+            for (int i = 0; i < weaponData.weapon[0].listOptionCustom.Count; i++)
+            {
+                GameObject newOption =  Instantiate(weaponData.weapon[0].listOptionCustom[i], optionCustom.transform);
+                buttonOfMaterial.Add(newOption);
+            }
+            foreach (Transform child in rawImageRectOfButton.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            GameObject newWeaponCustom = Instantiate(weaponData.weapon[0].weaponCustomer, rawImageRectOfButton.transform);
+            weaponButtonColor = newWeaponCustom;
         }
-        if (selectedOption == 2)
+        if (select == 1)
         {
-            rawImageRectOfButton.localPosition = new Vector3(9.3f, -0.3f, -29.24f);
-            rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 11.9f, 72f);
-            waeponButton.transform.localScale = new Vector3(9000, 3500, 3500);
+            foreach (Transform child in optionCustom.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            buttonOfMaterial.Clear();
+            for (int i = 0; i < weaponData.weapon[1].listOptionCustom.Count; i++)
+            {
+                GameObject newOption = Instantiate(weaponData.weapon[1].listOptionCustom[i], optionCustom.transform);
+                buttonOfMaterial.Add(newOption);
+            }
+            foreach (Transform child in rawImageRectOfButton.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            GameObject newWeaponCustom = Instantiate(weaponData.weapon[1].weaponCustomer, rawImageRectOfButton.transform);
+            weaponButtonColor = newWeaponCustom;
         }
-        if (selectedOption == 4)
+        if (select == 2)
         {
-            rawImageRectOfButton.localPosition = new Vector3(-9f, 1f, -29.24f);
-            waeponButton.transform.localScale = new Vector3(2750, 2750, 2750);
-            rawImageRectOfButton.sizeDelta = new Vector2(150, 150f);
-            rawImageRectOfButton.localRotation = Quaternion.Euler(1.434f, 11.815f, -18.826f);
+            foreach (Transform child in optionCustom.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            buttonOfMaterial.Clear();
+            for (int i = 0; i < weaponData.weapon[2].listOptionCustom.Count; i++)
+            {
+                GameObject newOption = Instantiate(weaponData.weapon[2].listOptionCustom[i], optionCustom.transform);
+                buttonOfMaterial.Add(newOption);
+            }
+            foreach (Transform child in rawImageRectOfButton.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            GameObject newWeaponCustom = Instantiate(weaponData.weapon[2].weaponCustomer, rawImageRectOfButton.transform);
+            weaponButtonColor = newWeaponCustom;
         }
-
-        if (selectedOption == 5)
+        for (int i = 0; i < buttonOfMaterial.Count; i++)
         {
-            rawImageRectOfButton.localPosition = new Vector3(1.2f, -1f, -29.24f);
-            rawImageRectOfButton.localRotation = Quaternion.Euler(0f, 0, 82f);
-            rawImageRectOfButton.sizeDelta = new Vector2(150, 550);
-            waeponButton.transform.localScale = new Vector3(3500, 3500, 3500);
+            indexButtonOfMaterial = 1;
+            int x = i;
+            foreach (Transform child in circleOptionTransform.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            Instantiate(weaponData.weapon[select].circleOption[0], circleOptionTransform.transform);
+            buttonOfMaterial[x].GetComponent<Button>().onClick.AddListener(() =>
+            {
+                indexButtonOfMaterial = buttonOfMaterial[x].layer;
+                foreach (Transform child in circleOptionTransform.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+                Instantiate(weaponData.weapon[select].circleOption[x], circleOptionTransform.transform);
+            });
         }
-
     }
 
 }

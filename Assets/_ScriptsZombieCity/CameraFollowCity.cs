@@ -7,32 +7,68 @@ public class CameraFollowCity : MonoBehaviour
 {
     [SerializeField] private Transform playerTransform;
     public Camera mainCamera;
+    [Header("--------------Movement Settings--------------")]
+    public float smoothTime = 0.3f;                             // Thời gian mượt khi di chuyển
+    private Vector3 velocity = Vector3.zero;
 
     private float fovVelocity = 0f; // dùng cho SmoothDamp
     private float targetFOV = 65f; // FOV mặc định
 
     private void LateUpdate()
     {
+        Scene currentScene = SceneManager.GetActiveScene();
+        int sceneIndex = currentScene.buildIndex;
+
+        // Nếu đã thắng thì di chuyển mượt đến vị trí thắng
+        if (GameController.instance != null && GameController.instance.enemyTotal <= 0)
+        {
+            Debug.Log("Winner");
+            transform.position = Vector3.SmoothDamp(
+                transform.position,
+                new Vector3(
+                    playerTransform.position.x,
+                    playerTransform.position.y - 6.5f,
+                    playerTransform.position.z + 8.4f
+                ),
+                ref velocity,
+                smoothTime
+            );
+            return; // Không set lại vị trí camera nữa
+        }
+
+        // Bình thường thì follow player
         transform.position = new Vector3(
             playerTransform.position.x,
             playerTransform.position.y,
             playerTransform.position.z
         );
-        Scene currentScene = SceneManager.GetActiveScene();     // Lấy scene hiện tại
-        int sceneIndex = currentScene.buildIndex;
-        if(sceneIndex != 4)
+
+        if (sceneIndex != 4)
         {
             if (ZombieCityController.instance.playerCityController.isSetCircle)
+            {
+                mainCamera.fieldOfView = Mathf.SmoothDamp(
+                    mainCamera.fieldOfView,
+                    targetFOV,
+                    ref fovVelocity,
+                    0.8f,
+                    Mathf.Infinity,
+                    Time.unscaledDeltaTime
+                );
+            }
+        }
+        if (GameController.instance != null && GameController.instance.playerController != null)
         {
-            mainCamera.fieldOfView = Mathf.SmoothDamp(
-            mainCamera.fieldOfView,
-            targetFOV,
-            ref fovVelocity,
-            0.8f,
-            Mathf.Infinity,
-            Time.unscaledDeltaTime
-);
+            if (GameController.instance.playerController.isLevelUp)
+            {
+                targetFOV = 80f; // FOV khi level up
+            }
+            else
+            {
+                targetFOV = 70f; // FOV bình thường
+            }
         }
-        }
+        mainCamera.fieldOfView = Mathf.SmoothDamp(mainCamera.fieldOfView, targetFOV, ref fovVelocity, 0.3f);            // SmoothDamp FOV → chuyển đổi mượt giữa FOV hiện tại và target
     }
+
 }

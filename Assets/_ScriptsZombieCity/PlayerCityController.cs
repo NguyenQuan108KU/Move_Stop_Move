@@ -92,10 +92,14 @@ public class PlayerCityController : MonoBehaviour
     public float timerProtectPlayer;            // Thời gian còn lại của bảo vệ
     public int countProtect;                    // Số lần nhặt khiên
     public TextMeshProUGUI textCount;           // UI hiển thị số khiên còn lại
+    public GameObject buttonCountProtect;
+    public GameObject buttonMaxProtect;
 
     [Header("---------------Speed Buff----------------")]
     public TextMeshProUGUI textOfCountSpeed;    // UI hiển thị tốc độ buff
     public int countSpeed;                      // Số lần buff tốc độ
+    public GameObject buttonCountSpeed;
+    public GameObject buttonMaxSpeed;
 
     [Header("---------------Circle Settings---------------")]
     public DrawCircle drawCircle;               // Vẽ vòng tròn phạm vi
@@ -103,6 +107,8 @@ public class PlayerCityController : MonoBehaviour
     public TextMeshProUGUI textCircleRange;     // UI hiển thị kích thước vòng
     public int sizeCircle;                      // Bán kính vòng tròn
     public float number;                               // Biến phụ trợ (nếu dùng nội bộ)
+    public GameObject buttonCircleRange;
+    public GameObject buttonMaxCircleRange;
 
 
     public void Init(){
@@ -170,6 +176,10 @@ public class PlayerCityController : MonoBehaviour
                 {
                     mats[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
                     matsOfButton[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                    if (j == 2 && indexWeapon == 0)
+                    {
+                        mats[2] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[1];
+                    }
                 }
 
                 // Cập nhật materials cho MeshRenderer
@@ -628,16 +638,33 @@ public class PlayerCityController : MonoBehaviour
     //Bảo vệ người chơi khỏi enemy 
     public void FunctionProtectPlayer()
     {
-        countProtect += 1;
-        textCount.text = countProtect.ToString();
+       if(countProtect <= 2)
+        {
+            countProtect += 1;
+            textCount.text = countProtect.ToString();
+        }
+        if (countProtect == 3)
+        {
+            buttonCountProtect.SetActive(false);
+            buttonMaxProtect.SetActive(true);
+        }
         isProtectPlayer = true;
         PlayerPrefs.SetInt("ProtectPlayer", countProtect);
     }
     //Tăng tốc độ player
     public void FunctionUpVelocity()
     {
-        countSpeed += 10;
-        textOfCountSpeed.text = countSpeed.ToString();
+        if(countSpeed <= 10)
+        {
+            countSpeed += 10;
+            textOfCountSpeed.text = countSpeed.ToString();
+        }
+        if(countSpeed == 10)
+        {
+            buttonCountSpeed.SetActive(false);
+            buttonMaxSpeed.SetActive(true);
+        }
+
         moveSpeedOfPlayerCity = moveSpeedOfPlayerCity + (moveSpeedOfPlayerCity * 0.2f);
         PlayerPrefs.SetInt("UpVelocity", countSpeed);
     }
@@ -645,9 +672,17 @@ public class PlayerCityController : MonoBehaviour
     // Tăng phạm vi tấn công 
     public void FunctionSetRangeAttack()
     {
-        sizeCircle += 10;
-        drawCircle.radius = 6.0f;
-        radiusAttackOfPlayerCity = 6.0f;
+        if(sizeCircle <= 10)
+        {
+            sizeCircle += 10;
+            drawCircle.radius = 6.0f;
+            radiusAttackOfPlayerCity = 6.0f;
+        }
+        else
+        {
+            buttonCircleRange.SetActive(false);
+            buttonMaxCircleRange.SetActive(true);
+        }
         isSetCircle = true;
         textCircleRange.text = sizeCircle.ToString();
         PlayerPrefs.SetInt("RangeAttack", sizeCircle);
@@ -659,6 +694,21 @@ public class PlayerCityController : MonoBehaviour
         textCount.text = countProtect.ToString();
         if (countProtect != 0)
             isProtectPlayer = true;
+        if(countProtect >= 3)
+        {
+            buttonCountProtect.SetActive(false);
+            buttonMaxProtect.SetActive(true);
+        }
+        if(countSpeed >= 10)
+        {
+            buttonCountSpeed.SetActive(false);
+            buttonMaxSpeed.SetActive(true);
+        }
+        if (sizeCircle >= 10)
+        {
+            buttonCircleRange.SetActive(false);
+            buttonMaxCircleRange.SetActive(true);
+        }
         //Load tốc độ player
         countSpeed = PlayerPrefs.GetInt("UpVelocity");
         textOfCountSpeed.text = countSpeed.ToString();

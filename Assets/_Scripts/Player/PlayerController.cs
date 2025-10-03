@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("------------------Player Components------------------")]
+    public Rigidbody rb;
     public Animator anim;                  // Animator của nhân vật
     public Joystick joystick;             // Joystick điều khiển nhân vật
 
@@ -82,15 +84,16 @@ public class PlayerController : MonoBehaviour
         }
         SetWeaponOfPlayer();
     }
-    //void Update()
-    //{
-    //    if (isDead) return;
-    //    PlayerMove();
-    //    AttackTrigle();
-    //    UpLevel();
-    //}
+    public void UpdatePlayer()
+    {
+        if (isDead || GameController.instance.isChecckWinLose) return;
+        PlayerMove();
+        AttackTrigle();
+        //if (SceneManager.GetActiveScene().buildIndex != 4)
+            UpLevel();
+    }
     //Thay đổi vũ khí
-     public void SetWeaponOfPlayer(){
+    public void SetWeaponOfPlayer(){
         indexWeapon = PlayerPrefs.GetInt("SelectOption");     //Lấy index của vũ khí 
         indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);       //Lấy index của loại vũ khí 
         MeshRenderer meshRenderer = weaponRenderer;
@@ -108,6 +111,10 @@ public class PlayerController : MonoBehaviour
                 for (int j = 0; j < weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials.Length; j++){
                     mats[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
                     matsOfButton[j] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[j];
+                    if (j == 2 && indexWeapon == 0)
+                    {
+                        mats[2] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[1];
+                    }
                 }
 
                 // Cập nhật materials cho MeshRenderer
@@ -253,6 +260,8 @@ public class PlayerController : MonoBehaviour
         }
     }
     // Hàm phát hiện enemy trong phạm vi tấn công
+    public void SetVelocityZero() => rb.linearVelocity = Vector3.zero;
+
     public void AttackTrigle(){
         Collider[] colliders = Physics.OverlapSphere(transform.position, radiusAttackOfPlayer);     // Lấy tất cả các Collider xung quanh player trong bán kính radiusAttackOfPlayer
         Enemy firstEnemyDetected = null;         // Biến lưu enemy đầu tiên phát hiện
@@ -275,7 +284,8 @@ public class PlayerController : MonoBehaviour
             enemyCurrent.circleTargetEnemy.SetActive(true);      // Bật hiển thị enemy mới
 
             // Nếu player không di chuyển
-            if (directionOfPlayer.sqrMagnitude < 0.001f){
+            if (directionOfPlayer.sqrMagnitude < 0.001f && !enemyCurrent.isEnemyDied)
+            {
                 targetEnemy = enemyCurrent.transform;
                 //weaponOfPlayer.SetActive(true);
                 anim.SetBool("Attack", true);
@@ -317,8 +327,8 @@ public class PlayerController : MonoBehaviour
             bulletObj.transform.localScale = new Vector3(39, 39, 39);  // Nếu không có gift, đặt scale viên đạn cố định
             bulletScript.isOffRotate = false;                          // Tắt để viên đạn xoay như bình thường
         }
-        if(isGetGift)
-            StartCoroutine(AutoSetDefaultBullet(1f));
+        //if(isGetGift)
+            //StartCoroutine(AutoSetDefaultBullet(2f));
     }
     private IEnumerator AutoSetDefaultBullet(float delay)
     {
@@ -344,7 +354,7 @@ public class PlayerController : MonoBehaviour
     public void UpLevel(){
 
         // Kiểm tra điều kiện để nâng cấp
-        if (pointOfPlayerDefault >= 3 && !hasPlayedLevelUp){
+        if (pointOfPlayerDefault >= 4 && !hasPlayedLevelUp){
             AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Level_Up);
             hasPlayedLevelUp = true;                                    // Đánh dấu đã phát Level Up để không phát lại nhiều lần
             effectLevelUp.SetActive(true);      
@@ -378,6 +388,9 @@ public class PlayerController : MonoBehaviour
     public void SetOffAttack()
     {
         anim.SetBool("Attack", false);
+    }
+    public void ActiveWeapon()
+    {
         weaponOfPlayer.SetActive(true);
     }
     public void DestroyPlayer() => gameObject.SetActive(false);

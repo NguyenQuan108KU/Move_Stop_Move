@@ -29,12 +29,13 @@ public class ApplyFullSetOfPlayer : MonoBehaviour
             pantManager.SetPaintOfPlayer();
             hatManager.SetHatOfPlayer();
         }
+        weaponManager.OptionWeaponWhenStartGame();
         weaponManager.LoadColorOfWeapon(PlayerPrefs.GetInt("SelectOption"));
         weaponManager.SetWeaponStartGame();
     }
     public void SetCoinPlayer()
     {
-        coinOfPlayer = DataManager.Ins.gameSave.coin;
+        coinOfPlayer = 100000;
         textOfPlayer.text = coinOfPlayer.ToString();
     }
 }

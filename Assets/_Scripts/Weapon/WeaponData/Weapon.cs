@@ -7,7 +7,10 @@ public class Weapon
 {
     public string index;
     public List<GameObject> weaponPrefabs;
+    public List<GameObject> listOptionCustom;
+    public List<GameObject> circleOption;
     public GameObject weaponOfPlayer;
+    public GameObject weaponCustomer;
     public string weaponName;
     public List<Sprite> weaponImage;
     public string coin;
@@ -18,5 +21,5 @@ public class Weapon
     public bool isRotate;
     public bool isBomerang;
 
-    //p
+    //
 }
