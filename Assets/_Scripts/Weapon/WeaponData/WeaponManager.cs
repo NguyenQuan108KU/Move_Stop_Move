@@ -73,7 +73,7 @@ public class WeaponManager : MonoBehaviour
     public GameObject weaponOutline;
     private GameObject currentOutline;
     public GameObject circleOptionTransform;
-
+    public TextMeshProUGUI coinMain;
     private void Start()
     {
         coinOfPlayer = DataManager.Ins.gameSave.coin;
@@ -225,6 +225,9 @@ public class WeaponManager : MonoBehaviour
     }
     public void OptionWeaponWhenStartGame()
     {
+        coinOfPlayer = DataManager.Ins.gameSave.coin;
+        Debug.Log("coinOfPlayer - " + coinOfPlayer);
+        coinMain.text = coinOfPlayer.ToString();
         int currentOption = PlayerPrefs.GetInt("SelectOption", 0);
         ChangeWeaponButtonColor(currentOption);
         int indexMaterialOfWeapon = PlayerPrefs.GetInt("IndexMaterialOfWeapon" + currentOption, 1);
@@ -233,7 +236,6 @@ public class WeaponManager : MonoBehaviour
         if(DataManager.Ins.gameSave.idWeapon != "")
         {
             UpdateWeapon(currentOption);
-            Debug.Log("Chay vao roi");
             foreach (Transform child in weaponAnchor.transform)
             {
                 Destroy(child.gameObject);
@@ -305,7 +307,7 @@ public class WeaponManager : MonoBehaviour
         }
         else
         {
-            if (int.Parse(weapon.coin) <= coinOfPlayer){
+            if (int.Parse(weapon.coin) <= coinOfPlayer && weaponData.weapon[selectedOption - 1].isBought){
                 SaveWeapon();
                 DataManager.Ins.gameSave.idWeapon = weaponData.GetWeapon(selectedOption).index;
                 string weaponIndex = weapon.index;
@@ -344,6 +346,16 @@ public class WeaponManager : MonoBehaviour
                     }
                 }
         }
+    }
+    public void BuyWeaponByAds()
+    {
+        string weaponIndex = weaponData.weapon[2].index;
+        if (!DataManager.Ins.gameSave.objectsBought.Contains(weaponIndex))
+        {
+            DataManager.Ins.gameSave.objectsBought.Add(weaponIndex);
+        }
+        DataManager.Ins.SaveGame();
+        weaponData.weapon[2].isBought = true;
     }
     public void SetButtonWeapon()
     {
@@ -631,13 +643,10 @@ public class WeaponManager : MonoBehaviour
     }
     public void ChangeWeaponButtonColor(int select)
     {
-        Debug.Log("Chay vao selectedOption" + selectedOption);
         if (weaponButtonColor == null) return; // tránh lỗi khi object đã bị hủy
 
-        Debug.Log("selectedOption" + selectedOption);
         if (select == 0)
         {
-            Debug.Log("Quan");
             foreach (Transform child in optionCustom.transform)
             {
                 Destroy(child.gameObject);

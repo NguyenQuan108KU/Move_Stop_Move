@@ -10,7 +10,7 @@ public class SpawnZombie : MonoBehaviour
     public GameObject enemyPrefab;
     public Transform player;
     public int maxEnemies = 13; // Số lượng enemy tối đa
-    public int totalEnemiesToSpawn = 15;   // Tổng số enemy cần spawn (bao gồm boss)
+    public int totalEnemiesToSpawn = 5;   // Tổng số enemy cần spawn (bao gồm boss)
     public int countEnemy = 30;
 
     [Header("Spawn Radius")]

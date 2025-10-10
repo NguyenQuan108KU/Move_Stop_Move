@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -48,6 +49,8 @@ public class PlayerCityController : MonoBehaviour
     public MeshFilter weaponMeshFilter;
     public MeshRenderer bulletRenderer;
     public MeshFilter bulletMeshFilter;
+    public List<GameObject> listWeapon;
+    public GameObject anchorWepon;
     [Header("------------------Change Pants------------------")]
     public PantsDatabases pantsData;                    // Data quần 
     public SkinnedMeshRenderer pantsOdPlayer;           // Renderer của quần nhân vật
@@ -109,9 +112,17 @@ public class PlayerCityController : MonoBehaviour
     public float number;                               // Biến phụ trợ (nếu dùng nội bộ)
     public GameObject buttonCircleRange;
     public GameObject buttonMaxCircleRange;
-
+    [Header("---------------MAX Settings---------------")]
+    public int maxBullet;
+    public TextMeshProUGUI textMaxBullet;
+    public GameObject buttonMaxBullet;
+    public GameObject buttonMaxBulletLevel;
+    public TextMeshProUGUI nameOfPlayer;
 
     public void Init(){
+        //PlayerPrefs.DeleteKey("MaxBullet");
+        string name = PlayerPrefs.GetString("NamePlayer");
+        nameOfPlayer.text = name.ToString();
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         // Nếu skin đang dùng KHÔNG phải Skin_2 → set skin bình thường
         if (DataManager.Ins.gameSave.idSkin != "Skin_2"){
@@ -158,9 +169,9 @@ public class PlayerCityController : MonoBehaviour
     {
         indexWeapon = PlayerPrefs.GetInt("SelectOption");     //Lấy index của vũ khí 
         indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);       //Lấy index của loại vũ khí 
-        MeshRenderer meshRenderer = weaponRenderer;
+        MeshRenderer meshRenderer;
         MeshRenderer meshRendererOfButton = bulletRenderer;
-        Material[] mats = meshRenderer.materials;
+        //Material[] mats = meshRenderer.materials;
         Material[] matsOfButton = meshRendererOfButton.sharedMaterials;
         string idWeapon = DataManager.Ins.gameSave.idWeapon;                // Lấy ID vũ khí hiện tại từ gameSave
         for (int i = 0; i < weaponData.weapon.Count(); i++)
@@ -168,7 +179,10 @@ public class PlayerCityController : MonoBehaviour
             if (weaponData.weapon[i].index == idWeapon)
             {
                 // Gán mesh của vũ khí cho player và bullet
-                weaponMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
+                //weaponMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
+                GameObject newWeapon = Instantiate(listWeapon[indexWeapon], anchorWepon.transform);
+                meshRenderer = newWeapon.GetComponent<MeshRenderer>();
+                Material[] mats = meshRenderer.materials;
                 bulletMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
 
                 // Thay đổi materials của vũ khí và bullet
@@ -179,6 +193,7 @@ public class PlayerCityController : MonoBehaviour
                     if (j == 2 && indexWeapon == 0)
                     {
                         mats[2] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[1];
+                        matsOfButton[2] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[1];
                     }
                 }
 
@@ -311,7 +326,7 @@ public class PlayerCityController : MonoBehaviour
             {
                 isAttack = false;
                 anim.SetBool("Attack", false);
-                weaponOfPlayerCity.SetActive(true);
+                //weaponOfPlayerCity.SetActive(true);
                 target = null;
                 attackTimer = 0f;
             }
@@ -335,7 +350,7 @@ public class PlayerCityController : MonoBehaviour
 
             if (directionOfPlayerCity.sqrMagnitude > 0.01f)
             {
-                weaponOfPlayerCity.SetActive(true);
+                //weaponOfPlayerCity.SetActive(true);
                 Quaternion toRotation = Quaternion.LookRotation(directionOfPlayerCity, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
                 anim.SetBool("Attack", false);
@@ -402,7 +417,7 @@ public class PlayerCityController : MonoBehaviour
 
     public void Shooting()
     {
-        weaponOfPlayerCity.SetActive(false);
+        //weaponOfPlayerCity.SetActive(false);
         AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Attack);
         // Lấy chế độ bắn từ PlayerPrefs (Function lưu trong bộ nhớ)
         indexFunctionBullet = PlayerPrefs.GetInt("Function");
@@ -416,15 +431,18 @@ public class PlayerCityController : MonoBehaviour
                 ShootingDefault();
             }
             // Level 1 → bắn 2 viên song song
-            else if (levelOfPlayerCity == 1)
+            else if (levelOfPlayerCity == 1 && maxBullet == 0)
             {
-                ShootDualParallel(0.6f); // khoảng cách giữa 2 viên = 0.3
+                ShootDualParallel(0.3f); // khoảng cách giữa 2 viên = 0.3
+            }else if(levelOfPlayerCity == 1 && maxBullet == 1)
+            {
+                ShootTripleParallel(0.25f);
             }
         }
         // Nếu functionBullet = 0 → bắn 2 viên, 1 viên thẳng và 1 viên lệch góc
         else if (indexFunctionBullet == 0)
         {
-            ShootDoubleSpread(45); // góc lệch 45 độ
+            ShootDualParallel(0.3f); // góc lệch 
         }
         // Nếu functionBullet = 1 → bắn liên tiếp 2 viên
         else if (indexFunctionBullet == 1)
@@ -490,10 +508,12 @@ public class PlayerCityController : MonoBehaviour
     //Bắn 2 viên song song 
     public void ShootDualParallel(float offsetDistance)
     {
-        // if: nếu không có target thì không bắn
-        if (target == null) return;
+        // Nếu không có target thì không bắn
+        if (target == null)
+            return;
 
-        directionOfPlayerCity = Vector3.zero; // Dừng di chuyển player khi bắn
+        // Dừng di chuyển player khi bắn
+        directionOfPlayerCity = Vector3.zero;
 
         // Hướng bắn (vector từ player tới enemy, chuẩn hóa để làm hướng bay của đạn)
         Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
@@ -502,26 +522,64 @@ public class PlayerCityController : MonoBehaviour
         // => cho ra hướng trái/phải để đặt 2 viên đạn song song
         Vector3 sideOffset = Vector3.Cross(Vector3.up, dirToTarget).normalized * offsetDistance;
 
-        // Viên đạn 1 (dịch sang trái một khoảng offsetDistance)
+        // ===================== Viên đạn trái =====================
         GameObject bulletLeft = Instantiate(
             bulletPrefabs,
-            firingTransform.position - sideOffset, // vị trí dịch sang trái
-            Quaternion.LookRotation(dirToTarget)   // xoay cùng hướng bắn
+            firingTransform.position - sideOffset,      // vị trí dịch sang trái
+            Quaternion.LookRotation(dirToTarget)        // xoay cùng hướng bắn
         );
+
         Bullet bLeft = bulletLeft.GetComponent<Bullet>();
-        bLeft.SetOwner(gameObject);      // Set player làm chủ viên đạn
+        bLeft.SetOwner(gameObject);     // Set player làm chủ viên đạn
         bLeft.SetDirection(dirToTarget); // Đặt hướng bay của đạn
 
-        // Viên đạn 2 (dịch sang phải một khoảng offsetDistance)
+        // ===================== Viên đạn phải =====================
         GameObject bulletRight = Instantiate(
             bulletPrefabs,
-            firingTransform.position + sideOffset, // vị trí dịch sang phải
-            Quaternion.LookRotation(dirToTarget)   // xoay cùng hướng bắn
+            firingTransform.position + sideOffset,      // vị trí dịch sang phải
+            Quaternion.LookRotation(dirToTarget)        // xoay cùng hướng bắn
         );
+
         Bullet bRight = bulletRight.GetComponent<Bullet>();
-        bRight.SetOwner(gameObject);      // Set player làm chủ viên đạn
+        bRight.SetOwner(gameObject);     // Set player làm chủ viên đạn
         bRight.SetDirection(dirToTarget); // Đặt hướng bay của đạn
     }
+
+    public void ShootTripleParallel(float offsetDistance)
+    {
+        if (firingTransform == null || target == null) return;
+
+        // 1️⃣ Hướng từ nòng súng tới enemy
+        Vector3 dirToTarget = (target.position - firingTransform.position).normalized;
+
+        // 2️⃣ Vector ngang trái-phải, vuông góc với hướng bay
+        Vector3 sideOffset = Vector3.Cross(Vector3.up, dirToTarget).normalized * offsetDistance;
+
+        // 3️⃣ Hướng quay chung cho cả 3 viên (đều nhìn cùng hướng)
+        Quaternion bulletRotation = Quaternion.LookRotation(dirToTarget);
+
+        // 4️⃣ Tạo viên giữa (bay thẳng đến enemy)
+        GameObject bulletCenter = Instantiate(bulletPrefabs, firingTransform.position, bulletRotation);
+        Bullet bCenter = bulletCenter.GetComponent<Bullet>();
+        bCenter.SetOwner(gameObject);
+        bCenter.SetDirection(dirToTarget);
+
+        // 5️⃣ Viên bên trái (song song)
+        GameObject bulletLeft = Instantiate(bulletPrefabs, firingTransform.position - sideOffset, bulletRotation);
+        Bullet bLeft = bulletLeft.GetComponent<Bullet>();
+        bLeft.SetOwner(gameObject);
+        bLeft.SetDirection(dirToTarget); // Cùng hướng với viên giữa
+
+        // 6️⃣ Viên bên phải (song song)
+        GameObject bulletRight = Instantiate(bulletPrefabs, firingTransform.position + sideOffset, bulletRotation);
+        Bullet bRight = bulletRight.GetComponent<Bullet>();
+        bRight.SetOwner(gameObject);
+        bRight.SetDirection(dirToTarget); // Cùng hướng với viên giữa
+    }
+
+
+
+
 
     // Bắn 2 viên tách nhau
     public void ShootDoubleSpread(float angle)
@@ -687,6 +745,20 @@ public class PlayerCityController : MonoBehaviour
         textCircleRange.text = sizeCircle.ToString();
         PlayerPrefs.SetInt("RangeAttack", sizeCircle);
     }
+    public void FunctionMax()
+    {
+        if(maxBullet <= 1)
+        {
+            maxBullet += 1;
+            textMaxBullet.text = maxBullet.ToString();
+        }
+        if (maxBullet == 1)
+        {
+            buttonMaxBullet.SetActive(false);
+            buttonMaxBulletLevel.SetActive(true);
+        }
+        PlayerPrefs.SetInt("MaxBullet", maxBullet);
+    }
     public void LoadFunction()
     {
         //Load vòng tròn bảo vệ
@@ -699,27 +771,35 @@ public class PlayerCityController : MonoBehaviour
             buttonCountProtect.SetActive(false);
             buttonMaxProtect.SetActive(true);
         }
+        //Load tốc độ player
+        countSpeed = PlayerPrefs.GetInt("UpVelocity");
+        textOfCountSpeed.text = countSpeed.ToString();
+        moveSpeedOfPlayerCity = moveSpeedOfPlayerCity + (moveSpeedOfPlayerCity * 0.2f);
         if(countSpeed >= 10)
         {
             buttonCountSpeed.SetActive(false);
             buttonMaxSpeed.SetActive(true);
         }
+        //Load phạm vi tấn công
+        sizeCircle = PlayerPrefs.GetInt("RangeAttack", sizeCircle);
         if (sizeCircle >= 10)
         {
             buttonCircleRange.SetActive(false);
             buttonMaxCircleRange.SetActive(true);
         }
-        //Load tốc độ player
-        countSpeed = PlayerPrefs.GetInt("UpVelocity");
-        textOfCountSpeed.text = countSpeed.ToString();
-        moveSpeedOfPlayerCity = moveSpeedOfPlayerCity + (moveSpeedOfPlayerCity * 0.2f);
-        //Load phạm vi tấn công
-        sizeCircle = PlayerPrefs.GetInt("RangeAttack", sizeCircle);
         drawCircle.radius = 6.0f;
         radiusAttackOfPlayerCity = 6.0f;
         textCircleRange.text = sizeCircle.ToString();
         if(countProtect != 0)
             isSetCircle = true;
+
+        maxBullet = PlayerPrefs.GetInt("MaxBullet");
+        if(maxBullet >= 1)
+        {
+            buttonMaxBullet.SetActive(false);
+            buttonMaxBulletLevel.SetActive(true);
+        }
+        textMaxBullet.text = maxBullet.ToString();
     }
     // Quay vũ khí khi vào game
     public void WeaponRotateWhenStartGame()
@@ -731,7 +811,7 @@ public class PlayerCityController : MonoBehaviour
     }
     public void SetOffAttack()
     {
-        weaponOfPlayerCity.SetActive(true);
+        //weaponOfPlayerCity.SetActive(true);
         anim.SetBool("Attack", false);
     }
     private void OnDrawGizmos()
@@ -748,7 +828,7 @@ public class PlayerCityController : MonoBehaviour
 
             dead1.SetActive(true);                     // Hiển thị hiệu ứng UI chết
             anim.SetBool("Death", true);               // Chạy animation chết
-            weaponOfPlayerCity.SetActive(false);       // Ẩn vũ khí của player
+            //weaponOfPlayerCity.SetActive(false);       // Ẩn vũ khí của player
             isDead = true;                             // Đánh dấu player đã chết
             PlayerPrefs.SetInt("coinMoney", coinMoney);// Lưu lại số coin hiện tại vào PlayerPrefs
             isPlayerDie = true;                        // Cờ kiểm tra player đã chết

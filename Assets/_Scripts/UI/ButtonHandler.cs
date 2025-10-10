@@ -10,7 +10,10 @@ public class ButtonHandler : MonoBehaviour
     public Button popupBackMenu;
     public Button popupBackMenuCity;
     public Button NextScene;
+    public Button buttonGetGift;
     public Button loadScene;
+    public GameObject loadGift;
+    public float speedRotation;
 
     [Header("--------------Prefabs--------------")]
     public GameObject popUpGiftPrefabs;
@@ -32,8 +35,14 @@ public class ButtonHandler : MonoBehaviour
             NextScene.onClick.AddListener(NextLevel);
         if (loadScene != null)
             loadScene.onClick.AddListener(LoadScene);
+        if (buttonGetGift != null)
+            buttonGetGift.onClick.AddListener(AdsController.Instance.ShowRewardWeapon);
     }
-
+    private void Update()
+    {
+        if (loadGift != null)
+            loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
+    }
     // Hiển thị popup quà tặng khi bấm nút Winner
     private void DisplayFreeItem()
     {

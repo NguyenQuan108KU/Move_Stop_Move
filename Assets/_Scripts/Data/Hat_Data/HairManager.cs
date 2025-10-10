@@ -200,6 +200,19 @@ public class HairManager : MonoBehaviour
         buyByCoin.SetActive(false);
         selectPaint.SetActive(true);
     }
+    public void BuyHairByAdsInGame()
+    {
+        string hatName = hatsDatabases.hats[4].index;
+        if (!DataManager.Ins.gameSave.objectsBought.Contains(hatName))
+        {
+            DataManager.Ins.gameSave.objectsBought.Add(hatName);
+        }
+        SetLock();
+        DataManager.Ins.SaveGame();
+        buyByAds.SetActive(false);
+        buyByCoin.SetActive(false);
+        selectPaint.SetActive(true);
+    }
     public void StateOfButton(int index)
     {
         string hatName = hatsDatabases.hats[index].index;             //Lấy index của quần khi click vào button quần 

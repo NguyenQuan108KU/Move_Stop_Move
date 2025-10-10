@@ -35,7 +35,7 @@ public class ApplyFullSetOfPlayer : MonoBehaviour
     }
     public void SetCoinPlayer()
     {
-        coinOfPlayer = 100000;
+        coinOfPlayer = DataManager.Ins.gameSave.coin;
         textOfPlayer.text = coinOfPlayer.ToString();
     }
 }

@@ -59,6 +59,7 @@ public class Zombie : MonoBehaviour
     }
 
     public void ZombieUpdate(){
+        if (target == null) return; // Ngưng update nếu chưa có target
         float distance = Vector3.Distance(transform.position, target.position);
         if (ZombieCityController.instance.playerCityController.isOffPlayer || isDead){
             agent.ResetPath();                  // Xóa đường đi của NavMeshAgent
@@ -171,6 +172,7 @@ public class Zombie : MonoBehaviour
         }
     }
     public void EnemyDie() {
+        //VibrationManager.Ins.Vibrate();
         ZombieCityController.instance.zombies.Remove(this);
         // Tạo hiệu ứng particle khi enemy chết
         GameObject effect = Instantiate(praticleSystemEnemyDie);

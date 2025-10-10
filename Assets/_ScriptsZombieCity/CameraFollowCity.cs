@@ -12,7 +12,7 @@ public class CameraFollowCity : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
 
     private float fovVelocity = 0f; // dùng cho SmoothDamp
-    private float targetFOV = 65f; // FOV mặc định
+    public float targetFOV = 65f; // FOV mặc định
 
     private void LateUpdate()
     {
@@ -43,10 +43,11 @@ public class CameraFollowCity : MonoBehaviour
             playerTransform.position.z
         );
 
-        if (sceneIndex != 4)
+        if (sceneIndex != 0)
         {
             if (ZombieCityController.instance.playerCityController.isSetCircle)
             {
+                Debug.Log("Quan cam");
                 mainCamera.fieldOfView = Mathf.SmoothDamp(
                     mainCamera.fieldOfView,
                     targetFOV,
@@ -68,7 +69,25 @@ public class CameraFollowCity : MonoBehaviour
                 targetFOV = 70f; // FOV bình thường
             }
         }
+        if (GameController.instance != null && GameController.instance.playerController != null)
+        {
+            if (GameController.instance.playerController.isGetGift && !GameController.instance.playerController.isReturnCamera)
+            {
+                int zoom = GameController.instance.playerController.levelUp;
+                if (zoom == 1)
+                    targetFOV = 80f;
+                else
+                    targetFOV = 85f;// FOV khi level up
+            }
+        }
         mainCamera.fieldOfView = Mathf.SmoothDamp(mainCamera.fieldOfView, targetFOV, ref fovVelocity, 0.3f);            // SmoothDamp FOV → chuyển đổi mượt giữa FOV hiện tại và target
     }
-
+    public void SetSefaultCamera()
+    {
+        if (GameController.instance != null && GameController.instance.playerController != null)
+        {
+            targetFOV = 70f; // FOV bình thường
+        }
+        mainCamera.fieldOfView = Mathf.SmoothDamp(mainCamera.fieldOfView, targetFOV, ref fovVelocity, 0.3f);
+    }
 }

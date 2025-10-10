@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
         isLoadMenu = false;     // chưa load menu
     }
     private void Update(){
-        //if(loadGift != null)
+        //if (loadGift != null)
         //    loadGift.transform.rotation = Quaternion.Euler(0, 0, Time.time * -speedRotation);
         //Load vào game Zombie city
         UpdateAliveZombie();

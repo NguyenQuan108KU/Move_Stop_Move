@@ -34,4 +34,11 @@ public class Obstacle : MonoBehaviour
             ResetMatObstacle();
         }
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            ResetMatObstacle();
+        }
+    }
 }

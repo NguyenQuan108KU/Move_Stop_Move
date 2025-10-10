@@ -1,5 +1,5 @@
 # ninja log v5
-46	550	7809325545777260	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	4659357105e2fd8a
-551	1115	7809325551727250	E:/Move_Stop_Move-master/Library/Bee/Android/Prj/Mono2x/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5q6az213/obj/armeabi-v7a/libswappywrapper.so	b06cfd44338c74f4
-24	1145	7809900051557775	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	4659357105e2fd8a
-1145	1494	7809900055058844	E:/Move_Stop_Move-master/Library/Bee/Android/Prj/Mono2x/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5q6az213/obj/armeabi-v7a/libswappywrapper.so	b06cfd44338c74f4
+26	435	7812053178326111	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5ae800430b7e59f5
+436	683	7812053180821012	E:/Move_Stop_Move-master/Library/Bee/Android/Prj/Mono2x/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5q6az213/obj/armeabi-v7a/libswappywrapper.so	74b12f72fd10cc6f
+43	2517	7817098512118956	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5ae800430b7e59f5
+2518	3273	7817098519774262	E:/Move_Stop_Move-master/Library/Bee/Android/Prj/Mono2x/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5q6az213/obj/armeabi-v7a/libswappywrapper.so	74b12f72fd10cc6f

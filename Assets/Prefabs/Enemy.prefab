@@ -435,7 +435,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &428050788991925403
 Transform:
   m_ObjectHideFlags: 0
@@ -1881,7 +1881,7 @@ MonoBehaviour:
   firingTransform: {fileID: 6378755179001133314}
   target: {fileID: 0}
   possibleColors:
-  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 1, g: 0.6, b: 0.4, a: 0}
   - {r: 0.25458813, g: 1, b: 0, a: 0}
   - {r: 0.13811731, g: 0, b: 1, a: 0}
   - {r: 0.10375927, g: 0.93207544, b: 0.82317495, a: 0}
@@ -1892,6 +1892,9 @@ MonoBehaviour:
   - {r: 0.6075471, g: 0.2983957, b: 0.063047275, a: 0}
   - {r: 0.04150939, g: 0, b: 0, a: 0}
   - {r: 0.038625814, g: 0.6603774, b: 0.41594028, a: 0}
+  - {r: 1, g: 0.6, b: 1, a: 0}
+  - {r: 0.8, g: 0.4, b: 1, a: 0}
+  - {r: 0.4, g: 0, b: 0, a: 0}
   pinkColor: {r: 0, g: 0, b: 0, a: 0}
   detectionRange: 8
   attackRange: 0
@@ -1928,6 +1931,9 @@ MonoBehaviour:
   informationOfEnemy: {fileID: 6282457656021724554}
   GroundCheck: {fileID: 6746558756906028439}
   floatingTextPrefab: {fileID: 6620629643112542043, guid: 5f0b04e44f96762489bb7cd766e0ce53, type: 3}
+  weaponData: {fileID: 11400000, guid: 72623cd077e98594cbac2e787147fb7d, type: 2}
+  anchorWeapon: {fileID: 1774457733360699256}
+  newWeapon: {fileID: 0}
 --- !u!114 &1330244777685495638
 MonoBehaviour:
   m_ObjectHideFlags: 0

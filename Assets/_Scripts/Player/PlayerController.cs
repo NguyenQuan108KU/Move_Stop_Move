@@ -1,7 +1,9 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -44,6 +46,8 @@ public class PlayerController : MonoBehaviour
     public MeshFilter weaponMeshFilter;
     public MeshRenderer bulletRenderer;
     public MeshFilter bulletMeshFilter;
+    public List<GameObject> listWeapon;
+    public GameObject anchorWepon;
     [Header("------------------Change Pants------------------")]
     public PantsDatabases pantsData;                 // Data quần 
     public SkinnedMeshRenderer pantsOdPlayer;        // Renderer của quần nhân vật
@@ -61,14 +65,21 @@ public class PlayerController : MonoBehaviour
     public Transform[] list_anchorsOfSkin;                  // Danh sách anchor của skin
     public Transform wingAnchor;                            // Vị trí gắn cánh
     public Transform tailAnchor;                            // Vị trí gắn đuôi
-
+    public bool isReturnCamera;
 
     public bool isGetGift = false;
     public bool isLevelUp = false;
     private bool hasPlayedLevelUp = false;
     public GameObject popupLose;
+
+    public TextMeshProUGUI nameOfPlayer;
+    public CameraFollow cam;
+    public CameraFollowCity cam1;
+    public int levelUp = 1;
     public void Init()
     {
+        string name = PlayerPrefs.GetString("NamePlayer", "You");
+        nameOfPlayer.text = name.ToString();
         pointOfPlayerDefault = 0;
         coinMoney = PlayerPrefs.GetInt("coinMoney");
         isGetGift = false;
@@ -94,17 +105,23 @@ public class PlayerController : MonoBehaviour
     }
     //Thay đổi vũ khí
     public void SetWeaponOfPlayer(){
-        indexWeapon = PlayerPrefs.GetInt("SelectOption");     //Lấy index của vũ khí 
-        indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon);       //Lấy index của loại vũ khí 
-        MeshRenderer meshRenderer = weaponRenderer;
+        
+        indexWeapon = PlayerPrefs.GetInt("SelectOption", 0);     //Lấy index của vũ khí 
+        indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon, 1);       //Lấy index của loại vũ khí 
+        //MeshRenderer meshRenderer = weaponRenderer;
+        MeshRenderer meshRenderer;
         MeshRenderer meshRendererOfButton = bulletRenderer;
-        Material[] mats = meshRenderer.materials;
+        //Material[] mats = meshRenderer.materials;
         Material[] matsOfButton = meshRendererOfButton.sharedMaterials;
         string idWeapon = DataManager.Ins.gameSave.idWeapon;                // Lấy ID vũ khí hiện tại từ gameSave
         for (int i = 0; i < weaponData.weapon.Count(); i++){                // Duyệt danh sách vũ khí để tìm vũ khí khớp với idWeapon
             if (weaponData.weapon[i].index == idWeapon){
+                Debug.Log("Sinh weapon");
                 // Gán mesh của vũ khí cho player và bullet
-                weaponMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
+                //weaponMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
+                GameObject newWeapon = Instantiate(listWeapon[indexWeapon], anchorWepon.transform);
+                meshRenderer = newWeapon.GetComponent<MeshRenderer>();
+                Material[] mats = meshRenderer.materials;
                 bulletMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
 
                 // Thay đổi materials của vũ khí và bullet
@@ -114,6 +131,7 @@ public class PlayerController : MonoBehaviour
                     if (j == 2 && indexWeapon == 0)
                     {
                         mats[2] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[1];
+                        matsOfButton[2] = weaponData.listOfMaterials[indexWeapon].materialOfHammer[indexMaterial].materials[1];
                     }
                 }
 
@@ -239,7 +257,7 @@ public class PlayerController : MonoBehaviour
         if (directionOfPlayer.sqrMagnitude > 0.01f)
         {
             // Chuẩn hoá vector để hướng luôn có độ dài = 1
-            weaponOfPlayer.SetActive(true);
+            //weaponOfPlayer.SetActive(true);
             Vector3 moveDir = directionOfPlayer.normalized;
 
             // Di chuyển với vận tốc đồng đều
@@ -310,7 +328,8 @@ public class PlayerController : MonoBehaviour
 
     //Hàm bắn Enemy. Hàm này gọi trong event của animation
     public void Shooting(){
-        weaponOfPlayer.SetActive(false);
+        //weaponOfPlayer.SetActive(false);
+        isReturnCamera = true;
         GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);   // Tạo một viên đạn mới từ prefab tại vị trí firingTransform
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();     // Lấy component Bullet từ viên đạn vừa tạo
         directionOfPlayer = Vector3.zero;                           // Reset hướng di chuyển của player (hoặc hướng bắn) về Vector3.zero
@@ -320,10 +339,14 @@ public class PlayerController : MonoBehaviour
 
         // Nếu player đang có gift (ăn được quà)
         if (isGetGift){
+            //isGetGift = false;
+            bulletScript.capsualColider.isTrigger = true;
             bulletScript.isOffRotate = true;                           // Bật chế độ viên đạn không xoay
             StartCoroutine(ScaleBullet(bulletObj, 3f, 130f, 0.3f));    // Bắt đầu tăng scale viên đạn từ kích thước ban đầu lên to hơn 
+            SetBulletPlayerDeufalt();
         }
         else{
+            bulletScript.capsualColider.isTrigger = false;
             bulletObj.transform.localScale = new Vector3(39, 39, 39);  // Nếu không có gift, đặt scale viên đạn cố định
             bulletScript.isOffRotate = false;                          // Tắt để viên đạn xoay như bình thường
         }
@@ -364,20 +387,34 @@ public class PlayerController : MonoBehaviour
             radiusAttackOfPlayer = 6.5f;  //Tăng phạm vi tấn công 
             circleAttack.radius = 6.5f;             
             circleAttack.DrawCircleUnderFeet();
+            levelUp += 1;
         }
     }
 
     //Hàm này set lại kích thước về ban đầu  của player sau khi ăn quà xong 
     public void SetBulletPlayerDeufalt(){
-        if (isGetGift){   
-            isGetGift = false;          // Reset trạng thái gift để có thể ăn lại quà 
+        if (isGetGift){
+            if(SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                cam1.SetSefaultCamera();
+            }
+            else
+            {
+                cam.SetSefaultCamera();
+            }
             radiusAttackOfPlayer = 5f;  // Đặt bán kính tấn công của player về mặc định
             if (circleAttack != null){
                 circleAttack.radius = 5f;             // Reset bán kính hiển thị trên DrawCircle
                 circleAttack.DrawCircleUnderFeet();   // Vẽ lại vòng tròn dưới chân player
             }
             bullet1.transform.localScale = new Vector3(39, 39, 39);   // Reset kích thước viên đạn về mặc định
+            StartCoroutine(ResetGiftAfterDelay());       // Reset trạng thái gift để có thể ăn lại quà 
         }
+    }
+    private IEnumerator ResetGiftAfterDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        isGetGift = false;
     }
 
     //Hàm vẽ màu cho Gizmos
@@ -391,7 +428,7 @@ public class PlayerController : MonoBehaviour
     }
     public void ActiveWeapon()
     {
-        weaponOfPlayer.SetActive(true);
+        //weaponOfPlayer.SetActive(true);
     }
     public void DestroyPlayer() => gameObject.SetActive(false);
     private void OnCollisionEnter(Collision collision){
@@ -401,13 +438,14 @@ public class PlayerController : MonoBehaviour
             AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Lose);
             //Instantiate(popupLose, transform.position, Quaternion.identity);   //Sinh Popup Lose 
             anim.SetBool("Death", true);                                       // Kích hoạt animation chết
-            weaponOfPlayer.SetActive(false);                                          //Tắt vũ khí của player khi ném            
+            //weaponOfPlayer.SetActive(false);                                          //Tắt vũ khí của player khi ném            
             PlayerPrefs.SetInt("coinMoney", coinMoney);                        //Lưu tiền của player
             Destroy(collision.gameObject);
         }
 
         //Kiểm tra va chạm khi ăn quà 
         if (collision.gameObject.CompareTag("Gift")){
+            isReturnCamera = false;
             AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Get_Gift);
             isGetGift = true;                           // Đánh dấu trạng thái nhận gift
             Destroy(collision.gameObject);              // Hủy gift khỏi scene

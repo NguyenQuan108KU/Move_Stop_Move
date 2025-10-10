@@ -26,6 +26,8 @@ public class AudioManager : MonoBehaviour
         {
             Ins = this;
             DontDestroyOnLoad(gameObject);
+            SetMute(IsMuted());
+
         }
         lastPlayTimeDic = new Dictionary<SoundData.SoundName, float>();
     }
@@ -159,5 +161,28 @@ public class AudioManager : MonoBehaviour
 
         sfxController.PlaySound(soundName);
     }
+    public void SetMute(bool isMuted)
+    {
+        // Lưu trạng thái nếu cần (ví dụ để nhớ trong DataManager)
+        PlayerPrefs.SetInt("Mute", isMuted ? 1 : 0);
+        PlayerPrefs.Save();
+
+        foreach (var s in soundList)
+        {
+            if (s != null && s.audioSource != null)
+                s.audioSource.mute = isMuted;
+        }
+        foreach (var m in musicList)
+        {
+            if (m != null && m.audioSource != null)
+                m.audioSource.mute = isMuted;
+        }
+    }
+
+    public bool IsMuted()
+    {
+        return PlayerPrefs.GetInt("Mute", 0) == 1;
+    }
+
 
 }

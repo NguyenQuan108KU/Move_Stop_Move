@@ -58,11 +58,16 @@ public class Enemy : MonoBehaviour
     private float timer = 0f;
     [Header("------------------Floating Text------------------")]
     public GameObject floatingTextPrefab; // kéo prefab vào trong Inspector
+    public ListWeaponOfEnemy weaponData;
+    public GameObject anchorWeapon;
+    public GameObject newWeapon;
 
-
+    public bool enemyStartGame;
     private void Awake()
     {
         SetColorOfEnemy();
+        if(!enemyStartGame)
+            SetWeaponEnemy();
     }
 
     //Hàm set màu cho enemy
@@ -121,7 +126,11 @@ public class Enemy : MonoBehaviour
         var ps = BloodParticle.GetComponent<ParticleSystem>().main;
         ps.startColor = chosenColor;
     }
-
+    public void SetWeaponEnemy()
+    {
+        int indexWeapon = Random.Range(0, weaponData.listWeapon.weaponPrefabs.Count);
+        newWeapon = Instantiate(weaponData.listWeapon.weaponPrefabs[indexWeapon], anchorWeapon.transform);
+    }
 
     //Hàm Enemy di chuyển 
     public void EnemyMovement(){
@@ -189,7 +198,17 @@ public class Enemy : MonoBehaviour
     //Hàm enemy bắn đạn 
     public void Shooting(){
         // Tạo viên đạn mới từ prefab tại vị trí firingTransform
+        // Tạo viên đạn mới từ prefab tại vị trí firingTransform
         GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, firingTransform.rotation);
+
+        // Copy mesh
+        bulletObj.GetComponent<MeshFilter>().mesh = newWeapon.GetComponent<MeshFilter>().mesh;
+
+        // Copy materials
+        MeshRenderer weaponRenderer = newWeapon.GetComponent<MeshRenderer>();
+        MeshRenderer bulletRenderer = bulletObj.GetComponent<MeshRenderer>();
+
+        bulletRenderer.materials = weaponRenderer.materials;
         bulletObj.tag = "Bullet2"; // Gán tag cho bullet của enemy
 
         Bullet bulletScript = bulletObj.GetComponent<Bullet>(); // Lấy component Bullet từ viên đạn
@@ -323,6 +342,31 @@ public class Enemy : MonoBehaviour
             Destroy(collision.gameObject);
             detectionRange = 12f;
             //bulletPrefabs.transform.localScale = new Vector3(100, 100, 100);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Bullet1") && !isEnemyDied)
+        {
+            if (floatingTextPrefab != null)
+            {
+                //VibrationManager.Ins.Vibrate();
+                GameObject ft = Instantiate(
+                floatingTextPrefab,
+                GameController.instance.playerController.transform.position + Vector3.up * 2f,
+                Quaternion.identity,
+                GameController.instance.playerController.transform // parent chính là Player
+);
+                ft.GetComponent<FloatingText>().Setup("+1", Color.white);
+            }
+            GameController.instance.playerController.ActiveWeapon();
+            OnHit();
+            GameController.instance.playerController.SetBulletPlayerDeufalt();
+            GameController.instance.playerController.pointOfPlayerDefault += 1;      // Player nhận điểm
+            GameController.instance.playerController.coinMoney += 50;               // Player nhận coin
+            GameController.instance.uiManager.UpdateCoin();                         //Cập nhật coin
+            GameController.instance.uiManager.UpdatePoint();
+            isEnemyDied = true;
         }
     }
 }

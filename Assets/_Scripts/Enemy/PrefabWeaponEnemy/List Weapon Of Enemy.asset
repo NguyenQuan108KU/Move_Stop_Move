@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea3ea8622d1ba045a7fe638118636da, type: 3}
+  m_Name: List Weapon Of Enemy
+  m_EditorClassIdentifier: 
+  listWeapon:
+    weaponPrefabs:
+    - {fileID: 4027082697827763985, guid: 86958f4ccdce03f4385aea50d8e60aee, type: 3}
+    - {fileID: 4027082697827763985, guid: 905ba412622aa00418c6e7ccdd3adc2c, type: 3}
+    - {fileID: 4027082697827763985, guid: b03095c6e88eebc48ae5bde26a0aecc7, type: 3}
+    - {fileID: 4027082697827763985, guid: 3b6575087b46fc44fbe3b451a5c2cf83, type: 3}
+    - {fileID: 4027082697827763985, guid: fa431f62d44503b45a55832bb67a35dc, type: 3}
+    - {fileID: 4027082697827763985, guid: 202114641298e6945beaffbd69fb9e50, type: 3}

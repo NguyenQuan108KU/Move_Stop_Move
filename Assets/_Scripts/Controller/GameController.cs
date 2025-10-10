@@ -20,6 +20,8 @@ public class GameController : MonoBehaviour
     public GameObject joystick;
     public bool isChecckWinLose;
     public List<Enemy> enemies = new List<Enemy>();     // quản lý nhiều enemy
+    public bool isPlayGame;
+    public int level = 1;
 
     private void Awake(){
         if (instance != null)
@@ -28,7 +30,8 @@ public class GameController : MonoBehaviour
             instance = this;
     }
     private void Start(){
-        AdsController.Instance.ShowInterstitial();
+        level = DataManager.Ins.gameSave.level;
+        //AdsController.Instance.ShowInterstitial();
         playerController.Init();
     }
     private void Update() {
@@ -36,17 +39,26 @@ public class GameController : MonoBehaviour
         playerController.UpdatePlayer();
 
         // Update tất cả Enemy
-        for (int i = 0; i < enemies.Count; i++)
+        if (isPlayGame || SceneManager.GetActiveScene().buildIndex == 0)
         {
-            enemies[i].EnemyUpdate();
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                enemies[i].EnemyUpdate();
+            }
         }
     }
+    public void SetPlayGame() => isPlayGame = true;
     private void CheckWinOrLose(){
+        if (enemyTotal <= 0 && SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            level += 1;
+        }
         if(enemyTotal <= 0 && !isChecckWinLose){
             isChecckWinLose = true;
             Instantiate(popupWin, transform.position, Quaternion.identity);
             joystick.SetActive(false);
-            
+            DataManager.Ins.gameSave.level = level;
+            DataManager.Ins.SaveGame();
         }
         else if (playerController.isDead && !isChecckWinLose)
         {

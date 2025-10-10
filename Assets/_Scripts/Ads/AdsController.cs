@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using AppLovinMax;
+using UnityEngine.SceneManagement;
 
 // Khai báo enum ở đây (ngoài class)
 public enum RewardType
@@ -10,12 +11,15 @@ public enum RewardType
     Pants,
     Hat,
     Skin,
-    Shield
+    Shield,
+    HatInGame,
+    Weapon
 }
 
 public class AdsController : MonoBehaviour
 {
     public static AdsController Instance;
+    public WeaponDatabase weaponData;
     private RewardType currentReward = RewardType.None;
     public HairManager hairReward;
     public PantsManager pantReward;
@@ -169,9 +173,18 @@ public class AdsController : MonoBehaviour
     {
         ShowRewarded(RewardType.Shield);
     }
-
+    public void ShowRewardHatInGame()
+    {
+        ShowRewarded(RewardType.HatInGame);
+    }
+    public void ShowRewardWeapon()
+    {
+        ShowRewarded(RewardType.Weapon);
+        //GameController.instance.sceneController.BackSceneMenu();
+    }
     private void GiveReward(RewardType rewardType)
     {
+        AppOpenAdManager.IsOtherAdShowing = true;
         switch (rewardType)
         {
             case RewardType.Pants:
@@ -186,12 +199,21 @@ public class AdsController : MonoBehaviour
             case RewardType.Shield:
                 shieldReward.BuyProtectByAds();
                 break;
+            case RewardType.Weapon:
+                    BuyWeaponByAds();
+                
+                break;
             default:
                 Debug.Log("Không có reward.");
                 break;
         }
 
         currentReward = RewardType.None; // reset
+        if (GameController.instance != null && GameController.instance.sceneController != null)
+        {
+            GameController.instance.sceneController.BackSceneMenu();
+        }
+        AppOpenAdManager.IsOtherAdShowing = false;
     }
     // ======================= BANNER =======================
     private void InitBanner()
@@ -211,5 +233,14 @@ public class AdsController : MonoBehaviour
     {
         MaxSdk.HideBanner(bannerAdUnitId);
     }
-
+    public void BuyWeaponByAds()
+    {
+        string weaponIndex = weaponData.weapon[2].index;
+        if (!DataManager.Ins.gameSave.objectsBought.Contains(weaponIndex))
+        {
+            DataManager.Ins.gameSave.objectsBought.Add(weaponIndex);
+        }
+        DataManager.Ins.SaveGame();
+        weaponData.weapon[2].isBought = true;
+    }
 }
