@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
     public bool SetBoomerang = false;
     private Vector3 startPos;
     private bool returning = false;
-    [SerializeField] private float maxDistance = 3f; // khoảng cách bay xa nhất
+    [SerializeField] private float maxDistance = 8f; // khoảng cách bay xa nhất
 
     private void Awake(){
         rb = GetComponent<Rigidbody>();
@@ -31,7 +31,11 @@ public class Bullet : MonoBehaviour
 
     private void Start(){
         startPos = transform.position; // lưu vị trí ban đầu
-        StartCoroutine(AutoDestroyAfterDelay(1f)); // gọi coroutine thay vì Destroy trực tiếp
+        if (!SetBoomerang)
+        {
+            // chỉ tự hủy với đạn thường
+            StartCoroutine(AutoDestroyAfterDelay(1f));
+        }
     }
 
     public void SetTarget(Transform _target)
@@ -90,6 +94,8 @@ public class Bullet : MonoBehaviour
                 Quaternion lookRotation = Quaternion.LookRotation(rb.linearVelocity.normalized, Vector3.up);
                 Vector3 euler = lookRotation.eulerAngles;
                 euler.x = -90f;
+                if (GameController.instance.playerController.isCheckBoomerang && gameObject.tag == "Bullet1")
+                    euler.z -= 110.0f;
                 transform.rotation = Quaternion.Euler(euler);
             }
         }

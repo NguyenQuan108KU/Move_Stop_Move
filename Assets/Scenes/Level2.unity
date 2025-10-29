@@ -5514,8 +5514,10 @@ MonoBehaviour:
   isLevelUp: 0
   popupLose: {fileID: 7436597365497648609, guid: 9f56ab77370ae744287b25152f96a7c6, type: 3}
   nameOfPlayer: {fileID: 1499400550}
-  cam: {fileID: 0}
+  cam: {fileID: 1001748388}
   cam1: {fileID: 0}
+  levelUp: 1
+  isCheckBoomerang: 0
 --- !u!54 &125603556
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9171,7 +9173,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &953636172
 Transform:
   m_ObjectHideFlags: 0
@@ -9965,7 +9967,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8170153791668043268, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1993.7031
+      value: 1670.898
       objectReference: {fileID: 0}
     - target: {fileID: 8170153791668043268, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15921,7 +15923,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &2990582966828387980
 GameObject:
   m_ObjectHideFlags: 0
@@ -17270,7 +17272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &5563123656150020068
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -18044,7 +18046,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &6642156800355405227
 GameObject:
   m_ObjectHideFlags: 0
@@ -18852,7 +18854,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &8606761677495717690
 GameObject:
   m_ObjectHideFlags: 0
@@ -19655,7 +19657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &9115136736213071528
 MeshCollider:
   m_ObjectHideFlags: 0

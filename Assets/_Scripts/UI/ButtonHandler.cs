@@ -34,7 +34,7 @@ public class ButtonHandler : MonoBehaviour
         if (NextScene != null)
             NextScene.onClick.AddListener(NextLevel);
         if (loadScene != null)
-            loadScene.onClick.AddListener(LoadScene);
+            loadScene.onClick.AddListener(BackMenuCity);
         if (buttonGetGift != null)
             buttonGetGift.onClick.AddListener(AdsController.Instance.ShowRewardWeapon);
     }

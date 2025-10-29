@@ -15,6 +15,9 @@ public class ZombieCityController : MonoBehaviour
     public int zombieTotal;        //Tổng số enemy
     public bool isCheckWinLose;   //Check xem cos win lose không
     public List<Zombie> zombies = new List<Zombie>();
+    public GameObject joyStick;
+    public GameObject circle;
+    public GameObject spawnZombie;
     private void Awake(){
         if (instance != null)
             Destroy(instance.gameObject);
@@ -65,9 +68,20 @@ public class ZombieCityController : MonoBehaviour
         if (ZombieCityController.instance.playerCityController.isDead && !isCheckWinLose){
             isCheckWinLose = true;
             Instantiate(popupLose, transform.position, Quaternion.identity);
-        }else if(zombieTotal <=0  && !isCheckWinLose){
+            joyStick.SetActive(false);
+            spawnZombie.SetActive(false);
+            for (int i = 0; i < zombies.Count; i++)
+            {
+                zombies[i].anim.SetBool("Move", false);
+                zombies[i].agent.speed = 0.0f;
+            }
+        }
+        else if(zombieTotal <=0  && !isCheckWinLose){
             isCheckWinLose = true;
             Instantiate(popupWin, transform.position, Quaternion.identity);
+            joyStick.SetActive(false);
+            circle.SetActive(false);
+            playerCityController.anim.SetBool("Move", false);
         }
     }
 }

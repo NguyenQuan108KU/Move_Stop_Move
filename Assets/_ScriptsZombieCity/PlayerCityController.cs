@@ -181,6 +181,7 @@ public class PlayerCityController : MonoBehaviour
                 // Gán mesh của vũ khí cho player và bullet
                 //weaponMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
                 GameObject newWeapon = Instantiate(listWeapon[indexWeapon], anchorWepon.transform);
+                weaponOfPlayerCity = newWeapon;
                 meshRenderer = newWeapon.GetComponent<MeshRenderer>();
                 Material[] mats = meshRenderer.materials;
                 bulletMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
@@ -350,7 +351,7 @@ public class PlayerCityController : MonoBehaviour
 
             if (directionOfPlayerCity.sqrMagnitude > 0.01f)
             {
-                //weaponOfPlayerCity.SetActive(true);
+                weaponOfPlayerCity.SetActive(true);
                 Quaternion toRotation = Quaternion.LookRotation(directionOfPlayerCity, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
                 anim.SetBool("Attack", false);
@@ -417,7 +418,7 @@ public class PlayerCityController : MonoBehaviour
 
     public void Shooting()
     {
-        //weaponOfPlayerCity.SetActive(false);
+        weaponOfPlayerCity.SetActive(false);
         AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Attack);
         // Lấy chế độ bắn từ PlayerPrefs (Function lưu trong bộ nhớ)
         indexFunctionBullet = PlayerPrefs.GetInt("Function");
@@ -733,10 +734,18 @@ public class PlayerCityController : MonoBehaviour
         if(sizeCircle <= 10)
         {
             sizeCircle += 10;
-            drawCircle.radius = 6.0f;
-            radiusAttackOfPlayerCity = 6.0f;
+            if (sizeCircle == 10)
+            {
+                drawCircle.radius = 5.5f;
+                radiusAttackOfPlayerCity = 5.5f;
+            }
+            if(sizeCircle == 20)
+            {
+                drawCircle.radius = 6f;
+                radiusAttackOfPlayerCity = 6f;
+            }
         }
-        else
+        if(sizeCircle == 20)
         {
             buttonCircleRange.SetActive(false);
             buttonMaxCircleRange.SetActive(true);
@@ -781,18 +790,31 @@ public class PlayerCityController : MonoBehaviour
             buttonMaxSpeed.SetActive(true);
         }
         //Load phạm vi tấn công
-        sizeCircle = PlayerPrefs.GetInt("RangeAttack", sizeCircle);
-        if (sizeCircle >= 10)
+        sizeCircle = PlayerPrefs.GetInt("RangeAttack");
+        if (sizeCircle >= 20)
         {
             buttonCircleRange.SetActive(false);
             buttonMaxCircleRange.SetActive(true);
         }
-        drawCircle.radius = 6.0f;
-        radiusAttackOfPlayerCity = 6.0f;
+        if(sizeCircle == 10)
+        {
+            drawCircle.radius = 5.5f;
+            radiusAttackOfPlayerCity = 5.5f;
+        }else if(sizeCircle == 20)
+        {
+            drawCircle.radius = 6f;
+            radiusAttackOfPlayerCity = 6f;
+        }
+        else
+        {
+            drawCircle.radius = 5f;
+            radiusAttackOfPlayerCity = 5f;
+        }
         textCircleRange.text = sizeCircle.ToString();
-        if(countProtect != 0)
+        if(sizeCircle != 0)
             isSetCircle = true;
 
+        //Vu khi
         maxBullet = PlayerPrefs.GetInt("MaxBullet");
         if(maxBullet >= 1)
         {
@@ -811,7 +833,7 @@ public class PlayerCityController : MonoBehaviour
     }
     public void SetOffAttack()
     {
-        //weaponOfPlayerCity.SetActive(true);
+        weaponOfPlayerCity.SetActive(true);
         anim.SetBool("Attack", false);
     }
     private void OnDrawGizmos()
@@ -828,7 +850,7 @@ public class PlayerCityController : MonoBehaviour
 
             dead1.SetActive(true);                     // Hiển thị hiệu ứng UI chết
             anim.SetBool("Death", true);               // Chạy animation chết
-            //weaponOfPlayerCity.SetActive(false);       // Ẩn vũ khí của player
+            weaponOfPlayerCity.SetActive(false);       // Ẩn vũ khí của player
             isDead = true;                             // Đánh dấu player đã chết
             PlayerPrefs.SetInt("coinMoney", coinMoney);// Lưu lại số coin hiện tại vào PlayerPrefs
             isPlayerDie = true;                        // Cờ kiểm tra player đã chết

@@ -13,7 +13,7 @@ public class Zombie : MonoBehaviour
     public float lookRadius = 10.0f;                    // Bán kính phát hiện target
     public float rotationSpeed = 5f;                    // Tốc độ xoay về phía target
     Transform target;                                   // Target hiện tại (player)
-    NavMeshAgent agent;                                 // Agent để enemy di chuyển tự động
+    public NavMeshAgent agent;                                 // Agent để enemy di chuyển tự động
 
     [Header("--------------Visual & Effects--------------")]
     public GameObject praticleSystemEnemyDie; // Hiệu ứng khi enemy chết
@@ -35,6 +35,10 @@ public class Zombie : MonoBehaviour
     public GameObject floatingTextPrefab; // kéo prefab vào trong Inspector
     public int poinOdBoss;   //Điểm khi giết chết enemy
     void Start(){
+        if (ZombieCityController.instance.playerCityController.isDead)
+        {
+            anim.SetBool("Move", false);
+        }
         target = ZombieCityController.instance.playerCityController.transform;
         agent = GetComponent<NavMeshAgent>();
 
@@ -61,10 +65,15 @@ public class Zombie : MonoBehaviour
     public void ZombieUpdate(){
         if (target == null) return; // Ngưng update nếu chưa có target
         float distance = Vector3.Distance(transform.position, target.position);
-        if (ZombieCityController.instance.playerCityController.isOffPlayer || isDead){
+        if (ZombieCityController.instance.playerCityController.isOffPlayer || isDead || ZombieCityController.instance.playerCityController.isDead)
+        {
             agent.ResetPath();                  // Xóa đường đi của NavMeshAgent
             anim.SetBool("Move", false);        // Tắt animation Move
             return;                             // Thoát khỏi Update
+        }
+        if (ZombieCityController.instance.playerCityController.isDead)
+        {
+            anim.SetBool("Move", false);
         }
         if (distance <= lookRadius && !isDead){
             anim.SetBool("Move", true);

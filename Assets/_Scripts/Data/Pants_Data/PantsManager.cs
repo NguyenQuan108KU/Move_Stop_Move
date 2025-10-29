@@ -157,11 +157,32 @@ public class PantsManager : MonoBehaviour
             {
                 DataManager.Ins.gameSave.objectsBought.Add(pantName);
             }
-            DataManager.Ins.SaveGame();
             SetLock();
+            DataManager.Ins.gameSave.idPant = pantName;
+            DataManager.Ins.SaveGame();
+          
             buyByAds.SetActive(false);
             buyByCoin.SetActive(false);
             selectPaint.SetActive(true);
+
+            isSetPant = true;
+            clothesManager.isSetClothes = false;
+            hairManager.isSetHat = false;
+            shieldManager.isSetShield = false;
+
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
+            PlayerPrefs.SetInt("IndexChoosePant", currentButtonIndex);
+            //string pantName = pantsDatabases.pants[currentButtonIndex].index;
+            SetActionButton("Unequip", Color.white);
+            //Reset mũ của nhân vật
+            hairManager.ResetDataOfHat();
+            hairManager.RefreshActionButton();
+            //Reset khiên
+            shieldManager.ResetDataOdShield();
+            shieldManager.RefreshActionButton();
+            //Reset clothes
+            clothesManager.ResetDatOfClothes();
+            clothesManager.RefreshActionButton();
         }
     }
     public void BuyPantByAds()

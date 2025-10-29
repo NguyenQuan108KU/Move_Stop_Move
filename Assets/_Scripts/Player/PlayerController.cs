@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
     public CameraFollow cam;
     public CameraFollowCity cam1;
     public int levelUp = 1;
+    public bool isCheckBoomerang;
     public void Init()
     {
         string name = PlayerPrefs.GetString("NamePlayer", "You");
@@ -105,7 +106,6 @@ public class PlayerController : MonoBehaviour
     }
     //Thay đổi vũ khí
     public void SetWeaponOfPlayer(){
-        
         indexWeapon = PlayerPrefs.GetInt("SelectOption", 0);     //Lấy index của vũ khí 
         indexMaterial = PlayerPrefs.GetInt("MaterialOfWeapon" + indexWeapon, 1);       //Lấy index của loại vũ khí 
         //MeshRenderer meshRenderer = weaponRenderer;
@@ -116,10 +116,11 @@ public class PlayerController : MonoBehaviour
         string idWeapon = DataManager.Ins.gameSave.idWeapon;                // Lấy ID vũ khí hiện tại từ gameSave
         for (int i = 0; i < weaponData.weapon.Count(); i++){                // Duyệt danh sách vũ khí để tìm vũ khí khớp với idWeapon
             if (weaponData.weapon[i].index == idWeapon){
-                Debug.Log("Sinh weapon");
                 // Gán mesh của vũ khí cho player và bullet
                 //weaponMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
                 GameObject newWeapon = Instantiate(listWeapon[indexWeapon], anchorWepon.transform);
+                weaponOfPlayer = newWeapon;
+                
                 meshRenderer = newWeapon.GetComponent<MeshRenderer>();
                 Material[] mats = meshRenderer.materials;
                 bulletMeshFilter.mesh = weaponData.weapon[i].meshWeapon;
@@ -146,9 +147,15 @@ public class PlayerController : MonoBehaviour
                     bullet1.SetRoration = false;
                 //Thay đổi loại vũ khí bommerang cho bullet 
                 if (weaponData.weapon[i].isBomerang)
+                {
+                    isCheckBoomerang = true;
                     bullet1.SetBoomerang = true;
+                }
                 else
+                {
+                    isCheckBoomerang = false;
                     bullet1.SetBoomerang = false;
+                }
             }
         }
     }
@@ -305,7 +312,7 @@ public class PlayerController : MonoBehaviour
             if (directionOfPlayer.sqrMagnitude < 0.001f && !enemyCurrent.isEnemyDied)
             {
                 targetEnemy = enemyCurrent.transform;
-                //weaponOfPlayer.SetActive(true);
+                weaponOfPlayer.SetActive(true);
                 anim.SetBool("Attack", true);
                 Vector3 directionEnemy = targetEnemy.position - transform.position;    // Tính toán hướng quay về target enemy
                 directionEnemy.y = 0;      // Giữ chiều cao không đổi
@@ -328,27 +335,33 @@ public class PlayerController : MonoBehaviour
 
     //Hàm bắn Enemy. Hàm này gọi trong event của animation
     public void Shooting(){
-        //weaponOfPlayer.SetActive(false);
+        weaponOfPlayer.SetActive(false);
         isReturnCamera = true;
         GameObject bulletObj = Instantiate(bulletPrefabs, firingTransform.position, Quaternion.identity);   // Tạo một viên đạn mới từ prefab tại vị trí firingTransform
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();     // Lấy component Bullet từ viên đạn vừa tạo
         directionOfPlayer = Vector3.zero;                           // Reset hướng di chuyển của player (hoặc hướng bắn) về Vector3.zero
         bulletScript.SetOwner(gameObject);                          // Thiết lập owner của viên đạn là chính player (tránh tự chết do viên đạn của mình)
-        bulletScript.SetTarget(targetEnemy);                        // Thiết lập target của viên đạn là enemy hiện tại
+        bulletScript.SetTarget(targetEnemy);
+        if (isCheckBoomerang)
+            bulletScript.SetBoomerang = false;                        // Thiết lập target của viên đạn là enemy hiện tại
         AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Attack);
 
         // Nếu player đang có gift (ăn được quà)
         if (isGetGift){
             //isGetGift = false;
+            if (isCheckBoomerang)
+                bulletScript.SetBoomerang = false;
             bulletScript.capsualColider.isTrigger = true;
             bulletScript.isOffRotate = true;                           // Bật chế độ viên đạn không xoay
             StartCoroutine(ScaleBullet(bulletObj, 3f, 130f, 0.3f));    // Bắt đầu tăng scale viên đạn từ kích thước ban đầu lên to hơn 
             SetBulletPlayerDeufalt();
         }
         else{
+            if (isCheckBoomerang)
+                bulletScript.SetBoomerang = true;
             bulletScript.capsualColider.isTrigger = false;
             bulletObj.transform.localScale = new Vector3(39, 39, 39);  // Nếu không có gift, đặt scale viên đạn cố định
-            bulletScript.isOffRotate = false;                          // Tắt để viên đạn xoay như bình thường
+            bulletScript.isOffRotate = false;
         }
         //if(isGetGift)
             //StartCoroutine(AutoSetDefaultBullet(2f));
@@ -402,10 +415,22 @@ public class PlayerController : MonoBehaviour
             {
                 cam.SetSefaultCamera();
             }
-            radiusAttackOfPlayer = 5f;  // Đặt bán kính tấn công của player về mặc định
-            if (circleAttack != null){
-                circleAttack.radius = 5f;             // Reset bán kính hiển thị trên DrawCircle
-                circleAttack.DrawCircleUnderFeet();   // Vẽ lại vòng tròn dưới chân player
+            if (!hasPlayedLevelUp)
+            {
+                radiusAttackOfPlayer = 5f;  // Đặt bán kính tấn công của player về mặc định
+                if (circleAttack != null){
+                    circleAttack.radius = 5f;             // Reset bán kính hiển thị trên DrawCircle
+                    circleAttack.DrawCircleUnderFeet();   // Vẽ lại vòng tròn dưới chân player
+                }
+            }
+            else if(hasPlayedLevelUp)
+            {
+                radiusAttackOfPlayer = 6.5f;  // Đặt bán kính tấn công của player về mặc định
+                if (circleAttack != null)
+                {
+                    circleAttack.radius = 6.5f;             // Reset bán kính hiển thị trên DrawCircle
+                    circleAttack.DrawCircleUnderFeet();   // Vẽ lại vòng tròn dưới chân player
+                }
             }
             bullet1.transform.localScale = new Vector3(39, 39, 39);   // Reset kích thước viên đạn về mặc định
             StartCoroutine(ResetGiftAfterDelay());       // Reset trạng thái gift để có thể ăn lại quà 
@@ -428,7 +453,7 @@ public class PlayerController : MonoBehaviour
     }
     public void ActiveWeapon()
     {
-        //weaponOfPlayer.SetActive(true);
+        weaponOfPlayer.SetActive(true);
     }
     public void DestroyPlayer() => gameObject.SetActive(false);
     private void OnCollisionEnter(Collision collision){
@@ -438,7 +463,7 @@ public class PlayerController : MonoBehaviour
             AudioManager.Ins.PlaySoundEffect(SoundData.SoundName.Lose);
             //Instantiate(popupLose, transform.position, Quaternion.identity);   //Sinh Popup Lose 
             anim.SetBool("Death", true);                                       // Kích hoạt animation chết
-            //weaponOfPlayer.SetActive(false);                                          //Tắt vũ khí của player khi ném            
+            weaponOfPlayer.SetActive(false);                                          //Tắt vũ khí của player khi ném            
             PlayerPrefs.SetInt("coinMoney", coinMoney);                        //Lưu tiền của player
             Destroy(collision.gameObject);
         }

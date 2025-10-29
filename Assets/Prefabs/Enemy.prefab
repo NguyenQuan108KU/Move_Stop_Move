@@ -1896,7 +1896,7 @@ MonoBehaviour:
   - {r: 0.8, g: 0.4, b: 1, a: 0}
   - {r: 0.4, g: 0, b: 0, a: 0}
   pinkColor: {r: 0, g: 0, b: 0, a: 0}
-  detectionRange: 8
+  detectionRange: 5.5
   attackRange: 0
   attackCoolDown: 6
   attackTimer: 0
@@ -1934,6 +1934,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 72623cd077e98594cbac2e787147fb7d, type: 2}
   anchorWeapon: {fileID: 1774457733360699256}
   newWeapon: {fileID: 0}
+  enemyStartGame: 0
 --- !u!114 &1330244777685495638
 MonoBehaviour:
   m_ObjectHideFlags: 0

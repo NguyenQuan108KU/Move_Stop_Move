@@ -9,7 +9,7 @@ public class AppOpenAdManager : MonoBehaviour
 
     [Header("AdMob")]
     [Tooltip("Dùng test ID khi test. Thay bằng Ad Unit ID thật khi publish.")]
-    [SerializeField] private string adUnitId = "ca-app-pub-6409857233709298~3411152071";
+    [SerializeField] private string adUnitId = "ca-app-pub-6409857233709298/8480480070";
 
     [Header("Behavior")]
     [Tooltip("Nếu true sẽ cố show ad ngay khi load xong lần đầu (thường dùng cho splash).")]

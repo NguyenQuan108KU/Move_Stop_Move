@@ -23,7 +23,7 @@ public class VibrationToggleUI : MonoBehaviour
 
     void UpdateIcon()
     {
-        //bool isOn = VibrationManager.Ins.IsVibrationOn();
-        //vibrationIcon.sprite = isOn ? iconOn : iconOff;
+        bool isOn = VibrationManager.Ins.IsVibrationOn();
+        vibrationIcon.sprite = isOn ? iconOn : iconOff;
     }
 }

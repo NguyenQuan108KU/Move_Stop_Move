@@ -114,7 +114,7 @@ MonoBehaviour:
   isOffRotate: 0
   SetRotation: 0
   SetBoomerang: 0
-  maxDistance: 3
+  maxDistance: 8
 --- !u!54 &1194726180561282274
 Rigidbody:
   m_ObjectHideFlags: 0

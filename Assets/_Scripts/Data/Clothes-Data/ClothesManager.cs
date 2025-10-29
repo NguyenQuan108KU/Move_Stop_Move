@@ -171,10 +171,29 @@ public class ClothesManager : MonoBehaviour
                 DataManager.Ins.gameSave.objectsBought.Add(skinName);
             }
             SetLock();
+            DataManager.Ins.gameSave.idSkin = skinName;
             DataManager.Ins.SaveGame();
             buyByAds.SetActive(false);
             buyByCoin.SetActive(false);
             selectPaint.SetActive(true);
+
+            hairManager.isSetHat = false;
+            shieldManager.isSetShield = false;
+            pantsManager.isSetPant = false;
+            isSetClothes = true;
+
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
+            SetActionButton("Unequip", Color.white);
+            PlayerPrefs.SetInt("IndexChooseClothes", currentButtonIndex);
+            //Reset quần
+            pantsManager.ResetDataOfPant();
+            pantsManager.RefreshActionButton();
+            //Reset khiên
+            shieldManager.ResetDataOdShield();
+            shieldManager.RefreshActionButton();
+            //Reset mũ của nhân vật
+            hairManager.ResetDataOfHat();
+            hairManager.RefreshActionButton();
         }
     }
     public void BuyClothesByAds()

@@ -5516,6 +5516,8 @@ MonoBehaviour:
   nameOfPlayer: {fileID: 1499400550}
   cam: {fileID: 1001748388}
   cam1: {fileID: 0}
+  levelUp: 1
+  isCheckBoomerang: 0
 --- !u!54 &125603556
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8670,7 +8672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8170153791668043268, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1987.7808
+      value: 1652.0054
       objectReference: {fileID: 0}
     - target: {fileID: 8170153791668043268, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
       propertyPath: m_LocalPosition.x

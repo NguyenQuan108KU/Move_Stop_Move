@@ -91,7 +91,7 @@ public class SpawnZombie : MonoBehaviour
             randomPos.x = Mathf.Clamp(randomPos.x, center.x - roadWidth, center.x + roadWidth);
 
             // Check vị trí trên NavMesh
-            if (NavMesh.SamplePosition(randomPos, out hit, 2f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomPos, out hit, 0.5f, NavMesh.AllAreas))
             {
                 if (Vector3.Distance(center, hit.position) >= minDist)
                 {

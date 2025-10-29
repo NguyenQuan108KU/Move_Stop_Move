@@ -77,7 +77,7 @@ public class Enemy : MonoBehaviour
         hasBeenEnemyHit = false;
         nameEnemy.text = listName[Random.Range(0, listName.Count)].name.ToString();
         attackTimer = attackCoolDown;
-        detectionRange = 8f;
+        detectionRange = 5.5f;
         bulletPrefabs.transform.localScale = new Vector3(39, 39, 39);
 
         randomDirection = Vector3.zero; // reset hướng ban đầu

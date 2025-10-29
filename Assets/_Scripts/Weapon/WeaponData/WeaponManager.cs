@@ -92,6 +92,7 @@ public class WeaponManager : MonoBehaviour
                   Destroy(child.gameObject);
                 }
                 GameObject newWeapon = Instantiate(weapon.weaponPrefabs[indexWeapon], weaponAnchor.transform);
+                weaponOfPlayer = newWeapon;
                 weaponCustom = newWeapon;
                 if(index == 0)
                     LoadColorOfWeapon(selectedOption);

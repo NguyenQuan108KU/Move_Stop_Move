@@ -48,7 +48,6 @@ public class ShieldManager : MonoBehaviour
         coinOfPlayer = DataManager.Ins.gameSave.coin;
         textOfPlayer.text = coinOfPlayer.ToString();
         //SetShieldOfPlayer();
-        coinOfPlayer = PlayerPrefs.GetInt("coinMoney");
         for (int i = 0; i < list_Buttons.Length; i++)
         {
             int index = i;
@@ -145,6 +144,8 @@ public class ShieldManager : MonoBehaviour
     {
         string shieldName = shieldsDatabases.shields[currentButtonIndex].index;
         int coinOfShield = shieldsDatabases.shields[currentButtonIndex].coinOfshield;
+        Debug.Log("coinOfShield" + coinOfShield);
+        Debug.Log("coinrPlayer" + coinOfPlayer);
         if (coinOfPlayer >= coinOfShield)
         {
             coinOfPlayer -= coinOfShield;
@@ -157,10 +158,30 @@ public class ShieldManager : MonoBehaviour
                 DataManager.Ins.gameSave.objectsBought.Add(shieldName);
             }
             SetLock();
+            DataManager.Ins.gameSave.idShield = shieldName;
             DataManager.Ins.SaveGame();
+
             buyByAds.SetActive(false);
             buyByCoin.SetActive(false);
             selectShield.SetActive(true);
+
+            isSetShield = true;
+            clothesManager.isSetClothes = false;
+            hairManager.isSetHat = false;
+            pantsManager.isSetPant = false;
+
+            EquippedClothes(list_Buttons[currentButtonIndex].transform);
+            PlayerPrefs.SetInt("IndexChooseShield", currentButtonIndex);
+            SetActionButton("Unequip", Color.white);
+            //Reset mũ
+            pantsManager.ResetDataOfPant();
+            pantsManager.RefreshActionButton();
+            //Reset mũ của nhân vật
+            hairManager.ResetDataOfHat();
+            hairManager.RefreshActionButton();
+            //Reset clothes
+            clothesManager.ResetDatOfClothes();
+            clothesManager.RefreshActionButton();
         }
     }
     public void BuyProtectByAds()
